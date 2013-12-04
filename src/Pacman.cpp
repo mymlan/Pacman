@@ -206,7 +206,7 @@ bool init()
 bool load_files()
 {
     //Load the square image
-    square = load_image( "square.bmp" );
+    square = load_image( "img/square.bmp" );
 
     //If there was a problem in loading the square
     if( square == NULL )
@@ -469,4 +469,5 @@ int main( int argc, char* args[] )
 
     return 0;
 }
+
 
