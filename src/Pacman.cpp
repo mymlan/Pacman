@@ -6,7 +6,7 @@
 // Description : Hello World in C++, Ansi-style
 //============================================================================
 
-//The headers
+//The eaders
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
 #include <string>
@@ -33,6 +33,7 @@ SDL_Event event;
 //The wall
 SDL_Rect wall;
 
+
 //The square
 class Square
 {
@@ -57,6 +58,30 @@ class Square
     void show();
 };
 
+//The ghost
+/*class Ghost
+{
+private:
+  //The collission box of the ghost
+  SDL_Rect box;
+
+  //The velocity of the ghost
+  inte xVel, yVel;
+
+public:
+  //Initializes the variables
+  Ghost();
+
+  //Takes key presses and adjusts the ghost's velocity
+  void handle_input();
+
+  //Moves the ghost
+  void move();
+
+  //Shows the ghost on the screen
+  void show();
+};
+*/
 //The timer
 class Timer
 {
@@ -242,6 +267,11 @@ Square::Square()
     yVel = 0;
 }
 
+/*
+Ghost::Square()
+{
+  //Initialize the offsets
+  */
 void Square::handle_input()
 {
     //If a key was pressed
@@ -278,7 +308,7 @@ void Square::move()
     box.x += xVel;
 
     //If the square went too far to the left or right or has collided with the wall
-    if( ( box.x < 0 ) || ( box.x + SQUARE_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall ) ) )
+    if( ( box.x < 0 ) || ( box.x + SQUARE_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall ) ))
     {
         //Move back
         box.x -= xVel;
@@ -421,6 +451,8 @@ int main( int argc, char* args[] )
     wall.w = 40;
     wall.h = 400;
 
+  
+
     //While the user hasn't quit
     while( quit == false )
     {
@@ -449,7 +481,7 @@ int main( int argc, char* args[] )
 
         //Show the wall
         SDL_FillRect( screen, &wall, SDL_MapRGB( screen->format, 0x77, 0x77, 0x77 ) );
-
+	
         //Show the square on the screen
         mySquare.show();
 
