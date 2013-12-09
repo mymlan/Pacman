@@ -284,7 +284,7 @@ Square::Square()
 Ghost::Ghost()
 {
   //Initialize the offsets
-  box.x = 360;
+  box.x = 100;
   box.y = 100;
 
 //Set the ghost's dimensions
