@@ -206,7 +206,7 @@ bool init()
 bool load_files()
 {
     //Load the square image
-    square = load_image( "img/square.bmp" );
+    square = load_image( "img/Pacman-test.bmp" );
 
     //If there was a problem in loading the square
     if( square == NULL )
