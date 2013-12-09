@@ -1,7 +1,7 @@
 //============================================================================
 // Name        : Pacman.cpp
 // Author      : Mymlan
-// Version     :
+// Version     : 
 // Copyright   : 
 // Description : Hello World in C++, Ansi-style
 //============================================================================
@@ -230,15 +230,15 @@ void clean_up()
 Square::Square()
 {
     //Initialize the offsets
-    box.x = 0;
-    box.y = 0;
+    box.x = 360;
+    box.y = 280;
 
     //Set the square's dimentions
     box.w = SQUARE_WIDTH;
     box.h = SQUARE_HEIGHT;
 
     //Initialize the velocity
-    xVel = 0;
+    xVel = 10;
     yVel = 0;
 }
 
@@ -250,12 +250,14 @@ void Square::handle_input()
         //Adjust the velocity
         switch( event.key.keysym.sym )
         {
-            case SDLK_UP: yVel -= SQUARE_HEIGHT / 2; break;
-            case SDLK_DOWN: yVel += SQUARE_HEIGHT / 2; break;
-            case SDLK_LEFT: xVel -= SQUARE_WIDTH / 2; break;
-            case SDLK_RIGHT: xVel += SQUARE_WIDTH / 2; break;
+	case SDLK_UP: yVel = -10 /*-SQUARE_HEIGHT/2*/; xVel = 0; break;
+	case SDLK_DOWN: yVel = 10 /* SQUARE_HEIGHT / 2*/; xVel = 0; break;
+	case SDLK_LEFT: xVel = -10/*-SQUARE_WIDTH / 2 */; yVel = 0; break;
+	case SDLK_RIGHT: xVel = 10 /*SQUARE_WIDTH / 2*/; yVel = 0;  break;
         }
     }
+
+    /*
     //If a key was released
     else if( event.type == SDL_KEYUP )
     {
@@ -267,7 +269,7 @@ void Square::handle_input()
             case SDLK_LEFT: xVel += SQUARE_WIDTH / 2; break;
             case SDLK_RIGHT: xVel -= SQUARE_WIDTH / 2; break;
         }
-    }
+	}*/
 }
 
 void Square::move()
