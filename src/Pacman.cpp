@@ -6,7 +6,7 @@
 // Description : Hello World in C++, Ansi-style
 //============================================================================
 
-//The headers
+//The eaders
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
 #include <string>
@@ -32,6 +32,7 @@ SDL_Event event;
 
 //The wall
 SDL_Rect wall;
+SDL_Rect wall2;
 
 //The square
 class Square
@@ -55,6 +56,30 @@ class Square
 
     //Shows the square on the screen
     void show();
+};
+
+//The ghost
+class Ghost
+{
+private:
+  //The collission box of the ghost
+  SDL_Rect box;
+
+  //The velocity of the ghost
+  inte xVel, yVel;
+
+public:
+  //Initializes the variables
+  Square();
+
+  //Takes key presses and adjusts the ghost's velocity
+  void handle_input();
+
+  //Moves the ghost
+  void move();
+
+  //Shows the ghost on the screen
+  void show();
 };
 
 //The timer
@@ -238,9 +263,13 @@ Square::Square()
     box.h = SQUARE_HEIGHT;
 
     //Initialize the velocity
-    xVel = 0;
+    xVel = 20;
     yVel = 0;
 }
+
+Ghost::Square()
+{
+  //Initialize the offsets
 
 void Square::handle_input()
 {
@@ -276,7 +305,7 @@ void Square::move()
     box.x += xVel;
 
     //If the square went too far to the left or right or has collided with the wall
-    if( ( box.x < 0 ) || ( box.x + SQUARE_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall ) ) )
+    if( ( box.x < 0 ) || ( box.x + SQUARE_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall ) || ( check_collision( box, wall2 ) )))
     {
         //Move back
         box.x -= xVel;
@@ -419,6 +448,12 @@ int main( int argc, char* args[] )
     wall.w = 40;
     wall.h = 400;
 
+    //Set the wall2
+    wall2.x = 100;
+    wall2.y = 0;
+    wall2.w = 10;
+    wall2.h = 20;
+
     //While the user hasn't quit
     while( quit == false )
     {
@@ -447,7 +482,7 @@ int main( int argc, char* args[] )
 
         //Show the wall
         SDL_FillRect( screen, &wall, SDL_MapRGB( screen->format, 0x77, 0x77, 0x77 ) );
-
+	SDL_FillRect( screen, &wall2, SDL_MapRGB( screen->format, 0x77, 0x77, 0x77 ) );
         //Show the square on the screen
         mySquare.show();
 
