@@ -32,7 +32,7 @@ SDL_Event event;
 
 //The wall
 SDL_Rect wall;
-SDL_Rect wall2;
+
 
 //The square
 class Square
