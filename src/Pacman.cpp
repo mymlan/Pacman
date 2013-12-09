@@ -6,10 +6,11 @@
 // Description : Hello World in C++, Ansi-style
 //============================================================================
 
-//The eaders
+//The headers
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
 #include <string>
+#include <iostream>
 
 //Screen attributes
 const int SCREEN_WIDTH = 640;
@@ -26,6 +27,7 @@ const int SQUARE_HEIGHT = 20;
 //The surfaces
 SDL_Surface *square = NULL;
 SDL_Surface *screen = NULL;
+SDL_Surface *ghost = NULL;
 
 //The event structure
 SDL_Event event;
@@ -58,15 +60,15 @@ class Square
     void show();
 };
 
-//The ghost
-/*class Ghost
+//The ghost 
+class Ghost
 {
 private:
   //The collission box of the ghost
   SDL_Rect box;
 
   //The velocity of the ghost
-  inte xVel, yVel;
+  int xVel, yVel;
 
 public:
   //Initializes the variables
@@ -81,7 +83,7 @@ public:
   //Shows the ghost on the screen
   void show();
 };
-*/
+
 //The timer
 class Timer
 {
@@ -238,6 +240,16 @@ bool load_files()
     {
         return false;
     }
+    /*  
+    //Load the ghost image
+    ghost == load_image( "img/ghost-picture.bmp" );
+
+    //If there was a problem in loading the ghost picture
+    if( ghost == NULL)
+      {
+	return false;
+      }
+*/
 
     //If everything loaded fine
     return true;
@@ -267,11 +279,26 @@ Square::Square()
     yVel = 0;
 }
 
-/*
-Ghost::Square()
+
+Ghost::Ghost()
 {
   //Initialize the offsets
-  */
+  box.x = 560;
+  box.y = 480;
+
+//Set the square's dimentions
+    box.w = SQUARE_WIDTH;    //we should change the global constants names SQUARE_WIDTH to CHARACTER_WIDTH
+    box.h = SQUARE_HEIGHT;
+
+    //Initialize the velocity
+    xVel = 0;
+    yVel = 0;
+}
+
+
+
+
+
 void Square::handle_input()
 {
     //If a key was pressed
@@ -325,11 +352,45 @@ void Square::move()
     }
 }
 
+
+void Ghost::move()
+{
+  //Move the ghost left or right 
+  box.x += xVel;
+
+  //If the ghost went too far to the left or right or has collided with the wall
+  if( ( box.x < 0 ) || ( box.x + SQUARE_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall ) ))
+    {
+      //Move back
+      box.x -= xVel;
+    }
+
+  //Move the ghost up or down
+  box.y += yVel;
+
+  //If the ghost went too far up or down or has collided with the wall
+  if( ( box.y < 0 ) || ( box.y + SQUARE_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall ) ) )
+    {
+      //Move back
+      box.y -= yVel;
+    }
+}
+
+
+
 void Square::show()
 {
     //Show the square
     apply_surface( box.x, box.y, square, screen );
 }
+
+
+void Ghost::show()
+{
+      //Show the ghost
+    apply_surface( box.x, box.y, ghost, screen );
+}
+
 
 Timer::Timer()
 {
@@ -430,6 +491,9 @@ int main( int argc, char* args[] )
     //The square
     Square mySquare;
 
+    //The ghost
+    Ghost myGhost;
+
     //The frame rate regulator
     Timer fps;
 
@@ -438,11 +502,12 @@ int main( int argc, char* args[] )
     {
         return 1;
     }
-
+    
     //Load the files
     if( load_files() == false )
     {
-        return 1;
+      std::cout << "trubbel att ladda filerna" << std::endl;
+      return 1;
     }
 
     //Set the wall
@@ -476,6 +541,9 @@ int main( int argc, char* args[] )
         //Move the square
         mySquare.move();
 
+	//Move the ghost
+	myGhost.move();
+
         //Fill the screen white
         SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0xFF, 0xFF, 0xFF ) );
 
@@ -484,6 +552,9 @@ int main( int argc, char* args[] )
 	
         //Show the square on the screen
         mySquare.show();
+
+	//Show the ghost on the screen
+	myGhost.show();
 
         //Update the screen
         if( SDL_Flip( screen ) == -1 )
