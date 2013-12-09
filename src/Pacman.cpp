@@ -1,7 +1,7 @@
 //============================================================================
 // Name        : Pacman.cpp
 // Author      : Mymlan
-// Version     :
+// Version     : 
 // Copyright   : 
 // Description : Hello World in C++, Ansi-style
 //============================================================================
@@ -255,15 +255,19 @@ void clean_up()
 Square::Square()
 {
     //Initialize the offsets
-    box.x = 0;
-    box.y = 0;
+    box.x = 360;
+    box.y = 280;
 
     //Set the square's dimentions
     box.w = SQUARE_WIDTH;
     box.h = SQUARE_HEIGHT;
 
     //Initialize the velocity
+<<<<<<< HEAD
     xVel = 20;
+=======
+    xVel = 10;
+>>>>>>> 964dd323b9cc486296ac5cff140b68141df502ae
     yVel = 0;
 }
 
@@ -279,12 +283,14 @@ void Square::handle_input()
         //Adjust the velocity
         switch( event.key.keysym.sym )
         {
-            case SDLK_UP: yVel -= SQUARE_HEIGHT / 2; break;
-            case SDLK_DOWN: yVel += SQUARE_HEIGHT / 2; break;
-            case SDLK_LEFT: xVel -= SQUARE_WIDTH / 2; break;
-            case SDLK_RIGHT: xVel += SQUARE_WIDTH / 2; break;
+	case SDLK_UP: yVel = -10 /*-SQUARE_HEIGHT/2*/; xVel = 0; break;
+	case SDLK_DOWN: yVel = 10 /* SQUARE_HEIGHT / 2*/; xVel = 0; break;
+	case SDLK_LEFT: xVel = -10/*-SQUARE_WIDTH / 2 */; yVel = 0; break;
+	case SDLK_RIGHT: xVel = 10 /*SQUARE_WIDTH / 2*/; yVel = 0;  break;
         }
     }
+
+    /*
     //If a key was released
     else if( event.type == SDL_KEYUP )
     {
@@ -296,7 +302,7 @@ void Square::handle_input()
             case SDLK_LEFT: xVel += SQUARE_WIDTH / 2; break;
             case SDLK_RIGHT: xVel -= SQUARE_WIDTH / 2; break;
         }
-    }
+	}*/
 }
 
 void Square::move()
@@ -305,7 +311,7 @@ void Square::move()
     box.x += xVel;
 
     //If the square went too far to the left or right or has collided with the wall
-    if( ( box.x < 0 ) || ( box.x + SQUARE_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall ) || ( check_collision( box, wall2 ) )))
+    if( ( box.x < 0 ) || ( box.x + SQUARE_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall ) ))
     {
         //Move back
         box.x -= xVel;
@@ -448,11 +454,7 @@ int main( int argc, char* args[] )
     wall.w = 40;
     wall.h = 400;
 
-    //Set the wall2
-    wall2.x = 100;
-    wall2.y = 0;
-    wall2.w = 10;
-    wall2.h = 20;
+  
 
     //While the user hasn't quit
     while( quit == false )
@@ -482,7 +484,7 @@ int main( int argc, char* args[] )
 
         //Show the wall
         SDL_FillRect( screen, &wall, SDL_MapRGB( screen->format, 0x77, 0x77, 0x77 ) );
-	SDL_FillRect( screen, &wall2, SDL_MapRGB( screen->format, 0x77, 0x77, 0x77 ) );
+	
         //Show the square on the screen
         mySquare.show();
 
