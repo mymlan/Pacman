@@ -59,7 +59,7 @@ class Square
 };
 
 //The ghost
-class Ghost
+/*class Ghost
 {
 private:
   //The collission box of the ghost
@@ -70,7 +70,7 @@ private:
 
 public:
   //Initializes the variables
-  Square();
+  Ghost();
 
   //Takes key presses and adjusts the ghost's velocity
   void handle_input();
@@ -81,7 +81,7 @@ public:
   //Shows the ghost on the screen
   void show();
 };
-
+*/
 //The timer
 class Timer
 {
@@ -263,18 +263,15 @@ Square::Square()
     box.h = SQUARE_HEIGHT;
 
     //Initialize the velocity
-<<<<<<< HEAD
-    xVel = 20;
-=======
     xVel = 10;
->>>>>>> 964dd323b9cc486296ac5cff140b68141df502ae
     yVel = 0;
 }
 
+/*
 Ghost::Square()
 {
   //Initialize the offsets
-
+  */
 void Square::handle_input()
 {
     //If a key was pressed
