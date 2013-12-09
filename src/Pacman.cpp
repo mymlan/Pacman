@@ -10,7 +10,7 @@
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
 #include <string>
-#include <iostream>
+#include <iostream>  //for felsokning med std::cout
 
 //Screen attributes
 const int SCREEN_WIDTH = 640;
@@ -238,18 +238,19 @@ bool load_files()
     //If there was a problem in loading the square
     if( square == NULL )
     {
+   
         return false;
     }
-    /*  
+   
     //Load the ghost image
-    ghost == load_image( "img/ghost-picture.bmp" );
+    ghost = load_image( "img/ghost-picture.bmp" );
 
     //If there was a problem in loading the ghost picture
     if( ghost == NULL)
       {
 	return false;
       }
-*/
+
 
     //If everything loaded fine
     return true;
@@ -259,7 +260,7 @@ void clean_up()
 {
     //Free the surface
     SDL_FreeSurface( square );
-
+    SDL_FreeSurface( ghost );                  //prova ta bort vid problem med ghost
     //Quit SDL
     SDL_Quit();
 }
@@ -270,7 +271,7 @@ Square::Square()
     box.x = 360;
     box.y = 280;
 
-    //Set the square's dimentions
+    //Set the square's dimensions
     box.w = SQUARE_WIDTH;
     box.h = SQUARE_HEIGHT;
 
@@ -283,10 +284,10 @@ Square::Square()
 Ghost::Ghost()
 {
   //Initialize the offsets
-  box.x = 560;
-  box.y = 480;
+  box.x = 360;
+  box.y = 100;
 
-//Set the square's dimentions
+//Set the ghost's dimensions
     box.w = SQUARE_WIDTH;    //we should change the global constants names SQUARE_WIDTH to CHARACTER_WIDTH
     box.h = SQUARE_HEIGHT;
 
