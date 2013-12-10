@@ -50,7 +50,7 @@ public:
   //Initializes the variables
   Square();
 
-  //Reveals pacmans position, ghosts will ask for it
+  //Reveals pacmans position, ghosts will ask for this
   int reveal_position_x();
   int reveal_position_y();
 
@@ -76,7 +76,7 @@ private:
   int xVel, yVel;
 
   //1 is left, 2 is right, 3 is up, and 4 is down. 0 is starting value, meaning the ghost hasn't found out where pacman is
-  int direction_to_pacman_{0};
+  int direction_to_pacman_;
 
 public:
   //Initializes the variables
@@ -85,7 +85,7 @@ public:
   //Moves the ghost
   void move();
 
-  //Finds out how to move to Pacman. Seek sets the "direction_to_pacman datamedlem".Tries to go straight for pacman, that is, will be stopped by a wall.
+  //Finds out how to move to Pacman. Seek sets the "direction_to_pacman datamedlem".
   void seek(Square);
 
   //Finds out how to move away from Pacman. Uses seek, but instead of going towards pacman by right, flee goes left.
@@ -310,14 +310,18 @@ Ghost::Ghost()
   //Initialize the offsets
   box.x = 100;
   box.y = 100;
+  
+  //Initialize the seek and destroy direction, that is, where the ghost believe pacman is
+  direction_to_pacman_ = 0;
 
-//Set the ghost's dimensions
-    box.w = SQUARE_WIDTH;    //we should change the global constants names SQUARE_WIDTH to CHARACTER_WIDTH
-    box.h = SQUARE_HEIGHT;
 
-    //Initialize the velocity
-    xVel = 0;
-    yVel = 0;
+  //Set the ghost's dimensions
+  box.w = SQUARE_WIDTH;    //we should change the global constants names SQUARE_WIDTH to CHARACTER_WIDTH
+  box.h = SQUARE_HEIGHT;
+
+  //Initialize the velocity
+  xVel = 0;
+  yVel = 0;
 }
 
 
@@ -339,19 +343,7 @@ void Square::handle_input()
         }
     }
 
-    /*
-    //If a key was released
-    else if( event.type == SDL_KEYUP )
-    {
-        //Adjust the velocity
-        switch( event.key.keysym.sym )
-        {
-            case SDLK_UP: yVel += SQUARE_HEIGHT / 2; break;
-            case SDLK_DOWN: yVel -= SQUARE_HEIGHT / 2; break;
-            case SDLK_LEFT: xVel += SQUARE_WIDTH / 2; break;
-            case SDLK_RIGHT: xVel -= SQUARE_WIDTH / 2; break;
-        }
-	}*/
+    
 }
 
 void Square::move()
@@ -383,11 +375,13 @@ void Ghost::move()
   //Set velocity and direction in order to move to where the ghost believe pacman is located
   switch(direction_to_pacman_)
     {
-    case 1: yVel = 0; xVel = -10; break;
-    case 2: yVel = 0; xVel = 10; break;
-    case 3: yVel = 10; xVel = 0; break;
-    case 4: yVel = -10; xVel = 0; break;
+    case 1: yVel = 0; xVel = -10; break; //left
+    case 2: yVel = 0; xVel = 10; break;  //right
+    case 3: yVel = -10; xVel = 0; break;  //up      y increases downwards
+    case 4: yVel = 10; xVel = 0; break; //down
     }
+  
+  std::cout << direction_to_pacman_ << std::endl;
 
   //Move the ghost left or right 
   box.x += xVel;
@@ -421,7 +415,7 @@ void Ghost::seek(Square paccy)
   
   
   //tries to minimize the distance in the shortest direction first. If pacman is one step to the right and far away at the bottom, the ghost will first take one step left and the go down.
-  if( abs(pacman_x - box.x) < abs(pacman_y - box.y) )
+  if( abs(pacman_x - box.x) > abs(pacman_y - box.y) ) //if bigger difference in x than in y, then walk towards pacman i x direction
     {
       if (pacman_x < box.x)
 	{direction_to_pacman_ = 1;}
@@ -429,10 +423,12 @@ void Ghost::seek(Square paccy)
 	{direction_to_pacman_ = 2;}
       return;
     }
-  if (pacman_y < box.y)
+
+  //else walk towards pacman in y direction
+  if (pacman_y < box.y) 
     {direction_to_pacman_ = 3;}
-    else
-      {direction_to_pacman_ = 4;}
+  else
+    {direction_to_pacman_ = 4;}
   return;    
 }
 
@@ -601,9 +597,11 @@ int main( int argc, char* args[] )
 	
 	//Ghost finds out where pacman is
 	myGhost.seek(mySquare);
-
+	
 	//Move the ghost
 	myGhost.move();
+
+	
 
         //Fill the screen white
         SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0xFF, 0xFF, 0xFF ) );
@@ -635,5 +633,4 @@ int main( int argc, char* args[] )
 
     return 0;
 }
-
 
