@@ -381,7 +381,6 @@ void Ghost::move()
     case 4: yVel = 10; xVel = 0; break; //down
     }
   
-  std::cout << direction_to_pacman_ << std::endl;
 
   //Move the ghost left or right 
   box.x += xVel;
