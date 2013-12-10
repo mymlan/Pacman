@@ -237,7 +237,7 @@ bool init()
     }
 
     //Set the window caption
-    SDL_WM_SetCaption( "Move the Square", NULL );
+    SDL_WM_SetCaption( "Pacman", NULL );
 
     //If everything initialized fine
     return true;
