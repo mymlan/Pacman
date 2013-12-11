@@ -82,6 +82,8 @@ public:
   //Shows the Pacman on the screen
   void show();
   
+  //Sets Pacmans position to startposition
+  void get_home();
 };
 
 //The ghost 
@@ -114,41 +116,53 @@ public:
 
   //Shows the ghost on the screen
   void show();
+
+  //Sets Ghost position to startposition
+  void get_home();
 };
 
 //The timer
 class Timer
 {
-    private:
-    //The clock time when the timer started
-    int startTicks;
-
-    //The ticks stored when the timer was paused
-    int pausedTicks;
-
-    //The timer status
-    bool paused;
-    bool started;
-
-    public:
-    //Initializes variables
-    Timer();
-
-    //The various clock actions
-    void start();
-    void stop();
-    void pause();
-    void unpause();
-
-    //Gets the timer's time
-    int get_ticks();
-
-    //Checks the status of the timer
-    bool is_started();
-    bool is_paused();
+private:
+  //The clock time when the timer started
+  int startTicks;
+  
+  //The ticks stored when the timer was paused
+  int pausedTicks;
+  
+  //The timer status
+  bool paused;
+  bool started;
+  
+public:
+  //Initializes variables
+  Timer();
+  
+  //The various clock actions
+  void start();
+  void stop();
+  void pause();
+  void unpause();
+  
+  //Gets the timer's time
+  int get_ticks();
+  
+  //Checks the status of the timer
+  bool is_started();
+  bool is_paused();
 };
 
-
+//Score
+/*class Score
+{
+private:
+  int points;
+public:
+  void reset_score();
+  void add_points(int);
+};
+*/
 
 //============================================================================
 // Images 
@@ -432,23 +446,38 @@ void Pacman::show()
     apply_surface( box.x, box.y, pacman, screen );
 }
 
+//Check if Pacman has no more lives
 bool Pacman::game_over()
 {
   return (life()==-1);
 }
 
+//Collision between
 bool Pacman::eat_eaten(Ghost& ghost_object)
 {
   if (check_collision(box, ghost_object.get_box()))
       {
-	lives=lives-1;
-	box.x = 360;
-	box.y = 280;
+	if (ghost_object.scared_)
+	  {
+	    //Pacman gets points
+	  }
+	else
+	  {
+	    lives=lives-1;
+	  }
+	get_home();
+	ghost_object.get_home();
 	return true;
       }
   return false;
 }
 
+//Returns Pacman to startposition
+void Pacman::get_home()
+{
+  box.x = 360;
+  box.y = 280;
+}
 //============================================================================
 //  Class: Ghost
 //============================================================================
@@ -541,13 +570,21 @@ void Ghost::seek(Pacman paccy)
 
 void Ghost::show()
 {
-      //Show the ghost
-    apply_surface( box.x, box.y, ghost, screen );
+  //Show the ghost
+  apply_surface( box.x, box.y, ghost, screen );
 }
 
+//Returns SDL-object of ghost
 SDL_Rect Ghost::get_box()
 {
   return box;
+}
+
+//Returns ghost to start position
+void Ghost::get_home()
+{
+  box.x = 100;
+  box.y = 100;
 }
 
 //============================================================================
@@ -645,10 +682,27 @@ bool Timer::is_paused()
     return paused;
 }
 
-
-
 //============================================================================
-//  Class: Timer
+//  Class: Score
+//============================================================================
+/*
+Score::Score()
+{
+  points{0};
+}
+
+void Score::reset_score()
+{
+  points=0;
+}
+
+void Score::add_points(int new_points)
+{
+  points +=new_points;
+}
+*/
+//============================================================================
+//  MAIN
 //============================================================================
 
 
@@ -737,7 +791,7 @@ int main( int argc, char* args[] )
 	//Show the ghost on the screen
 	myGhost.show();
 
-  apply_surface( MAP_WIDTH, 0, menu, screen );
+	apply_surface( MAP_WIDTH, 0, menu, screen );
 
 
         //Update the screen
