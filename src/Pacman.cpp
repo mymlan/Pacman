@@ -394,13 +394,9 @@ void Pacman::move()
     //Move the pacman left or right
     box.x += xVel;
 
-<<<<<<< HEAD
-    //If the square went too far to the left or right or has collided with the wall
-    if( ( box.x < 0 ) || ( box.x + SQUARE_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall ) ))
-=======
     //If the pacman went too far to the left or right or has collided with the wall
-    if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall ) ))
->>>>>>> 54f750ed8d09e528d6544d843ef6e03e3f15a9d5
+    if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall ) ))
+
     {
         //Move back
         box.x -= xVel;
@@ -469,11 +465,9 @@ void Ghost::move()
   box.x += xVel;
 
   //If the ghost went too far to the left or right or has collided with the wall
-<<<<<<< HEAD
-  if( ( box.x < 0 ) || ( box.x + SQUARE_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall ) ))
-=======
-  if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall ) ))
->>>>>>> 54f750ed8d09e528d6544d843ef6e03e3f15a9d5
+
+  if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall ) ))
+
     {
       //Move back
       box.x -= xVel;
