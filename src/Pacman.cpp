@@ -39,8 +39,6 @@ SDL_Event event;
 //  Classes
 //============================================================================
 
-
-
 //The wall
 SDL_Rect wall;
 
@@ -55,6 +53,9 @@ private:
   //The velocity of the square
   int xVel, yVel;
 
+  //Pacmans lives
+  int lives;
+
 public:
   //Initializes the variables
   Square();
@@ -62,6 +63,11 @@ public:
   //Reveals pacmans position, ghosts will ask for this
   int reveal_position_x();
   int reveal_position_y();
+
+  //Keeps tracks of pacmans lives and when he dies
+  int life();
+  bool game_over();
+  bool eat_eaten(class Ghost&);
 
   //Takes key presses and adjusts the square's velocity
   void handle_input();
@@ -100,7 +106,7 @@ public:
   //Finds out how to move away from Pacman. Uses seek, but instead of going towards pacman by right, flee goes left.
   //std::string flee();
 
-  
+  SDL_Rect get_box();
 
   //Shows the ghost on the screen
   void show();
@@ -338,6 +344,9 @@ Square::Square()
     //Initialize the velocity
     xVel = 10;
     yVel = 0;
+
+    //Initialize lives of Pacman
+    lives = 2;
 }
 
 int Square::reveal_position_x()
@@ -352,7 +361,11 @@ int Square::reveal_position_y()
   return position_y;
 }
 
-
+int Square::life()
+{
+  int life{lives};
+  return life;
+}
 
 void Square::handle_input()
 {
@@ -368,8 +381,6 @@ void Square::handle_input()
 	case SDLK_RIGHT: xVel = 10 /*SQUARE_WIDTH / 2*/; yVel = 0;  break;
         }
     }
-
-    
 }
 
 void Square::move()
@@ -393,6 +404,7 @@ void Square::move()
         //Move back
         box.y -= yVel;
     }
+   
 }
 
 
@@ -402,7 +414,22 @@ void Square::show()
     apply_surface( box.x, box.y, square, screen );
 }
 
+bool Square::game_over()
+{
+  return (life()==-1);
+}
 
+bool Square::eat_eaten(Ghost& ghost_object)
+{
+  if (check_collision(box, ghost_object.get_box()))
+      {
+	lives=lives-1;
+	box.x = 360;
+	box.y = 280;
+	return true;
+      }
+  return false;
+}
 
 //============================================================================
 //  Class: Ghost
@@ -428,8 +455,6 @@ Ghost::Ghost()
   xVel = 0;
   yVel = 0;
 }
-
-
 
 void Ghost::move()
 {
@@ -498,6 +523,11 @@ void Ghost::show()
 {
       //Show the ghost
     apply_surface( box.x, box.y, ghost, screen );
+}
+
+SDL_Rect Ghost::get_box()
+{
+  return box;
 }
 
 //============================================================================
@@ -667,7 +697,13 @@ int main( int argc, char* args[] )
 	//Move the ghost
 	myGhost.move();
 
-	
+	//Is a ghost eating Pacman or are Pacman eating a ghost
+	if (mySquare.eat_eaten(myGhost)){
+	  if (mySquare.game_over()){
+	    quit=true;
+	  }
+	}
+
 
         //Fill the screen white
         SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0xFF, 0xFF, 0xFF ) );
