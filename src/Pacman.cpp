@@ -378,7 +378,7 @@ int Pacman::reveal_position_y()
   return position_y;
 }
 
-int Square::life()
+int Pacman::life()
 {
   int life{lives};
   return life;
@@ -432,12 +432,12 @@ void Pacman::show()
     apply_surface( box.x, box.y, pacman, screen );
 }
 
-bool Square::game_over()
+bool Pacman::game_over()
 {
   return (life()==-1);
 }
 
-bool Square::eat_eaten(Ghost& ghost_object)
+bool Pacman::eat_eaten(Ghost& ghost_object)
 {
   if (check_collision(box, ghost_object.get_box()))
       {
@@ -718,8 +718,8 @@ int main( int argc, char* args[] )
 	myGhost.move();
 
 	//Is a ghost eating Pacman or are Pacman eating a ghost
-	if (mySquare.eat_eaten(myGhost)){
-	  if (mySquare.game_over()){
+	if (myPacman.eat_eaten(myGhost)){
+	  if (myPacman.game_over()){
 	    quit=true;
 	  }
 	}
