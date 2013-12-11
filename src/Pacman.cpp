@@ -706,8 +706,8 @@ bool Pacman::eat_eaten(Ghost& ghost_object)
 Ghost::Ghost()
 {
   //Initialize the offsets
-  box.x = 100;
-  box.y = 100;
+  box.x = 0;
+  box.y = 0;
   
   //Initialize the seek and destroy direction, that is, where the ghost believe pacman is
   direction_to_pacman_ = 0;
