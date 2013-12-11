@@ -88,6 +88,9 @@ private:
   //The velocity of the ghost
   int xVel, yVel;
 
+  //Angry or scare ghost. 0 angry, 1 scared
+  bool scared_;
+
   //1 is left, 2 is right, 3 is up, and 4 is down. 0 is starting value, meaning the ghost hasn't found out where pacman is
   int direction_to_pacman_;
 
@@ -101,14 +104,12 @@ public:
   //Finds out how to move to Pacman. Seek sets the "direction_to_pacman datamedlem".
   void seek(Pacman);
 
-  //Finds out how to move away from Pacman. Uses seek, but instead of going towards pacman by right, flee goes left.
-  //std::string flee();
-
-  
 
   //Shows the ghost on the screen
   void show();
 };
+
+
 
 //The timer
 class Timer
@@ -437,6 +438,8 @@ Ghost::Ghost()
   //Initialize the seek and destroy direction, that is, where the ghost believe pacman is
   direction_to_pacman_ = 0;
 
+  //Initialize the angry or scared mode
+  scared_ = true;
 
   //Set the ghost's dimensions
   box.w = PACMAN_WIDTH;    //we should change the global constants names SQUARE_WIDTH to CHARACTER_WIDTH
@@ -451,6 +454,18 @@ Ghost::Ghost()
 
 void Ghost::move()
 {
+  
+  //If the ghost is scared, then go right instead of left and up instead of down etc...
+  if (scared_ == true)
+    {
+      if (direction_to_pacman_ == 1 || 3)
+	{direction_to_pacman_ +=1;}
+      else
+	{direction_to_pacman_ -= 1;}
+    }  
+ 
+
+
   //Set velocity and direction in order to move to where the ghost believe pacman is located
   switch(direction_to_pacman_)
     {
@@ -460,8 +475,10 @@ void Ghost::move()
     case 4: yVel = 10; xVel = 0; break; //down
     }
   
+  
 
-  //Move the ghost left or right 
+
+//Move the ghost left or right 
   box.x += xVel;
 
   //If the ghost went too far to the left or right or has collided with the wall
