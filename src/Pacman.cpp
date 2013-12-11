@@ -751,14 +751,14 @@ bool Pacman::eat_eaten(Ghost& ghost_object)
 {
   if (check_collision(box, ghost_object.get_box()))
       {
-	if (ghost_object.scared_)
+	/*	if (ghost_object.scared_)
 	  {
 	    //Pacman gets points
 	  }
 	else
-	  {
+	{*/
 	    lives=lives-1;
-	  }
+	    // }
 	get_home();
 	ghost_object.get_home();
 	return true;
@@ -769,8 +769,8 @@ bool Pacman::eat_eaten(Ghost& ghost_object)
 //Returns Pacman to startposition
 void Pacman::get_home()
 {
-  box.x = 360;
-  box.y = 280;
+  box.x = 320;
+  box.y = 440;
 }
 //============================================================================
 //  Class: Ghost
