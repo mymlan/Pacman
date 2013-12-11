@@ -439,7 +439,7 @@ Ghost::Ghost()
   direction_to_pacman_ = 0;
 
   //Initialize the angry or scared mode
-  scared_ = true;
+  scared_ = false;
 
   //Set the ghost's dimensions
   box.w = PACMAN_WIDTH;    //we should change the global constants names SQUARE_WIDTH to CHARACTER_WIDTH
