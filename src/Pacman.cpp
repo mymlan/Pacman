@@ -773,6 +773,19 @@ Ghost::Ghost()
 void Ghost::move()
 {
   
+  //If pacman recently crashed against a wall, try moving another way, but not opposite.
+  if (crashed_ == true)
+    {
+      if (direction_to_pacman_ == 1 || 2)
+	{
+	  direction_to_pacman_ = rand() % 4 + 3; //if this fails, try 3 + 4 instead
+	}
+      if(direction_to_pacman_ == 3 || 4)
+	{
+	  direction_to_pacman_ == rand() % 2 + 1;
+	}
+    }
+
   //If the ghost is scared, then go right instead of left and up instead of down etc...
   if (scared_ == true)
     {
