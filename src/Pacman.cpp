@@ -107,7 +107,7 @@ public:
 };
 
 //The ghost 
-class Ghost
+class Ghost //need a way to set crashed_ to false. Do this by checking if there was no crash
 {
 private:
   //The collission box of the ghost
