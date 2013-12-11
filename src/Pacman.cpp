@@ -787,7 +787,7 @@ void Ghost::move()
 
 
 //Move the ghost left or right 
-  box.x += xel;
+  box.x += xVel;
 
   //If the ghost went too far to the left or right or has collided with the walls
 
