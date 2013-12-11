@@ -102,6 +102,8 @@ public:
   //Shows the Pacman on the screen
   void show();
   
+  //Sets Pacmans position to startposition
+  void get_home();
 };
 
 //The ghost 
@@ -113,6 +115,9 @@ private:
 
   //The velocity of the ghost
   int xVel, yVel;
+
+  //Angry or scare ghost. 0 angry, 1 scared
+  bool scared_;
 
   //1 is left, 2 is right, 3 is up, and 4 is down. 0 is starting value, meaning the ghost hasn't found out where pacman is
   int direction_to_pacman_;
@@ -134,41 +139,55 @@ public:
 
   //Shows the ghost on the screen
   void show();
+
+  //Sets Ghost position to startposition
+  void get_home();
 };
+
+
 
 //The timer
 class Timer
 {
-    private:
-    //The clock time when the timer started
-    int startTicks;
-
-    //The ticks stored when the timer was paused
-    int pausedTicks;
-
-    //The timer status
-    bool paused;
-    bool started;
-
-    public:
-    //Initializes variables
-    Timer();
-
-    //The various clock actions
-    void start();
-    void stop();
-    void pause();
-    void unpause();
-
-    //Gets the timer's time
-    int get_ticks();
-
-    //Checks the status of the timer
-    bool is_started();
-    bool is_paused();
+private:
+  //The clock time when the timer started
+  int startTicks;
+  
+  //The ticks stored when the timer was paused
+  int pausedTicks;
+  
+  //The timer status
+  bool paused;
+  bool started;
+  
+public:
+  //Initializes variables
+  Timer();
+  
+  //The various clock actions
+  void start();
+  void stop();
+  void pause();
+  void unpause();
+  
+  //Gets the timer's time
+  int get_ticks();
+  
+  //Checks the status of the timer
+  bool is_started();
+  bool is_paused();
 };
 
-
+//Score
+/*class Score
+{
+private:
+  int points;
+public:
+  void reset_score();
+  void add_points(int);
+};
+*/
 
 //============================================================================
 // Images 
@@ -680,23 +699,38 @@ void Pacman::show()
     apply_surface( box.x, box.y, pacman, screen );
 }
 
+//Check if Pacman has no more lives
 bool Pacman::game_over()
 {
   return (life()==-1);
 }
 
+//Collision between
 bool Pacman::eat_eaten(Ghost& ghost_object)
 {
   if (check_collision(box, ghost_object.get_box()))
       {
-	lives=lives-1;
-	box.x = 360;
-	box.y = 280;
+	/*	if (ghost_object.scared_)
+	  {
+	    //Pacman gets points
+	  }
+	else
+	{*/
+	    lives=lives-1;
+	    // }
+	get_home();
+	ghost_object.get_home();
 	return true;
       }
   return false;
 }
 
+//Returns Pacman to startposition
+void Pacman::get_home()
+{
+  box.x = 320;
+  box.y = 440;
+}
 //============================================================================
 //  Class: Ghost
 //============================================================================
@@ -712,6 +746,8 @@ Ghost::Ghost()
   //Initialize the seek and destroy direction, that is, where the ghost believe pacman is
   direction_to_pacman_ = 0;
 
+  //Initialize the angry or scared mode
+  scared_ = false;
 
   //Set the ghost's dimensions
   box.w = PACMAN_WIDTH;    //we should change the global constants names PACMAN_WIDTH to CHARACTER_WIDTH
@@ -722,8 +758,22 @@ Ghost::Ghost()
   yVel = 0;
 }
 
+
+
 void Ghost::move()
 {
+  
+  //If the ghost is scared, then go right instead of left and up instead of down etc...
+  if (scared_ == true)
+    {
+      if (direction_to_pacman_ == 1 || 3)
+	{direction_to_pacman_ +=1;}
+      else
+	{direction_to_pacman_ -= 1;}
+    }  
+ 
+
+
   //Set velocity and direction in order to move to where the ghost believe pacman is located
   switch(direction_to_pacman_)
     {
@@ -733,8 +783,10 @@ void Ghost::move()
     case 4: yVel = 10; xVel = 0; break; //down
     }
   
+  
 
-  //Move the ghost left or right 
+
+//Move the ghost left or right 
   box.x += xVel;
 
   //If the ghost went too far to the left or right or has collided with the walls
@@ -1017,13 +1069,21 @@ void Ghost::seek(Pacman paccy)
 
 void Ghost::show()
 {
-      //Show the ghost
-    apply_surface( box.x, box.y, ghost, screen );
+  //Show the ghost
+  apply_surface( box.x, box.y, ghost, screen );
 }
 
+//Returns SDL-object of ghost
 SDL_Rect Ghost::get_box()
 {
   return box;
+}
+
+//Returns ghost to start position
+void Ghost::get_home()
+{
+  box.x = 100;
+  box.y = 100;
 }
 
 //============================================================================
@@ -1121,10 +1181,27 @@ bool Timer::is_paused()
     return paused;
 }
 
-
-
 //============================================================================
-//  Class: Timer
+//  Class: Score
+//============================================================================
+/*
+Score::Score()
+{
+  points{0};
+}
+
+void Score::reset_score()
+{
+  points=0;
+}
+
+void Score::add_points(int new_points)
+{
+  points +=new_points;
+}
+*/
+//============================================================================
+//  MAIN
 //============================================================================
 
 
@@ -1259,7 +1336,7 @@ int main( int argc, char* args[] )
 	//Show ghost on the screen
 	myGhost.show();
 
-  apply_surface( MAP_WIDTH, 0, menu, screen );
+	apply_surface( MAP_WIDTH, 0, menu, screen );
 
 
         //Update the screen
