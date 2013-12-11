@@ -23,12 +23,12 @@ const int MAP_WIDTH = 640;
 //The frame rate
 const int FRAMES_PER_SECOND = 20;
 
-//The attributes of the square
-const int SQUARE_WIDTH = 20;
-const int SQUARE_HEIGHT = 20;
+//The attributes of the Pacman
+const int PACMAN_WIDTH = 20;
+const int PACMAN_HEIGHT = 20;
 
 //The surfaces
-SDL_Surface *square = NULL;
+SDL_Surface *pacman = NULL;
 SDL_Surface *screen = NULL;
 SDL_Surface *ghost = NULL;
 SDL_Surface *menu = NULL;
@@ -49,8 +49,8 @@ SDL_Event event;
 SDL_Rect wall;
 
 
-//The square
-class Square
+//The Pacman
+class Pacman
 {
 private:
   //The collision box of the square
@@ -61,7 +61,7 @@ private:
 
 public:
   //Initializes the variables
-  Square();
+  Pacman();
 
   //Reveals pacmans position, ghosts will ask for this
   int reveal_position_x();
@@ -70,10 +70,10 @@ public:
   //Takes key presses and adjusts the square's velocity
   void handle_input();
 
-  //Moves the square
+  //Moves the Pacman
   void move();
 
-  //Shows the square on the screen
+  //Shows the Pacman on the screen
   void show();
   
 };
@@ -99,7 +99,7 @@ public:
   void move();
 
   //Finds out how to move to Pacman. Seek sets the "direction_to_pacman datamedlem".
-  void seek(Square);
+  void seek(Pacman);
 
   //Finds out how to move away from Pacman. Uses seek, but instead of going towards pacman by right, flee goes left.
   //std::string flee();
@@ -281,11 +281,11 @@ bool init()
 
 bool load_files()
 {
-    //Load the square image
-  square = load_image( "img/square.bmp" ); //pacman-test bilden har fel dimensioner
+    //Load the Pacman image
+  pacman = load_image( "img/square.bmp" ); //pacman-test bilden har fel dimensioner
 
-    //If there was a problem in loading the square
-    if( square == NULL )
+    //If there was a problem in loading the Pacman
+    if( pacman == NULL )
     {
    
         return false;
@@ -328,7 +328,7 @@ bool load_files()
 void clean_up()
 {
     //Free the surface
-    SDL_FreeSurface( square );
+    SDL_FreeSurface( pacman );
     SDL_FreeSurface( ghost );                  //prova ta bort vid problem med ghost
     //Quit SDL
     SDL_Quit();
@@ -337,33 +337,33 @@ void clean_up()
 
 
 //============================================================================
-//  Class: Square
+//  Class: Pacman
 //============================================================================
 
 
 
-Square::Square()
+Pacman::Pacman()
 {
     //Initialize the offsets
     box.x = 360;
     box.y = 280;
 
-    //Set the square's dimensions
-    box.w = SQUARE_WIDTH;
-    box.h = SQUARE_HEIGHT;
+    //Set the Pacman's dimensions
+    box.w = PACMAN_WIDTH;
+    box.h = PACMAN_HEIGHT;
 
     //Initialize the velocity
     xVel = 10;
     yVel = 0;
 }
 
-int Square::reveal_position_x()
+int Pacman::reveal_position_x()
 {
   int position_x{box.x};
   return position_x;
 }
 
-int Square::reveal_position_y()
+int Pacman::reveal_position_y()
 {
   int position_y{box.y};
   return position_y;
@@ -371,7 +371,7 @@ int Square::reveal_position_y()
 
 
 
-void Square::handle_input()
+void Pacman::handle_input()
 {
     //If a key was pressed
     if( event.type == SDL_KEYDOWN )
@@ -379,33 +379,38 @@ void Square::handle_input()
         //Adjust the velocity
         switch( event.key.keysym.sym )
         {
-	case SDLK_UP: yVel = -10 /*-SQUARE_HEIGHT/2*/; xVel = 0; break;
-	case SDLK_DOWN: yVel = 10 /* SQUARE_HEIGHT / 2*/; xVel = 0; break;
-	case SDLK_LEFT: xVel = -10/*-SQUARE_WIDTH / 2 */; yVel = 0; break;
-	case SDLK_RIGHT: xVel = 10 /*SQUARE_WIDTH / 2*/; yVel = 0;  break;
+	case SDLK_UP: yVel = -10 /*-PACMAN_HEIGHT/2*/; xVel = 0; break;
+	case SDLK_DOWN: yVel = 10 /* PACMAN_HEIGHT / 2*/; xVel = 0; break;
+	case SDLK_LEFT: xVel = -10/*-PACMAN_WIDTH / 2 */; yVel = 0; break;
+	case SDLK_RIGHT: xVel = 10 /*PACMAN_WIDTH / 2*/; yVel = 0;  break;
         }
     }
 
     
 }
 
-void Square::move()
+void Pacman::move()
 {
-    //Move the square left or right
+    //Move the pacman left or right
     box.x += xVel;
 
+<<<<<<< HEAD
     //If the square went too far to the left or right or has collided with the wall
     if( ( box.x < 0 ) || ( box.x + SQUARE_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall ) ))
+=======
+    //If the pacman went too far to the left or right or has collided with the wall
+    if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall ) ))
+>>>>>>> 54f750ed8d09e528d6544d843ef6e03e3f15a9d5
     {
         //Move back
         box.x -= xVel;
     }
 
-    //Move the square up or down
+    //Move the pacman up or down
     box.y += yVel;
 
-    //If the square went too far up or down or has collided with the wall
-    if( ( box.y < 0 ) || ( box.y + SQUARE_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall ) ) )
+    //If the pacman went too far up or down or has collided with the wall
+    if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall ) ) )
     {
         //Move back
         box.y -= yVel;
@@ -413,10 +418,10 @@ void Square::move()
 }
 
 
-void Square::show()
+void Pacman::show()
 {
-    //Show the square
-    apply_surface( box.x, box.y, square, screen );
+    //Show the Pacman
+    apply_surface( box.x, box.y, pacman, screen );
 }
 
 
@@ -438,8 +443,8 @@ Ghost::Ghost()
 
 
   //Set the ghost's dimensions
-  box.w = SQUARE_WIDTH;    //we should change the global constants names SQUARE_WIDTH to CHARACTER_WIDTH
-  box.h = SQUARE_HEIGHT;
+  box.w = PACMAN_WIDTH;    //we should change the global constants names SQUARE_WIDTH to CHARACTER_WIDTH
+  box.h = PACMAN_HEIGHT;
 
   //Initialize the velocity
   xVel = 0;
@@ -464,7 +469,11 @@ void Ghost::move()
   box.x += xVel;
 
   //If the ghost went too far to the left or right or has collided with the wall
+<<<<<<< HEAD
   if( ( box.x < 0 ) || ( box.x + SQUARE_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall ) ))
+=======
+  if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall ) ))
+>>>>>>> 54f750ed8d09e528d6544d843ef6e03e3f15a9d5
     {
       //Move back
       box.x -= xVel;
@@ -474,7 +483,7 @@ void Ghost::move()
   box.y += yVel;
 
   //If the ghost went too far up or down or has collided with the wall
-  if( ( box.y < 0 ) || ( box.y + SQUARE_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall ) ) )
+  if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall ) ) )
     {
       //Move back
       box.y -= yVel;
@@ -483,7 +492,7 @@ void Ghost::move()
 
 
 //Sets the moving direction towards pacman
-void Ghost::seek(Square paccy)
+void Ghost::seek(Pacman paccy)
 {
 
   //pacman_x and pacman_y are the coordinates of pacman
@@ -625,8 +634,8 @@ int main( int argc, char* args[] )
     //Quit flag
     bool quit = false;
 
-    //The square
-    Square mySquare;
+    //The pacman
+    Pacman myPacman;
 
     //The ghost
     Ghost myGhost;
@@ -664,8 +673,8 @@ int main( int argc, char* args[] )
         //While there's events to handle
         while( SDL_PollEvent( &event ) )
         {
-            //Handle events for the square
-            mySquare.handle_input();
+            //Handle events for the pacman
+            myPacman.handle_input();
 
             //If the user has Xed out the window
             if( event.type == SDL_QUIT )
@@ -675,11 +684,11 @@ int main( int argc, char* args[] )
             }
         }
 
-        //Move the square
-        mySquare.move();
+        //Move the pacman
+        myPacman.move();
 	
 	//Ghost finds out where pacman is
-	myGhost.seek(mySquare);
+	myGhost.seek(myPacman);
 	
 	//Move the ghost
 	myGhost.move();
@@ -692,8 +701,8 @@ int main( int argc, char* args[] )
         //Show the wall
         SDL_FillRect( screen, &wall, SDL_MapRGB( screen->format, 0x77, 0x77, 0x77 ) );
 	
-        //Show the square on the screen
-        mySquare.show();
+        //Show the pacman on the screen
+        myPacman.show();
 
 	//Show the ghost on the screen
 	myGhost.show();
