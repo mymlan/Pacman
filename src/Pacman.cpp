@@ -91,7 +91,7 @@ public:
   //Keeps tracks of pacmans lives and when he dies
   int life();
   bool game_over();
-  bool eat_eaten(class Ghost&);
+  bool eat_eaten(class Ghost&, class Score);
 
   //Takes key presses and adjusts the square's velocity
   void handle_input();
@@ -142,6 +142,9 @@ public:
 
   //Sets Ghost position to startposition
   void get_home();
+
+  //Returns if ghost is scared/angry
+  bool is_scared();
 };
 
 
@@ -179,15 +182,16 @@ public:
 };
 
 //Score
-/*class Score
+class Score
 {
 private:
   int points;
 public:
+  Score();
   void reset_score();
   void add_points(int);
 };
-*/
+
 
 //============================================================================
 // Images 
@@ -706,18 +710,18 @@ bool Pacman::game_over()
 }
 
 //Collision between
-bool Pacman::eat_eaten(Ghost& ghost_object)
+bool Pacman::eat_eaten(Ghost& ghost_object,Score myScore)
 {
   if (check_collision(box, ghost_object.get_box()))
       {
-	/*	if (ghost_object.scared_)
+	if (ghost_object.is_scared())
 	  {
-	    //Pacman gets points
+	    myScore.add_points(10);
 	  }
 	else
-	{*/
+	  {
 	    lives=lives-1;
-	    // }
+	  }
 	get_home();
 	ghost_object.get_home();
 	return true;
@@ -1086,6 +1090,11 @@ void Ghost::get_home()
   box.y = 100;
 }
 
+bool Ghost::is_scared()
+{
+  return (scared_);
+}
+
 //============================================================================
 //  Class: Timer
 //============================================================================
@@ -1184,10 +1193,9 @@ bool Timer::is_paused()
 //============================================================================
 //  Class: Score
 //============================================================================
-/*
 Score::Score()
 {
-  points{0};
+  points=0;
 }
 
 void Score::reset_score()
@@ -1199,7 +1207,7 @@ void Score::add_points(int new_points)
 {
   points +=new_points;
 }
-*/
+
 //============================================================================
 //  MAIN
 //============================================================================
@@ -1216,6 +1224,9 @@ int main( int argc, char* args[] )
 
     //The ghost
     Ghost myGhost;
+
+    //Player score
+    Score myScore;
 
     //The frame rate regulator
     Timer fps;
@@ -1270,7 +1281,7 @@ int main( int argc, char* args[] )
 	myGhost.move();
 
 	//Is a ghost eating Pacman or are Pacman eating a ghost
-	if (myPacman.eat_eaten(myGhost)){
+	if (myPacman.eat_eaten(myGhost, myScore)){
 	  if (myPacman.game_over()){
 	    quit=true;
 	  }
