@@ -13,9 +13,12 @@
 #include <iostream>  //for felsokning med std::cout
 
 //Screen attributes
-const int SCREEN_WIDTH = 640;
+const int SCREEN_WIDTH = 1000; //640;
 const int SCREEN_HEIGHT = 480;
 const int SCREEN_BPP = 32;
+
+const int MAP_WIDTH = 640;
+
 
 //The frame rate
 const int FRAMES_PER_SECOND = 20;
@@ -28,6 +31,7 @@ const int SQUARE_HEIGHT = 20;
 SDL_Surface *square = NULL;
 SDL_Surface *screen = NULL;
 SDL_Surface *ghost = NULL;
+SDL_Surface *menu = NULL;
 
 //The event structure
 SDL_Event event;
@@ -297,6 +301,19 @@ bool load_files()
       }
 
 
+ //Load the menu image
+    menu = load_image( "img/pingvin.png" );
+
+    //If there was a problem in loading the ghost picture
+    if( ghost == NULL)
+      {
+	return false;
+      }
+
+
+
+
+
     //If everything loaded fine
     return true;
 }
@@ -378,7 +395,7 @@ void Square::move()
     box.x += xVel;
 
     //If the square went too far to the left or right or has collided with the wall
-    if( ( box.x < 0 ) || ( box.x + SQUARE_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall ) ))
+    if( ( box.x < 0 ) || ( box.x + SQUARE_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall ) ))
     {
         //Move back
         box.x -= xVel;
@@ -447,7 +464,7 @@ void Ghost::move()
   box.x += xVel;
 
   //If the ghost went too far to the left or right or has collided with the wall
-  if( ( box.x < 0 ) || ( box.x + SQUARE_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall ) ))
+  if( ( box.x < 0 ) || ( box.x + SQUARE_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall ) ))
     {
       //Move back
       box.x -= xVel;
@@ -680,6 +697,9 @@ int main( int argc, char* args[] )
 
 	//Show the ghost on the screen
 	myGhost.show();
+
+  apply_surface( MAP_WIDTH, 0, menu, screen );
+
 
         //Update the screen
         if( SDL_Flip( screen ) == -1 )
