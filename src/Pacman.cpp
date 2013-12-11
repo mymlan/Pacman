@@ -27,6 +27,11 @@ const int FRAMES_PER_SECOND = 20;
 const int PACMAN_WIDTH = 20;
 const int PACMAN_HEIGHT = 20;
 
+//The attributes of the Buttons
+const int BUTTON_WIDTH = 220;
+const int BUTTON_HEIGHT = 60;
+
+
 //The surfaces
 SDL_Surface *pacman = NULL;
 SDL_Surface *screen = NULL;
@@ -168,7 +173,39 @@ class Timer
     bool is_paused();
 };
 
+class Menu
+{
+private:
+  // The button
+  SDL_Rect button;
 
+public:
+  //Initialize variable
+  Menu(int x, int  y);
+
+  void show();
+
+};
+
+
+Menu::Menu(int x, int y)
+{
+  //Initialize offset
+  button.x = x;
+  button.y = y;
+
+  //Set dimension
+  button.w = BUTTON_WIDTH;
+  button.h = BUTTON_HEIGHT;
+
+}
+
+void Menu::show()
+{
+  //Show the ghost
+   SDL_FillRect( screen, &button, SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF) );
+
+}
 
 //============================================================================
 // Images 
@@ -961,6 +998,9 @@ int main( int argc, char* args[] )
     //The frame rate regulator
     Timer fps;
 
+    //The buttons
+    Menu theButton(750,240);
+
     //Initialize
     if( init() == false )
     {
@@ -1077,8 +1117,13 @@ int main( int argc, char* args[] )
 	//Show ghost on the screen
 	myGhost.show();
 
+	
+
+	//Show penguin
   apply_surface( MAP_WIDTH, 0, menu, screen );
 
+	//Show Button
+	theButton.show();
 
         //Update the screen
         if( SDL_Flip( screen ) == -1 )
