@@ -36,16 +36,36 @@ SDL_Surface *menu = NULL;
 //The event structure
 SDL_Event event;
 
-
+//The wall
+SDL_Rect wall1 = {40,40,40,200};
+SDL_Rect wall2 = {80,40,40,40};
+SDL_Rect wall3 = {80,120,40,40};
+SDL_Rect wall4 = {120,40,40,120};
+SDL_Rect wall5 = {200,40,160,40};
+SDL_Rect wall6 = {320,80,40,40};
+SDL_Rect wall7 = {200,120,160,40};
+SDL_Rect wall8 = {200,160,40,40};
+SDL_Rect wall9 = {200,200,160,40};
+SDL_Rect wall10 = {400,40,200,40};
+SDL_Rect wall11 = {400,120,200,40};
+SDL_Rect wall12 = {40,280,40,160};
+SDL_Rect wall13 = {120,200,40,240};
+SDL_Rect wall14 = {200,280,40,160};
+SDL_Rect wall15 = {280,280,120,40};
+SDL_Rect wall16 = {360,320,40,40};
+SDL_Rect wall17 = {280,360,120,80};
+SDL_Rect wall18 = {400,200,200,40};
+SDL_Rect wall19 = {440,240,40,200};
+SDL_Rect wall20 = {520,240,40,40};
+SDL_Rect wall21 = {600,280,40,40};
+SDL_Rect wall22 = {520,320,40,120};
+SDL_Rect wall23 = {560,360,40,40};
+SDL_Rect wall24 = {600,440,40,40};
 
 
 //============================================================================
 //  Classes
 //============================================================================
-
-//The wall
-SDL_Rect wall;
-
 
 //The Pacman
 class Pacman
@@ -351,8 +371,8 @@ void clean_up()
 Pacman::Pacman()
 {
     //Initialize the offsets
-    box.x = 360;
-    box.y = 280;
+    box.x = 320;
+    box.y = 440;
 
     //Set the Pacman's dimensions
     box.w = PACMAN_WIDTH;
@@ -402,27 +422,301 @@ void Pacman::handle_input()
 
 void Pacman::move()
 {
-    //Move the pacman left or right
+    //Move pacman left or right
     box.x += xVel;
 
-    //If the pacman went too far to the left or right or has collided with the wall
-    if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall ) ))
-
+  //If pacman went too far to the left or right or has collided with the wall= 1,2,3..
+    if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall1 ) ) )
     {
         //Move back
         box.x -= xVel;
     }
 
-    //Move the pacman up or down
+    if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall2 ) ) )
+    {
+        //Move back
+        box.x -= xVel;
+    }
+
+    if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall3 ) ) )
+    {
+        //Move back
+        box.x -= xVel;
+    }
+
+    if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall4 ) ) )
+    {
+        //Move back
+        box.x -= xVel;
+    }
+
+    if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall5 ) ) )
+    {
+        //Move back
+        box.x -= xVel;
+    }
+
+    if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall6) ) )
+    {
+        //Move back
+        box.x -= xVel;
+    }
+
+    if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall7 ) ) )
+    {
+        //Move back
+        box.x -= xVel;
+    }
+
+    if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall8 ) ) )
+    {
+        //Move back
+        box.x -= xVel;
+    }
+
+    if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall9 ) ) )
+    {
+        //Move back
+        box.x -= xVel;
+    }
+
+    if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall10 ) ) )
+    {
+        //Move back
+        box.x -= xVel;
+    }
+
+    if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall11) ) )
+    {
+        //Move back
+        box.x -= xVel;
+    }
+
+    if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall12 ) ) )
+    {
+        //Move back
+        box.x -= xVel;
+    }
+
+    if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall13 ) ) )
+    {
+        //Move back
+        box.x -= xVel;
+    }
+
+    if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall14 ) ) )
+    {
+        //Move back
+        box.x -= xVel;
+    }
+
+    if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall15 ) ) )
+    {
+        //Move back
+        box.x -= xVel;
+    }
+
+    if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall16) ) )
+    {
+        //Move back
+        box.x -= xVel;
+    }
+
+    if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall17 ) ) )
+    {
+        //Move back
+        box.x -= xVel;
+    }
+
+    if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall18 ) ) )
+    {
+        //Move back
+        box.x -= xVel;
+    }
+
+    if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall19 ) ) )
+    {
+        //Move back
+        box.x -= xVel;
+    }
+
+    if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall20 ) ) )
+    {
+        //Move back
+        box.x -= xVel;
+    }
+
+    if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall21) ) )
+    {
+        //Move back
+        box.x -= xVel;
+    }
+
+    if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall22 ) ) )
+    {
+        //Move back
+        box.x -= xVel;
+    }
+
+    if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall23 ) ) )
+    {
+        //Move back
+        box.x -= xVel;
+    }
+
+    if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > SCREEN_WIDTH ) || ( check_collision( box, wall24 ) ) )
+    {
+        //Move back
+        box.x -= xVel;
+    }
+    //****************************************************************************************************
+    //Move pacman up or down
     box.y += yVel;
 
-    //If the pacman went too far up or down or has collided with the wall
-    if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall ) ) )
+    //If pacman went too far up or down or has collided with the wall=1,2,3..
+    if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall1 ) ) )
     {
         //Move back
         box.y -= yVel;
     }
-   
+
+    if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall2 ) ) )
+    {
+        //Move back
+        box.y -= yVel;
+    }
+
+    if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall3) ) )
+    {
+        //Move back
+        box.y -= yVel;
+    }
+
+    if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall4) ) )
+    {
+        //Move back
+        box.y -= yVel;
+    }
+
+    if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall5) ) )
+    {
+        //Move back
+        box.y -= yVel;
+    }
+
+    if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall6) ) )
+    {
+        //Move back
+        box.y -= yVel;
+    }
+
+    if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall7 ) ) )
+    {
+        //Move back
+        box.y -= yVel;
+    }
+
+    if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall8) ) )
+    {
+        //Move back
+        box.y -= yVel;
+    }
+
+    if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall9) ) )
+    {
+        //Move back
+        box.y -= yVel;
+    }
+
+    if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall10) ) )
+    {
+        //Move back
+        box.y -= yVel;
+    }
+
+    if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall11) ) )
+    {
+        //Move back
+        box.y -= yVel;
+    }
+
+    if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall12 ) ) )
+    {
+        //Move back
+        box.y -= yVel;
+    }
+
+    if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall13) ) )
+    {
+        //Move back
+        box.y -= yVel;
+    }
+
+    if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall14) ) )
+    {
+        //Move back
+        box.y -= yVel;
+    }
+
+    if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall15) ) )
+    {
+        //Move back
+        box.y -= yVel;
+    }
+
+    if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall16) ) )
+    {
+        //Move back
+        box.y -= yVel;
+    }
+
+    if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall17 ) ) )
+    {
+        //Move back
+        box.y -= yVel;
+    }
+
+    if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall18) ) )
+    {
+        //Move back
+        box.y -= yVel;
+    }
+
+    if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall19) ) )
+    {
+        //Move back
+        box.y -= yVel;
+    }
+
+    if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall20) ) )
+    {
+        //Move back
+        box.y -= yVel;
+    }
+
+    if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall21) ) )
+    {
+        //Move back
+        box.y -= yVel;
+    }
+
+    if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall22 ) ) )
+    {
+        //Move back
+        box.y -= yVel;
+    }
+
+    if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall23) ) )
+    {
+        //Move back
+        box.y -= yVel;
+    }
+
+    if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall24) ) )
+    {
+        //Move back
+        box.y -= yVel;
+    }
 }
 
 
@@ -466,7 +760,7 @@ Ghost::Ghost()
 
 
   //Set the ghost's dimensions
-  box.w = PACMAN_WIDTH;    //we should change the global constants names SQUARE_WIDTH to CHARACTER_WIDTH
+  box.w = PACMAN_WIDTH;    //we should change the global constants names PACMAN_WIDTH to CHARACTER_WIDTH
   box.h = PACMAN_HEIGHT;
 
   //Initialize the velocity
@@ -491,7 +785,7 @@ void Ghost::move()
 
   //If the ghost went too far to the left or right or has collided with the wall
 
-  if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall ) ))
+  if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall1 ) ))
 
     {
       //Move back
@@ -502,7 +796,7 @@ void Ghost::move()
   box.y += yVel;
 
   //If the ghost went too far up or down or has collided with the wall
-  if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall ) ) )
+  if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall1 ) ) )
     {
       //Move back
       box.y -= yVel;
@@ -679,14 +973,13 @@ int main( int argc, char* args[] )
       std::cout << "trubbel att ladda filerna" << std::endl;
       return 1;
     }
-
+    /* Detta hanteras numera globalt
     //Set the wall
     wall.x = 300;
     wall.y = 40;
     wall.w = 40;
     wall.h = 400;
-
-  
+    */
 
     //While the user hasn't quit
     while( quit == false )
@@ -728,13 +1021,60 @@ int main( int argc, char* args[] )
         //Fill the screen white
         SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0xFF, 0xFF, 0xFF ) );
 
-        //Show the wall
-        SDL_FillRect( screen, &wall, SDL_MapRGB( screen->format, 0x77, 0x77, 0x77 ) );
-	
-        //Show the pacman on the screen
+        //Show the walls
+ 
+        SDL_FillRect( screen, &wall1, SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF) );
+
+       	SDL_FillRect( screen, &wall2, SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF ) );
+
+       	SDL_FillRect( screen, &wall3, SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF ) );
+
+       	SDL_FillRect( screen, &wall4, SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF ) );
+
+        SDL_FillRect( screen, &wall5, SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF) );
+
+       	SDL_FillRect( screen, &wall6, SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF ) );
+
+       	SDL_FillRect( screen, &wall7, SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF ) );
+
+       	SDL_FillRect( screen, &wall8, SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF ) );	
+
+       	SDL_FillRect( screen, &wall9, SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF ) );	
+
+        SDL_FillRect( screen, &wall10, SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF) );
+
+       	SDL_FillRect( screen, &wall11, SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF ) );
+
+       	SDL_FillRect( screen, &wall12, SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF ) );
+
+       	SDL_FillRect( screen, &wall13, SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF ) );	
+
+       	SDL_FillRect( screen, &wall14, SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF ) );	
+
+        SDL_FillRect( screen, &wall15, SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF) );
+
+       	SDL_FillRect( screen, &wall16, SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF ) );
+
+       	SDL_FillRect( screen, &wall17, SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF ) );
+
+       	SDL_FillRect( screen, &wall18, SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF ) );	
+
+       	SDL_FillRect( screen, &wall19, SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF ) );	
+
+        SDL_FillRect( screen, &wall20, SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF) );
+
+       	SDL_FillRect( screen, &wall21, SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF ) );
+
+       	SDL_FillRect( screen, &wall22, SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF ) );
+
+       	SDL_FillRect( screen, &wall23, SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF ) );	
+
+       	SDL_FillRect( screen, &wall24, SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF ) );
+
+        //Show pacman on the screen
         myPacman.show();
 
-	//Show the ghost on the screen
+	//Show ghost on the screen
 	myGhost.show();
 
   apply_surface( MAP_WIDTH, 0, menu, screen );
