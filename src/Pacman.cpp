@@ -32,6 +32,15 @@ SDL_Surface *ghost = NULL;
 //The event structure
 SDL_Event event;
 
+
+
+
+//============================================================================
+//  Classes
+//============================================================================
+
+
+
 //The wall
 SDL_Rect wall;
 
@@ -129,6 +138,15 @@ class Timer
     bool is_paused();
 };
 
+
+
+//============================================================================
+// Images 
+//============================================================================
+
+
+
+
 SDL_Surface *load_image( std::string filename )
 {
     //The image that's loaded
@@ -174,6 +192,13 @@ void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination,
     SDL_BlitSurface( source, clip, destination, &offset );
 }
 
+
+//============================================================================
+//  Collision
+//============================================================================
+
+
+
 bool check_collision( SDL_Rect A, SDL_Rect B )
 {
     //The sides of the rectangles
@@ -218,6 +243,13 @@ bool check_collision( SDL_Rect A, SDL_Rect B )
     //If none of the sides from A are outside B
     return true;
 }
+
+
+
+//============================================================================
+//  Initilizing  SDL and files
+//============================================================================
+
 
 bool init()
 {
@@ -269,6 +301,13 @@ bool load_files()
     return true;
 }
 
+
+
+//============================================================================
+//  Memory release
+//============================================================================
+
+
 void clean_up()
 {
     //Free the surface
@@ -277,6 +316,14 @@ void clean_up()
     //Quit SDL
     SDL_Quit();
 }
+
+
+
+//============================================================================
+//  Class: Square
+//============================================================================
+
+
 
 Square::Square()
 {
@@ -304,27 +351,6 @@ int Square::reveal_position_y()
   int position_y{box.y};
   return position_y;
 }
-
-Ghost::Ghost()
-{
-  //Initialize the offsets
-  box.x = 100;
-  box.y = 100;
-  
-  //Initialize the seek and destroy direction, that is, where the ghost believe pacman is
-  direction_to_pacman_ = 0;
-
-
-  //Set the ghost's dimensions
-  box.w = SQUARE_WIDTH;    //we should change the global constants names SQUARE_WIDTH to CHARACTER_WIDTH
-  box.h = SQUARE_HEIGHT;
-
-  //Initialize the velocity
-  xVel = 0;
-  yVel = 0;
-}
-
-
 
 
 
@@ -368,6 +394,41 @@ void Square::move()
         box.y -= yVel;
     }
 }
+
+
+void Square::show()
+{
+    //Show the square
+    apply_surface( box.x, box.y, square, screen );
+}
+
+
+
+//============================================================================
+//  Class: Ghost
+//============================================================================
+
+
+
+Ghost::Ghost()
+{
+  //Initialize the offsets
+  box.x = 100;
+  box.y = 100;
+  
+  //Initialize the seek and destroy direction, that is, where the ghost believe pacman is
+  direction_to_pacman_ = 0;
+
+
+  //Set the ghost's dimensions
+  box.w = SQUARE_WIDTH;    //we should change the global constants names SQUARE_WIDTH to CHARACTER_WIDTH
+  box.h = SQUARE_HEIGHT;
+
+  //Initialize the velocity
+  xVel = 0;
+  yVel = 0;
+}
+
 
 
 void Ghost::move()
@@ -431,11 +492,6 @@ void Ghost::seek(Square paccy)
   return;    
 }
 
-void Square::show()
-{
-    //Show the square
-    apply_surface( box.x, box.y, square, screen );
-}
 
 
 void Ghost::show()
@@ -444,6 +500,9 @@ void Ghost::show()
     apply_surface( box.x, box.y, ghost, screen );
 }
 
+//============================================================================
+//  Class: Timer
+//============================================================================
 
 Timer::Timer()
 {
@@ -535,6 +594,14 @@ bool Timer::is_paused()
 {
     return paused;
 }
+
+
+
+//============================================================================
+//  Class: Timer
+//============================================================================
+
+
 
 int main( int argc, char* args[] )
 {
