@@ -43,8 +43,6 @@ SDL_Event event;
 //  Classes
 //============================================================================
 
-
-
 //The wall
 SDL_Rect wall;
 
@@ -59,6 +57,9 @@ private:
   //The velocity of the square
   int xVel, yVel;
 
+  //Pacmans lives
+  int lives;
+
 public:
   //Initializes the variables
   Pacman();
@@ -66,6 +67,11 @@ public:
   //Reveals pacmans position, ghosts will ask for this
   int reveal_position_x();
   int reveal_position_y();
+
+  //Keeps tracks of pacmans lives and when he dies
+  int life();
+  bool game_over();
+  bool eat_eaten(class Ghost&);
 
   //Takes key presses and adjusts the square's velocity
   void handle_input();
@@ -104,6 +110,10 @@ public:
   //Finds out how to move to Pacman. Seek sets the "direction_to_pacman datamedlem".
   void seek(Pacman);
 
+  //Finds out how to move away from Pacman. Uses seek, but instead of going towards pacman by right, flee goes left.
+  //std::string flee();
+
+  SDL_Rect get_box();
 
   //Shows the ghost on the screen
   void show();
@@ -356,6 +366,9 @@ Pacman::Pacman()
     //Initialize the velocity
     xVel = 10;
     yVel = 0;
+
+    //Initialize lives of Pacman
+    lives = 2;
 }
 
 int Pacman::reveal_position_x()
@@ -370,7 +383,11 @@ int Pacman::reveal_position_y()
   return position_y;
 }
 
-
+int Pacman::life()
+{
+  int life{lives};
+  return life;
+}
 
 void Pacman::handle_input()
 {
@@ -386,8 +403,6 @@ void Pacman::handle_input()
 	case SDLK_RIGHT: xVel = 10 /*PACMAN_WIDTH / 2*/; yVel = 0;  break;
         }
     }
-
-    
 }
 
 void Pacman::move()
@@ -412,6 +427,7 @@ void Pacman::move()
         //Move back
         box.y -= yVel;
     }
+   
 }
 
 
@@ -421,7 +437,22 @@ void Pacman::show()
     apply_surface( box.x, box.y, pacman, screen );
 }
 
+bool Pacman::game_over()
+{
+  return (life()==-1);
+}
 
+bool Pacman::eat_eaten(Ghost& ghost_object)
+{
+  if (check_collision(box, ghost_object.get_box()))
+      {
+	lives=lives-1;
+	box.x = 360;
+	box.y = 280;
+	return true;
+      }
+  return false;
+}
 
 //============================================================================
 //  Class: Ghost
@@ -479,7 +510,7 @@ void Ghost::move()
 
 
 //Move the ghost left or right 
-  box.x += xVel;
+  box.x += xel;
 
   //If the ghost went too far to the left or right or has collided with the wall
 
@@ -535,6 +566,11 @@ void Ghost::show()
 {
       //Show the ghost
     apply_surface( box.x, box.y, ghost, screen );
+}
+
+SDL_Rect Ghost::get_box()
+{
+  return box;
 }
 
 //============================================================================
@@ -704,7 +740,13 @@ int main( int argc, char* args[] )
 	//Move the ghost
 	myGhost.move();
 
-	
+	//Is a ghost eating Pacman or are Pacman eating a ghost
+	if (myPacman.eat_eaten(myGhost)){
+	  if (myPacman.game_over()){
+	    quit=true;
+	  }
+	}
+
 
         //Fill the screen white
         SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0xFF, 0xFF, 0xFF ) );
