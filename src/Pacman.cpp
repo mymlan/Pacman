@@ -11,6 +11,8 @@
 #include "SDL/SDL_image.h"
 #include <string>
 #include <iostream>  //for felsokning med std::cout
+#include "SDL/SDL_ttf.h"
+#include <sstream>
 
 //Screen attributes
 const int SCREEN_WIDTH = 1000; //640;
@@ -24,17 +26,42 @@ const int MAP_WIDTH = 640;
 const int FRAMES_PER_SECOND = 20;
 
 //The attributes of the Pacman
-const int PACMAN_WIDTH = 20;
-const int PACMAN_HEIGHT = 20;
+const int PACMAN_WIDTH = 30;
+const int PACMAN_HEIGHT = 29;
+
+//the directions of the pacman
+const int PACMAN_RIGHT = 0;
+const int PACMAN_LEFT = 1;
+const int PACMAN_UP = 2;
+const int PACMAN_DOWN = 3;
+
+//The attributes of the Buttons
+const int BUTTON_WIDTH = 220;
+const int BUTTON_HEIGHT = 60;
+
 
 //The surfaces
 SDL_Surface *pacman = NULL;
 SDL_Surface *screen = NULL;
 SDL_Surface *ghost = NULL;
 SDL_Surface *menu = NULL;
+SDL_Surface *score = NULL;
 
 //The event structure
 SDL_Event event;
+
+
+//The areas of the pacmansheet
+SDL_Rect clipsRight[ 2 ];
+SDL_Rect clipsLeft[ 2 ];
+SDL_Rect clipsDown[ 2 ];
+SDL_Rect clipsUp[ 2 ];
+
+//The font
+TTF_Font *font = NULL;
+
+//The color of the font
+SDL_Color textColor = {0,0,0};
 
 //The wall
 SDL_Rect wall1 = {40,40,40,200};
@@ -73,12 +100,19 @@ class Pacman
 private:
   //The collision box of the square
   SDL_Rect box;
+  int x, y;
 
   //The velocity of the square
   int xVel, yVel;
 
   //Pacmans lives
   int lives;
+ 
+  //Its current frame
+    int frame;
+
+    //Its animation status
+    int status;
 
 public:
   //Initializes the variables
@@ -91,7 +125,7 @@ public:
   //Keeps tracks of pacmans lives and when he dies
   int life();
   bool game_over();
-  bool eat_eaten(class Ghost&);
+  bool eat_eaten(class Ghost&, class Score&);
 
   //Takes key presses and adjusts the square's velocity
   void handle_input();
@@ -107,7 +141,7 @@ public:
 };
 
 //The ghost 
-class Ghost
+class Ghost //need a way to set crashed_ to false. Do this by checking if there was no crash
 {
 private:
   //The collission box of the ghost
@@ -118,6 +152,9 @@ private:
 
   //Angry or scare ghost. 0 angry, 1 scared
   bool scared_;
+
+  //if ghost crashes into a wall it will change direction, otherwise will keep going.
+  bool crashed_;
 
   //1 is left, 2 is right, 3 is up, and 4 is down. 0 is starting value, meaning the ghost hasn't found out where pacman is
   int direction_to_pacman_;
@@ -142,6 +179,9 @@ public:
 
   //Sets Ghost position to startposition
   void get_home();
+
+  //Returns if ghost is scared/angry
+  bool is_scared();
 };
 
 
@@ -178,16 +218,51 @@ public:
   bool is_paused();
 };
 
+class Menu
+{
+private:
+  // The button
+  SDL_Rect button;
+
+public:
+  //Initialize variable
+  Menu(int x, int  y);
+
+  void show();
+
+};
+
 //Score
-/*class Score
+class Score
 {
 private:
   int points;
 public:
+  Score();
   void reset_score();
   void add_points(int);
+  std::string get_score();
+  void show();
 };
-*/
+
+Menu::Menu(int x, int y)
+{
+  //Initialize offset
+  button.x = x;
+  button.y = y;
+
+  //Set dimension
+  button.w = BUTTON_WIDTH;
+  button.h = BUTTON_HEIGHT;
+
+}
+
+void Menu::show()
+{
+  //Show the ghost
+   SDL_FillRect( screen, &button, SDL_MapRGB( screen->format, 0xEF, 0xEF, 0xEF) );
+
+}
 
 //============================================================================
 // Images 
@@ -239,7 +314,53 @@ void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination,
 
     //Blit
     SDL_BlitSurface( source, clip, destination, &offset );
+
 }
+
+void set_clips()
+{
+    //Clip the sprites
+    clipsRight[ 0 ].x = 0;
+    clipsRight[ 0 ].y = 0;
+    clipsRight[ 0 ].w = PACMAN_WIDTH;
+    clipsRight[ 0 ].h = PACMAN_HEIGHT;
+
+    clipsRight[ 1 ].x = 0;
+    clipsRight[ 1 ].y = PACMAN_HEIGHT;
+    clipsRight[ 1 ].w = PACMAN_WIDTH;
+    clipsRight[ 1 ].h = PACMAN_HEIGHT;
+
+    clipsDown[ 0 ].x = PACMAN_WIDTH;
+    clipsDown[ 0 ].y = 0;
+    clipsDown[ 0 ].w = PACMAN_WIDTH;
+    clipsDown[ 0 ].h = PACMAN_HEIGHT;
+
+    clipsDown[ 1 ].x = PACMAN_WIDTH ;
+    clipsDown[ 1 ].y = PACMAN_HEIGHT;
+    clipsDown[ 1 ].w = PACMAN_WIDTH;
+    clipsDown[ 1 ].h = PACMAN_HEIGHT;
+    
+    clipsLeft[ 0 ].x = PACMAN_WIDTH * 2 ;
+    clipsLeft[ 0 ].y = 0 ;
+    clipsLeft[ 0 ].w = PACMAN_WIDTH;
+    clipsLeft[ 0 ].h = PACMAN_HEIGHT;
+
+    clipsLeft[ 1 ].x = PACMAN_WIDTH * 2;
+    clipsLeft[ 1 ].y = PACMAN_HEIGHT;
+    clipsLeft[ 1 ].w = PACMAN_WIDTH;
+    clipsLeft[ 1 ].h = PACMAN_HEIGHT;
+
+    clipsUp[ 0 ].x = PACMAN_WIDTH * 3;
+    clipsUp[ 0 ].y = 0;
+    clipsUp[ 0 ].w = PACMAN_WIDTH;
+    clipsUp[ 0 ].h = PACMAN_HEIGHT;
+
+    clipsUp[ 1 ].x = PACMAN_WIDTH * 3;
+    clipsUp[ 1 ].y = PACMAN_HEIGHT;
+    clipsUp[ 1 ].w = PACMAN_WIDTH;
+    clipsUp[ 1 ].h = PACMAN_HEIGHT;
+}
+
 
 
 //============================================================================
@@ -320,6 +441,12 @@ bool init()
     //Set the window caption
     SDL_WM_SetCaption( "Pacman", NULL );
 
+    //Initialize SDL_ttf
+    if(TTF_Init() == -1)
+      {
+	return false;
+      }
+
     //If everything initialized fine
     return true;
 }
@@ -327,7 +454,7 @@ bool init()
 bool load_files()
 {
     //Load the Pacman image
-  pacman = load_image( "img/square.bmp" ); //pacman-test bilden har fel dimensioner
+  pacman = load_image( "img/Pacman.bmp" ); //pacman-test bilden har fel dimensioner
 
     //If there was a problem in loading the Pacman
     if( pacman == NULL )
@@ -355,6 +482,14 @@ bool load_files()
 	return false;
       }
 
+    //Load player score
+    font = TTF_OpenFont("img/arial.ttf",28);
+
+    if (font ==NULL)
+      {
+	return false;
+      }
+
 
 
 
@@ -374,7 +509,8 @@ void clean_up()
 {
     //Free the surface
     SDL_FreeSurface( pacman );
-    SDL_FreeSurface( ghost );                  //prova ta bort vid problem med ghost
+    SDL_FreeSurface( ghost );   
+    SDL_FreeSurface( score );               //prova ta bort vid problem med ghost
     //Quit SDL
     SDL_Quit();
 }
@@ -382,7 +518,7 @@ void clean_up()
 
 
 //============================================================================
-//  Class: Pacman
+//  Class: Pacman (KOD)
 //============================================================================
 
 
@@ -400,10 +536,17 @@ Pacman::Pacman()
     //Initialize the velocity
     xVel = 10;
     yVel = 0;
+    x= 320;
+    y= 440;
 
     //Initialize lives of Pacman
     lives = 2;
+
+ //Initialize animation variables
+    frame = 0;
+    status = PACMAN_LEFT;
 }
+
 
 int Pacman::reveal_position_x()
 {
@@ -691,13 +834,77 @@ void Pacman::move()
         box.y -= yVel;
     }
 }
-
-
 void Pacman::show()
+{
+  
+    //If Pacman is moving left
+    if( xVel < 0 )
+    {
+        //Set the animation to left
+        status = PACMAN_LEFT;
+
+        //Move to the next frame in the animation
+        frame++;
+    }
+    //If Foo is moving right
+    else if( xVel > 0 )
+    {
+        //Set the animation to right
+        status = PACMAN_RIGHT;
+
+        //Move to the next frame in the animation
+        frame++;
+    }
+    //If pacman is moving up
+    else if ( yVel < 0)
+      {
+	status = PACMAN_UP;
+	frame++;
+      }
+    //if pacman is moving down
+    else if (yVel > 0)
+      {
+	status = PACMAN_DOWN;
+	frame ++;
+      }
+    //If Foo standing
+    else
+    {
+        //Restart the animation
+        frame = 0;
+    }
+
+    //Loop the animation
+    if( frame >= 2 )
+    {
+        frame = 0;
+    }
+
+    //Show the stick figure
+    if( status == PACMAN_RIGHT )
+    {
+        apply_surface(box.x, box.y, pacman, screen, &clipsRight[ frame ] );
+    }
+    else if( status == PACMAN_LEFT )
+    {
+        apply_surface( box.x,box.y, pacman, screen, &clipsLeft[ frame ] );
+    }
+    else if( status == PACMAN_UP)
+      {
+	apply_surface (box.x, box.y, pacman, screen, &clipsUp[ frame ]);
+      }
+
+ else if( status == PACMAN_DOWN)
+      {
+	apply_surface (box.x,box.y, pacman , screen, &clipsDown[ frame ]);
+      }
+}
+
+/*void Pacman::show()
 {
     //Show the Pacman
     apply_surface( box.x, box.y, pacman, screen );
-}
+}*/
 
 //Check if Pacman has no more lives
 bool Pacman::game_over()
@@ -706,26 +913,26 @@ bool Pacman::game_over()
 }
 
 //Collision between
-bool Pacman::eat_eaten(Ghost& ghost_object)
+bool Pacman::eat_eaten(Ghost& ghost_object,Score& myScore)
 {
   if (check_collision(box, ghost_object.get_box()))
       {
-	/*	if (ghost_object.scared_)
+	if (ghost_object.is_scared())
 	  {
-	    //Pacman gets points
+	    myScore.add_points(1);
 	  }
 	else
-	{*/
+	  {
 	    lives=lives-1;
-	    // }
-	get_home();
+	    get_home();
+	  }
 	ghost_object.get_home();
 	return true;
       }
   return false;
 }
 
-//Returns Pacman to startposition
+//Returns Pacman to starting position
 void Pacman::get_home()
 {
   box.x = 320;
@@ -734,8 +941,6 @@ void Pacman::get_home()
 //============================================================================
 //  Class: Ghost
 //============================================================================
-
-
 
 Ghost::Ghost()
 {
@@ -747,14 +952,17 @@ Ghost::Ghost()
   direction_to_pacman_ = 0;
 
   //Initialize the angry or scared mode
-  scared_ = false;
+  scared_ = true;
+
+  //Initialize crashed
+  crashed_ = false;
 
   //Set the ghost's dimensions
   box.w = PACMAN_WIDTH;    //we should change the global constants names PACMAN_WIDTH to CHARACTER_WIDTH
   box.h = PACMAN_HEIGHT;
 
   //Initialize the velocity
-  xVel = 0;
+  xVel = 10;
   yVel = 0;
 }
 
@@ -763,6 +971,19 @@ Ghost::Ghost()
 void Ghost::move()
 {
   
+  //If pacman recently crashed against a wall, try moving another way, but not opposite.
+  if (crashed_ == true)
+    {
+      if (direction_to_pacman_ == 1 || 2)
+	{
+	  direction_to_pacman_ = rand() % 4 + 3; //if this fails, try 3 + 4 instead
+	}
+      if(direction_to_pacman_ == 3 || 4)
+	{
+	  direction_to_pacman_ == rand() % 2 + 1;
+	}
+    }
+
   //If the ghost is scared, then go right instead of left and up instead of down etc...
   if (scared_ == true)
     {
@@ -795,121 +1016,124 @@ void Ghost::move()
 
     {
       //Move back
-      box.x -= xVel;
+      box.x -= xVel; 
+      crashed_ = true;
     }
     if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall2 ) ) )
     {
         box.x -= xVel;
-    }
+     crashed_ = true;
+}
 
     if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall3 ) ) )
     {
         box.x -= xVel;
+    crashed_ = true;
     }
 
     if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall4 ) ) )
     {
-        box.x -= xVel;
+        box.x -= xVel;crashed_ = true;
     }
 
     if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall5 ) ) )
     {
-        box.x -= xVel;
+        box.x -= xVel;crashed_ = true;
     }
 
     if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall6) ) )
     {
-        box.x -= xVel;
+        box.x -= xVel;crashed_ = true;
     }
 
     if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall7 ) ) )
     {
-        box.x -= xVel;
+        box.x -= xVel;crashed_ = true;
     }
 
     if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall8 ) ) )
     {
-        box.x -= xVel;
+        box.x -= xVel;crashed_ = true;
     }
 
     if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall9 ) ) )
     {
-        box.x -= xVel;
+        box.x -= xVel;crashed_ = true;
     }
 
     if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall10 ) ) )
     {
-        box.x -= xVel;
+        box.x -= xVel;crashed_ = true;
     }
 
     if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall11) ) )
     {
-        box.x -= xVel;
+        box.x -= xVel;crashed_ = true;
     }
 
     if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall12 ) ) )
     {
-        box.x -= xVel;
+        box.x -= xVel;crashed_ = true;
     }
 
     if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall13 ) ) )
     {
-        box.x -= xVel;
+        box.x -= xVel;crashed_ = true;
     }
 
     if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall14 ) ) )
     {
-        box.x -= xVel;
+        box.x -= xVel;crashed_ = true;
     }
 
     if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall15 ) ) )
     {
-        box.x -= xVel;
+        box.x -= xVel;crashed_ = true;
     }
 
     if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall16) ) )
     {
-        box.x -= xVel;
+        box.x -= xVel;crashed_ = true;
     }
 
     if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall17 ) ) )
     {
-        box.x -= xVel;
+        box.x -= xVel;crashed_ = true;
     }
 
     if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall18 ) ) )
     {
-        box.x -= xVel;
+        box.x -= xVel;crashed_ = true;
     }
 
     if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall19 ) ) )
     {
-        box.x -= xVel;
+        box.x -= xVel;crashed_ = true;
     }
 
     if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall20 ) ) )
     {
-        box.x -= xVel;
+        box.x -= xVel;crashed_ = true;
     }
 
     if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall21) ) )
     {
-        box.x -= xVel;
+        box.x -= xVel;crashed_ = true;
     }
 
     if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall22 ) ) )
     {
-        box.x -= xVel;
+        box.x -= xVel;crashed_ = true;
     }
 
     if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall23 ) ) )
     {
-        box.x -= xVel;
+        box.x -= xVel;crashed_ = true;
     }
 
     if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall24 ) ) )
     {
-        box.x -= xVel;
+        box.x -= xVel;crashed_ = true;
     }
 
   //Move the ghost up or down ****************************************************************************
@@ -919,121 +1143,121 @@ void Ghost::move()
   if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall1 ) ) )
     {
       //Move back
-      box.y -= yVel;
+      box.y -= yVel;crashed_ = true;
     }
     if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall2 ) ) )
     {
-        box.y -= yVel;
+        box.y -= yVel;crashed_ = true;
     }
 
     if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall3) ) )
     {
-        box.y -= yVel;
+        box.y -= yVel;crashed_ = true;
     }
 
     if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall4) ) )
     {
-        box.y -= yVel;
+        box.y -= yVel;crashed_ = true;
     }
 
     if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall5) ) )
     {
-        box.y -= yVel;
+        box.y -= yVel;crashed_ = true;
     }
 
     if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall6) ) )
     {
-        box.y -= yVel;
+        box.y -= yVel;crashed_ = true;
     }
 
     if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall7 ) ) )
     {
-        box.y -= yVel;
+        box.y -= yVel;crashed_ = true;
     }
 
     if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall8) ) )
     {
-        box.y -= yVel;
+        box.y -= yVel;crashed_ = true;
     }
 
     if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall9) ) )
     {
-        box.y -= yVel;
+        box.y -= yVel;crashed_ = true;
     }
 
     if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall10) ) )
     {
-        box.y -= yVel;
+        box.y -= yVel;crashed_ = true;
     }
 
     if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall11) ) )
     {
-        box.y -= yVel;
+        box.y -= yVel;crashed_ = true;
     }
 
     if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall12 ) ) )
     {
-        box.y -= yVel;
+        box.y -= yVel;crashed_ = true;
     }
 
     if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall13) ) )
     {
-        box.y -= yVel;
+        box.y -= yVel;crashed_ = true;
     }
 
     if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall14) ) )
     {
-        box.y -= yVel;
+        box.y -= yVel;crashed_ = true;
     }
 
     if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall15) ) )
     {
-        box.y -= yVel;
+        box.y -= yVel;crashed_ = true;
     }
 
     if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall16) ) )
     {
-        box.y -= yVel;
+        box.y -= yVel;crashed_ = true;
     }
 
     if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall17 ) ) )
     {
-        box.y -= yVel;
+        box.y -= yVel;crashed_ = true;
     }
 
     if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall18) ) )
     {
-        box.y -= yVel;
+        box.y -= yVel;crashed_ = true;
     }
 
     if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall19) ) )
     {
-        box.y -= yVel;
+        box.y -= yVel;crashed_ = true;
     }
 
     if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall20) ) )
     {
-        box.y -= yVel;
+        box.y -= yVel;crashed_ = true;
     }
 
     if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall21) ) )
     {
-        box.y -= yVel;
+        box.y -= yVel;crashed_ = true;
     }
 
     if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall22 ) ) )
     {
-        box.y -= yVel;
+        box.y -= yVel;crashed_ = true;
     }
 
     if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall23) ) )
     {
-        box.y -= yVel;
+        box.y -= yVel;crashed_ = true;
     }
 
     if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, wall24) ) )
     {
-        box.y -= yVel;
+        box.y -= yVel;crashed_ = true;
     }
 }
 
@@ -1042,30 +1266,32 @@ void Ghost::move()
 void Ghost::seek(Pacman paccy)
 {
 
-  //pacman_x and pacman_y are the coordinates of pacman
-  int pacman_x{paccy.reveal_position_x()};
-  int pacman_y{paccy.reveal_position_y()};
-  
-  
-  //tries to minimize the distance in the shortest direction first. If pacman is one step to the right and far away at the bottom, the ghost will first take one step left and the go down.
-  if( abs(pacman_x - box.x) > abs(pacman_y - box.y) ) //if bigger difference in x than in y, then walk towards pacman i x direction
+  if (crashed_ == true)
     {
-      if (pacman_x < box.x)
-	{direction_to_pacman_ = 1;}
+      //pacman_x and pacman_y are the coordinates of pacman
+      int pacman_x{paccy.reveal_position_x()};
+      int pacman_y{paccy.reveal_position_y()};
+  
+  
+      //tries to minimize the distance in the shortest direction first. If pacman is one step to the right and far away at the bottom, the ghost will first take one step left and the go down.
+      if( abs(pacman_x - box.x) > abs(pacman_y - box.y) ) //if bigger difference in x than in y, then walk towards pacman i x direction
+	{
+	  if (pacman_x < box.x)
+	    {direction_to_pacman_ = 1;}
+	  else
+	    {direction_to_pacman_ = 2;}
+	  return;
+	}
+
+      //else walk towards pacman in y direction
+      if (pacman_y < box.y) 
+	{direction_to_pacman_ = 3;}
       else
-	{direction_to_pacman_ = 2;}
-      return;
+	{direction_to_pacman_ = 4;}
+      return;    
     }
 
-  //else walk towards pacman in y direction
-  if (pacman_y < box.y) 
-    {direction_to_pacman_ = 3;}
-  else
-    {direction_to_pacman_ = 4;}
-  return;    
 }
-
-
 
 void Ghost::show()
 {
@@ -1084,6 +1310,11 @@ void Ghost::get_home()
 {
   box.x = 0;
   box.y = 0;
+}
+
+bool Ghost::is_scared()
+{
+  return (scared_);
 }
 
 //============================================================================
@@ -1184,10 +1415,9 @@ bool Timer::is_paused()
 //============================================================================
 //  Class: Score
 //============================================================================
-/*
 Score::Score()
 {
-  points{0};
+  points=0;
 }
 
 void Score::reset_score()
@@ -1197,9 +1427,24 @@ void Score::reset_score()
 
 void Score::add_points(int new_points)
 {
-  points +=new_points;
+  points += new_points;
 }
-*/
+
+std::string Score::get_score()
+{
+  std::stringstream stream;
+  std::string text;
+  stream << points;
+  stream >> text; 
+  return text;
+}
+
+void Score::show()
+{
+  score = TTF_RenderText_Solid( font, get_score().c_str(), textColor );
+  apply_surface(0,0,score, screen);
+}
+
 //============================================================================
 //  MAIN
 //============================================================================
@@ -1217,8 +1462,14 @@ int main( int argc, char* args[] )
     //The ghost
     Ghost myGhost;
 
+    //Player score
+    Score myScore;
+
     //The frame rate regulator
     Timer fps;
+
+    //The buttons
+    Menu theButton(700,100);
 
     //Initialize
     if( init() == false )
@@ -1239,6 +1490,9 @@ int main( int argc, char* args[] )
     wall.w = 40;
     wall.h = 400;
     */
+    // Clip the sprite sheet
+    set_clips();
+ 
 
     //While the user hasn't quit
     while( quit == false )
@@ -1270,7 +1524,7 @@ int main( int argc, char* args[] )
 	myGhost.move();
 
 	//Is a ghost eating Pacman or are Pacman eating a ghost
-	if (myPacman.eat_eaten(myGhost)){
+	if (myPacman.eat_eaten(myGhost, myScore)){
 	  if (myPacman.game_over()){
 	    quit=true;
 	  }
@@ -1336,7 +1590,16 @@ int main( int argc, char* args[] )
 	//Show ghost on the screen
 	myGhost.show();
 
-	apply_surface( MAP_WIDTH, 0, menu, screen );
+	
+	//Show penguin
+  apply_surface( MAP_WIDTH, 0, menu, screen );
+
+
+	//Show Button
+	theButton.show();
+
+	//Show score on the side of the screen
+	myScore.show();
 
 
         //Update the screen
@@ -1347,11 +1610,11 @@ int main( int argc, char* args[] )
 
         //Cap the frame rate
         if( fps.get_ticks() < 1000 / FRAMES_PER_SECOND )
-        {
+	  {
             SDL_Delay( ( 1000 / FRAMES_PER_SECOND ) - fps.get_ticks() );
-        }
+	  }
     }
-
+    
     //Clean up
     clean_up();
 
