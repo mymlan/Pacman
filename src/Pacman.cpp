@@ -135,6 +135,9 @@ public:
   bool game_over();
   bool eat_eaten(class Ghost&, class Score&);
 
+ //Pacman eats food for points
+  bool eat_food(class Food&, class Score&);
+
   //Pacman eats special_food - ghosts flees
   bool eat_special_food(class Special_Food&, class Score&, class Ghost&);
 
@@ -1591,6 +1594,29 @@ void Menu::show()
 
 
 
+//============================================================================
+//  FOOD
+//============================================================================
+
+
+Food::Food(int x_cord, int y_cord)
+{
+  bool eaten_=false;
+
+  //Initialize the offsets
+  box.x = x_cord;
+  box.y = y_cord;
+
+  //Set the foods dimensions
+  box.w = PACMAN_WIDTH; //we should change the global constants names PACMAN_WIDTH to CHARACTER_WIDTH
+  box.h = PACMAN_HEIGHT;
+}
+
+void Food::was_eaten()
+{
+  eaten_=true;
+}
+
 bool Food::eaten()
 {
   return eaten_;
@@ -1609,6 +1635,14 @@ SDL_Rect Food::get_box()
 {
   return box;
 }
+
+
+
+
+
+
+
+
 
 //============================================================================
 //  Class: Special_Food
