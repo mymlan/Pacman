@@ -46,6 +46,7 @@ SDL_Surface *screen = NULL;
 SDL_Surface *ghost = NULL;
 SDL_Surface *menu = NULL;
 SDL_Surface *score = NULL;
+SDL_Surface *food = NULL;
 
 //The event structure
 SDL_Event event;
@@ -125,7 +126,10 @@ public:
   //Keeps tracks of pacmans lives and when he dies
   int life();
   bool game_over();
-  bool eat_eaten(class Ghost&, class Score&);
+  bool eat_eaten_ghost(class Ghost&, class Score&);
+
+  //Pacman eats food for points
+  bool eat_food(class Food&, class Score&);
 
   //Takes key presses and adjusts the square's velocity
   void handle_input();
@@ -245,6 +249,21 @@ public:
   void show();
 };
 
+//Food
+class Food
+{
+private:
+  SDL_Rect box;
+  bool eaten_;
+public:
+  Food(int,int);
+  bool eaten();
+  void was_eaten();
+  void show();
+  SDL_Rect get_box();
+};
+
+//Menu
 Menu::Menu(int x, int y)
 {
   //Initialize offset
@@ -472,8 +491,17 @@ bool load_files()
 	return false;
       }
 
+    //Load the foods image
+    food = load_image( "img/food-picture1.bmp" );
 
- //Load the menu image
+    //If there was a problem in loading the food picture
+    if( food == NULL)
+      {
+	return false;
+      }
+    
+
+    //Load the menu image
     menu = load_image( "img/pingvin.png" );
 
     //If there was a problem in loading the ghost picture
@@ -912,8 +940,8 @@ bool Pacman::game_over()
   return (life()==-1);
 }
 
-//Collision between
-bool Pacman::eat_eaten(Ghost& ghost_object,Score& myScore)
+//Collision between pacman and ghost
+bool Pacman::eat_eaten_ghost(Ghost& ghost_object,Score& myScore)
 {
   if (check_collision(box, ghost_object.get_box()))
       {
@@ -927,6 +955,18 @@ bool Pacman::eat_eaten(Ghost& ghost_object,Score& myScore)
 	    get_home();
 	  }
 	ghost_object.get_home();
+	return true;
+      }
+  return false;
+}
+
+//Pacman eats food
+bool Pacman::eat_food(Food& food_object,Score& myScore)
+{
+  if (check_collision(box, food_object.get_box()) && !food_object.eaten())
+      {
+	myScore.add_points(1);
+	food_object.was_eaten();
 	return true;
       }
   return false;
@@ -1442,14 +1482,51 @@ std::string Score::get_score()
 void Score::show()
 {
   score = TTF_RenderText_Solid( font, get_score().c_str(), textColor );
-  apply_surface(0,0,score, screen);
+  apply_surface(0,0,score,screen);
 }
 
 //============================================================================
+//  Class: Food
+//============================================================================
+Food::Food(int x_cord, int y_cord)
+{
+  bool eaten_=false;
+
+  //Initialize the offsets
+  box.x = x_cord;
+  box.y = y_cord;
+
+  //Set the foods dimensions
+  box.w = PACMAN_WIDTH;    //we should change the global constants names PACMAN_WIDTH to CHARACTER_WIDTH
+  box.h = PACMAN_HEIGHT;
+}
+
+void Food::was_eaten()
+{
+  eaten_=true;
+}
+
+bool Food::eaten()
+{
+  return eaten_;
+}
+
+void Food::show()
+{
+  if (!eaten())
+    {
+      apply_surface(box.x,box.y,food, screen);
+    }
+}
+
+//Returns SDL-object of ghost
+SDL_Rect Food::get_box()
+{
+  return box;
+}
+//============================================================================
 //  MAIN
 //============================================================================
-
-
 
 int main( int argc, char* args[] )
 {
@@ -1464,6 +1541,9 @@ int main( int argc, char* args[] )
 
     //Player score
     Score myScore;
+
+    //Food
+    Food myFood(370,100);
 
     //The frame rate regulator
     Timer fps;
@@ -1524,12 +1604,18 @@ int main( int argc, char* args[] )
 	myGhost.move();
 
 	//Is a ghost eating Pacman or are Pacman eating a ghost
-	if (myPacman.eat_eaten(myGhost, myScore)){
+	if (myPacman.eat_eaten_ghost(myGhost, myScore)){
 	  if (myPacman.game_over()){
 	    quit=true;
 	  }
 	}
 
+	//Is a Pacman eating food
+	if (myPacman.eat_food(myFood, myScore)){
+	  // if (alla food-pluttar uppätna - spel slut){
+	  //  quit=true;
+	  
+	}
 
         //Fill the screen white
         SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0xFF, 0xFF, 0xFF ) );
@@ -1589,6 +1675,9 @@ int main( int argc, char* args[] )
 
 	//Show ghost on the screen
 	myGhost.show();
+
+	//Show food on the screen
+	myFood.show();
 
 	
 	//Show penguin
