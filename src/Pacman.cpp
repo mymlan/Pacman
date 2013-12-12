@@ -1292,12 +1292,6 @@ int main( int argc, char* args[] )
     //Create vector with all walls in, called maze
     std::vector<SDL_Rect> maze = {wall1,wall2,wall3,wall4,wall5,wall6,wall7,wall8,wall9,wall10,wall11,wall12,wall13,wall14,wall15,wall16,wall17,wall18,wall19,wall20,wall21,wall22,wall23,wall24};
 
-    std::cerr << maze.size()<< std::endl;
-
-    for (std::vector<SDL_Rect>::iterator it = maze.begin() ; it != maze.end(); ++it)
-      {
-	std::cout << it->x << std::endl;
-      }
 
     // Clip the sprite sheet
     set_clips();
