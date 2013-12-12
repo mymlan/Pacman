@@ -25,7 +25,7 @@ const int MAP_WIDTH = 640;
 
 
 //The frame rate
-const int FRAMES_PER_SECOND = 20;
+int FRAMES_PER_SECOND = 20;
 
 //The attributes of the Pacman
 const int PACMAN_WIDTH = 30;
@@ -48,7 +48,6 @@ SDL_Surface *screen = NULL;
 SDL_Surface *ghost = NULL;
 SDL_Surface *menu = NULL;
 SDL_Surface *score = NULL;
-SDL_Surface *food = NULL;
 SDL_Surface *text = NULL;
 
 //The event structure
@@ -129,10 +128,7 @@ public:
   //Keeps tracks of pacmans lives and when he dies
   int life();
   bool game_over();
-  bool eat_eaten_ghost(class Ghost&, class Score&);
-
-  //Pacman eats food for points
-  bool eat_food(class Food&, class Score&);
+  bool eat_eaten(class Ghost&, class Score&);
 
   //Takes key presses and adjusts the square's velocity
   void handle_input();
@@ -236,6 +232,8 @@ public:
   Menu(int x, int  y);
 
   void show();
+  void pause();
+  void unpause();
 
 };
 
@@ -252,21 +250,6 @@ public:
   void show();
 };
 
-//Food
-class Food
-{
-private:
-  SDL_Rect box;
-  bool eaten_;
-public:
-  Food(int,int);
-  bool eaten();
-  void was_eaten();
-  void show();
-  SDL_Rect get_box();
-};
-
-//Menu
 Menu::Menu(int x, int y)
 {
   //Initialize offset
@@ -279,6 +262,28 @@ Menu::Menu(int x, int y)
 
 }
 
+void Menu::pause()
+{
+  //If a key was pressed
+    if( event.type == SDL_KEYDOWN )
+    {
+      if(event.key.keysym.sym == SDLK_s)
+	{
+	  while(event.type != SDL_KEYDOWN);
+	  while(event.key.keysym.sym != SDLK_s) ;
+	  
+        
+	}
+    }
+    
+}
+
+
+
+void Menu::unpause()
+{
+  while(event.key.keysym.sym != SDLK_s);
+}
 
 
 
@@ -491,17 +496,8 @@ bool load_files()
 	return false;
       }
 
-    //Load the foods image
-    food = load_image( "img/food-picture1.bmp" );
 
-    //If there was a problem in loading the food picture
-    if( food == NULL)
-      {
-	return false;
-      }
-    
-
-    //Load the menu image
+ //Load the menu image
     menu = load_image( "img/pingvin.png" );
 
     //If there was a problem in loading the ghost picture
@@ -940,8 +936,8 @@ bool Pacman::game_over()
   return (life()==-1);
 }
 
-//Collision between pacman and ghost
-bool Pacman::eat_eaten_ghost(Ghost& ghost_object,Score& myScore)
+//Collision between
+bool Pacman::eat_eaten(Ghost& ghost_object,Score& myScore)
 {
   if (check_collision(box, ghost_object.get_box()))
       {
@@ -955,18 +951,6 @@ bool Pacman::eat_eaten_ghost(Ghost& ghost_object,Score& myScore)
 	    get_home();
 	  }
 	ghost_object.get_home();
-	return true;
-      }
-  return false;
-}
-
-//Pacman eats food
-bool Pacman::eat_food(Food& food_object,Score& myScore)
-{
-  if (check_collision(box, food_object.get_box()) && !food_object.eaten())
-      {
-	myScore.add_points(1);
-	food_object.was_eaten();
 	return true;
       }
   return false;
@@ -1482,7 +1466,7 @@ std::string Score::get_score()
 void Score::show()
 {
   score = TTF_RenderText_Solid( font, get_score().c_str(), textColor );
-  apply_surface(0,0,score,screen);
+  apply_surface(0,0,score, screen);
 }
 
 
@@ -1499,47 +1483,10 @@ void Menu::show()
 
 
 //============================================================================
-//  Class: Food
-//============================================================================
-Food::Food(int x_cord, int y_cord)
-{
-  bool eaten_=false;
-
-  //Initialize the offsets
-  box.x = x_cord;
-  box.y = y_cord;
-
-  //Set the foods dimensions
-  box.w = PACMAN_WIDTH;    //we should change the global constants names PACMAN_WIDTH to CHARACTER_WIDTH
-  box.h = PACMAN_HEIGHT;
-}
-
-void Food::was_eaten()
-{
-  eaten_=true;
-}
-
-bool Food::eaten()
-{
-  return eaten_;
-}
-
-void Food::show()
-{
-  if (!eaten())
-    {
-      apply_surface(box.x,box.y,food, screen);
-    }
-}
-
-//Returns SDL-object of ghost
-SDL_Rect Food::get_box()
-{
-  return box;
-}
-//============================================================================
 //  MAIN
 //============================================================================
+
+
 
 int main( int argc, char* args[] )
 {
@@ -1554,9 +1501,6 @@ int main( int argc, char* args[] )
 
     //Player score
     Score myScore;
-
-    //Food
-    Food myFood(370,100);
 
     //The frame rate regulator
     Timer fps;
@@ -1589,24 +1533,52 @@ int main( int argc, char* args[] )
 
     //While the user hasn't quit
     while( quit == false )
-    {
-        //Start the frame timer
-        fps.start();
+      {
+	//Start the frame timer
+	fps.start();
 
-        //While there's events to handle
-        while( SDL_PollEvent( &event ) )
-        {
-            //Handle events for the pacman
-            myPacman.handle_input();
+	//While there's events to handle
+	while( SDL_PollEvent( &event ) )
+	  {
 
+	    //If a key was pressed
+	    if( event.type == SDL_KEYDOWN )
+	      {
+             
+		//If p was pressed
+		if( event.key.keysym.sym == SDLK_p )
+		  {
+		    std::cout <<"Fel" << std:: endl;
+		    bool cont = false;
+		    //Pause the timer
+		    while(!cont)
+		      {
+			while(SDL_PollEvent( &event)){
+			  if(event.type == SDL_KEYDOWN)
+			    {
+			      if(event.key.keysym.sym == SDLK_p)
+				cont=true;
+			 
+			    }}
+		      }}
+	      }
+	  
+
+
+	  
+	    //Handle events for the pacman
+	    myPacman.handle_input();
+
+
+	  
             //If the user has Xed out the window
             if( event.type == SDL_QUIT )
-            {
-                //Quit the program
+	      {
+		//Quit the program
                 quit = true;
-            }
-        }
-
+	      }
+	  }
+	
         //Move the pacman
         myPacman.move();
 	
@@ -1615,21 +1587,15 @@ int main( int argc, char* args[] )
 	
 	//Move the ghost
 	myGhost.move();
-
+	
 	//Is a ghost eating Pacman or are Pacman eating a ghost
-	if (myPacman.eat_eaten_ghost(myGhost, myScore)){
+	if (myPacman.eat_eaten(myGhost, myScore)){
 	  if (myPacman.game_over()){
 	    quit=true;
 	  }
 	}
 
-	//Is a Pacman eating food
-	if (myPacman.eat_food(myFood, myScore)){
-	  // if (alla food-pluttar uppätna - spel slut){
-	  //  quit=true;
-	  
-	}
-
+	
         //Fill the screen white
         SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0xFF, 0xFF, 0xFF ) );
 
@@ -1689,33 +1655,30 @@ int main( int argc, char* args[] )
 	//Show ghost on the screen
 	myGhost.show();
 
-	//Show food on the screen
-	myFood.show();
-
 	
 	//Show penguin
-  apply_surface( MAP_WIDTH, 0, menu, screen );
+	apply_surface( MAP_WIDTH, 0, menu, screen );
 
 
-	//Show Button
-	theButton.show();
+
 
 	//Show score on the side of the screen
 	myScore.show();
 
-
+	
+	
         //Update the screen
         if( SDL_Flip( screen ) == -1 )
-        {
+	  {
             return 1;
-        }
-
+	  }
+	
         //Cap the frame rate
         if( fps.get_ticks() < 1000 / FRAMES_PER_SECOND )
 	  {
             SDL_Delay( ( 1000 / FRAMES_PER_SECOND ) - fps.get_ticks() );
 	  }
-    }
+	}
     
     //Clean up
     clean_up();
