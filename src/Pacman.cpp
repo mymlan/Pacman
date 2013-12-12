@@ -50,6 +50,7 @@ SDL_Surface *ghost = NULL;
 SDL_Surface *ghost2 = NULL;
 SDL_Surface *menu = NULL;
 SDL_Surface *score = NULL;
+SDL_Surface *startup=NULL;
 
 SDL_Surface *food = NULL;
 SDL_Surface *special_food = NULL;
@@ -121,7 +122,7 @@ public:
   void handle_input();
 
   //Moves the Pacman
-  void move(std::vector<SDL_Rect>);
+  void move(std::vector<SDL_Rect>, SDL_Rect);
 
   //Shows the Pacman on the screen
   void show();
@@ -257,14 +258,15 @@ class Menu
 private:
   // The button
   SDL_Rect button;
+  bool start;
 
 public:
   //Initialize variable
   Menu(int x, int  y);
-
+  void showstart();
   void show();
-  void pause();
-  void unpause();
+  bool get_start();
+  void change_start();
 
 };
 
@@ -310,42 +312,9 @@ public:
   SDL_Rect get_box();
 };
 
-//Menu
-
-Menu::Menu(int x, int y)
-{
-  //Initialize offset
-  button.x = x;
-  button.y = y;
-
-  //Set dimension
-  button.w = BUTTON_WIDTH;
-  button.h = BUTTON_HEIGHT;
-
-}
-
-void Menu::pause()
-{
-  //If a key was pressed
-    if( event.type == SDL_KEYDOWN )
-    {
-      if(event.key.keysym.sym == SDLK_s)
-	{
-	  while(event.type != SDL_KEYDOWN);
-	  while(event.key.keysym.sym != SDLK_s) ;
-	  
-        
-	}
-    }
-    
-}
 
 
 
-void Menu::unpause()
-{
-  while(event.key.keysym.sym != SDLK_s);
-}
 
 
 
@@ -594,7 +563,15 @@ bool load_files()
       {
 	return false;
       }
+//Load the startup image
+    startup = load_image( "img/startup.bmp" );
 
+    //If there was a problem in loading the startup picture
+    if( startup == NULL)
+      {
+        return false;
+      }
+    
 
     //If everything loaded fine
     return true;
@@ -612,7 +589,9 @@ void clean_up()
     //Free the surface
     SDL_FreeSurface( pacman );
     SDL_FreeSurface( ghost );   
-    SDL_FreeSurface( score );               //prova ta bort vid problem med ghost
+    SDL_FreeSurface( score );
+    SDL_FreeSurface( startup);
+               //prova ta bort vid problem med ghost
     //Quit SDL
     SDL_Quit();
 }
@@ -705,7 +684,7 @@ void Pacman::handle_input()
     }
 }
 
-void Pacman::move(std::vector<SDL_Rect> maze)
+void Pacman::move(std::vector<SDL_Rect> maze, SDL_Rect wall25)
 {
     //Move pacman left or right
     box.x += xVel;
@@ -717,7 +696,12 @@ void Pacman::move(std::vector<SDL_Rect> maze)
 	    //Move back
 	    box.x -= xVel;
 	  }
-      }    
+      }   
+	if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall25 ) ) )
+	  {
+	    //Move back
+	    box.x -= xVel;
+	  } 
 
     //Move pacman up or down
     box.y += yVel;
@@ -1243,22 +1227,49 @@ void Score::show()
   apply_surface(0,0,score, screen);
 }
 
+//============================================================================
+//  Class: Menu
+//============================================================================
 
+Menu::Menu(int x, int y)
+{
+  //Initialize offset
+  button.x = x;
+  button.y = y;
+  start=true;
+
+
+  //Set dimension
+  button.w = BUTTON_WIDTH;
+  button.h = BUTTON_HEIGHT;
+
+}
+bool Menu::get_start()
+{
+  return start;
+}
+
+
+void Menu::change_start()
+{ 
+ start=false;
+}
 
 void Menu::show()
 {
-  //Show the ghost
+  //Show the startbuttons
+ 
    SDL_FillRect( screen, &button, SDL_MapRGB( screen->format, 0xEF, 0xEF, 0xEF) );
+
 
    text = TTF_RenderText_Solid( font, "Chicken tandoori" , textColor );
    apply_surface(button.x, button.y,text, screen);
 }
 
-
-
-//============================================================================
-//  MAIN
-//============================================================================
+void Menu::showstart()
+{
+  apply_surface(0,0,startup,screen); 
+}
 
 
 
@@ -1356,33 +1367,40 @@ SDL_Rect Special_Food::get_box()
 //  MAIN
 //============================================================================
 
+
+
 int main( int argc, char* args[] )
 {
-  //Quit flag
-  bool quit = false;
-  
-  //The pacman
-  Pacman myPacman;
-  
-  //The first ghost
-  Ghost myGhost;
-      
-  //The second ghost
-  Ghost2 myGhost2;
-  
-  //Player score
-  Score myScore;
-  
-  
-  //Food
-  Food myFood(370,100);
-  
-  //Special_food
-  Special_Food mySpecial_Food(370,0);
-  
-  
-  //The frame rate regulator
-  Timer fps;
+
+    //Quit flag
+    bool quit = false;
+
+    //Menu
+    Menu Startup(0,0);
+
+    //The pacman
+    Pacman myPacman;
+
+    //The ghost
+    Ghost myGhost;
+
+    //The second ghost
+    Ghost2 myGhost2;
+
+    //Player score
+    Score myScore;
+
+
+    //Food
+    Food myFood(370,100);
+
+    //Special_food
+    Special_Food mySpecial_Food(370,0);
+
+
+    //The frame rate regulator
+    Timer fps;
+
 
   //The buttons
   Menu theButton(700,100);
@@ -1424,6 +1442,7 @@ int main( int argc, char* args[] )
     SDL_Rect wall22 = {520,320,40,120};
     SDL_Rect wall23 = {560,360,40,40};
     SDL_Rect wall24 = {600,440,40,40};
+    SDL_Rect wall25 = {350,160,10,40};
 
     //Create vector with all walls in, called maze
     std::vector<SDL_Rect> maze = {wall1,wall2,wall3,wall4,wall5,wall6,wall7,wall8,wall9,wall10,wall11,wall12,wall13,wall14,wall15,wall16,wall17,wall18,wall19,wall20,wall21,wall22,wall23,wall24};
@@ -1436,8 +1455,44 @@ int main( int argc, char* args[] )
     //While the user hasn't quit
     while( quit == false )
       {
+
+
+	if(Startup.get_start()==true)
+	  {	
+	    bool cont = false;
+	    Startup.showstart();
+	 
+	    //Show penguin
+	    apply_surface( MAP_WIDTH, 0, menu, screen );
+	    theButton.show();
+
+	 
+	    //Update the screen
+	     if( SDL_Flip( screen ) == -1 )
+	  {
+            return 1;
+	    }
+	  
+	    while(!cont)
+	      {
+
+		while(SDL_PollEvent( &event)){
+		  if(event.type == SDL_KEYDOWN)
+		    {
+		      if(event.key.keysym.sym == SDLK_s)
+			cont=true;
+		      Startup.change_start();
+		    }
+		}
+	      }
+	  }
+	
+
 	//Start the frame timer
 	fps.start();
+
+
+
 
 	//While there's events to handle
 	while( SDL_PollEvent( &event ) )
@@ -1446,12 +1501,12 @@ int main( int argc, char* args[] )
 	    //If a key was pressed
 	    if( event.type == SDL_KEYDOWN )
 	      {
-             
+             	bool cont = false;
 		//If p was pressed
 		if( event.key.keysym.sym == SDLK_p )
 		  {
-		    std::cout <<"Fel" << std:: endl;
-		    bool cont = false;
+		    std::cout <<"Spel pausat" << std:: endl;
+		    
 		    //Pause the timer
 		    while(!cont)
 		      {
@@ -1482,7 +1537,7 @@ int main( int argc, char* args[] )
 	  }
 	
         //Move the pacman
-        myPacman.move(maze);
+        myPacman.move(maze, wall25);
 	
 	//Ghost finds out where pacman is
 	myGhost.seek(myPacman);
@@ -1522,6 +1577,8 @@ int main( int argc, char* args[] )
 	  {
 	    SDL_FillRect( screen, &(*it), SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF) );
 	  }
+	//Show wall 25 the wall that separates the ghosts nest from playfield
+	SDL_FillRect( screen, &wall25, SDL_MapRGB( screen->format, 0xAF, 0x00, 0x00) );
 
         //Show pacman on the screen
         myPacman.show();
