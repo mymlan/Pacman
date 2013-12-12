@@ -145,8 +145,9 @@ private:
   //if ghost crashes into a wall it will change direction, otherwise will keep going.
   bool crashed_;
 
-  //1 is left, 2 is right, 3 is up, and 4 is down. 0 is starting value, meaning the ghost hasn't found out where pacman is
-  int direction_to_pacman_;
+  //1 is left, 2 is right, 3 is up, and 4 is down. 0 will be the starting value, meaning the ghost hasn't found out where pacman is
+  int first_way_to_pacman_;
+  int second_way_to_pacman_;
 
 public:
   //Initializes the variables
@@ -155,11 +156,9 @@ public:
   //Moves the ghost
   void move(std::vector<SDL_Rect>);
 
-  //Finds out how to move to Pacman. Seek sets the "direction_to_pacman datamedlem".
+  //Finds out how to move to Pacman. Seek sets the first and second way to pacman member unit".
   void seek(Pacman);
 
-  //Finds out how to move away from Pacman. Uses seek, but instead of going towards pacman by right, flee goes left.
-  //std::string flee();
 
   SDL_Rect get_box();
 
@@ -828,11 +827,11 @@ Ghost::Ghost()
   box.x = 0;
   box.y = 0;
   
-  //Initialize the seek and destroy direction, that is, where the ghost believe pacman is
-  direction_to_pacman_ = 0;
-
+  //Initialize the seek and destroy directions. first way to pacman is the most desirable way to go.
+  first_way_to_pacman_ = 0;
+  second_way_to_pacman_ = 0;
   //Initialize the angry or scared mode
-  scared_ = true;
+  scared_ = false;
 
   //Initialize crashed
   crashed_ = false;
@@ -850,33 +849,13 @@ Ghost::Ghost()
 
 void Ghost::move(std::vector<SDL_Rect> maze)
 {
-  
-  //If pacman recently crashed against a wall, try moving another way, but not opposite.
-  if (crashed_ == true)
-    {
-      if (direction_to_pacman_ == 1 || 2)
-	{
-	  direction_to_pacman_ = rand() % 4 + 3; //if this fails, try 3 + 4 instead
-	}
-      if(direction_to_pacman_ == 3 || 4)
-	{
-	  direction_to_pacman_ == rand() % 2 + 1;
-	}
-    }
-
-  //If the ghost is scared, then go right instead of left and up instead of down etc...
-  if (scared_ == true)
-    {
-      if (direction_to_pacman_ == 1 || 3)
-	{direction_to_pacman_ +=1;}
-      else
-	{direction_to_pacman_ -= 1;}
-    }  
  
+  //If the ghost recently crashed into a wall, go towards pacman in the second most desirable way
+  if (crashed_ == true)
+    {first_way_to_pacman_ = second_way_to_pacman_;}
 
-
-  //Set velocity and direction in order to move to where the ghost believe pacman is located
-  switch(direction_to_pacman_)
+  //Set velocity and direction
+  switch(first_way_to_pacman_)
     {
     case 1: yVel = 0; xVel = -10; break; //left
     case 2: yVel = 0; xVel = 10; break;  //right
@@ -917,33 +896,55 @@ void Ghost::move(std::vector<SDL_Rect> maze)
 //Sets the moving direction towards pacman
 void Ghost::seek(Pacman paccy)
 {
-
-  if (crashed_ == true)
+  //pacman_x and pacman_y are the coordinates of pacman
+  int pacman_x{paccy.reveal_position_x()};
+  int pacman_y{paccy.reveal_position_y()};
+  
+  
+  //tries to minimize the distance in the shortest direction first. If pacman is one step to the right and far away at the bottom, the ghost will first go down and then take one step left.
+  if( abs(pacman_x - box.x) > abs(pacman_y - box.y) ) //if bigger difference in x than in y, then walk towards pacman i x direction
     {
-      //pacman_x and pacman_y are the coordinates of pacman
-      int pacman_x{paccy.reveal_position_x()};
-      int pacman_y{paccy.reveal_position_y()};
-  
-  
-      //tries to minimize the distance in the shortest direction first. If pacman is one step to the right and far away at the bottom, the ghost will first take one step left and the go down.
-      if( abs(pacman_x - box.x) > abs(pacman_y - box.y) ) //if bigger difference in x than in y, then walk towards pacman i x direction
-	{
-	  if (pacman_x < box.x)
-	    {direction_to_pacman_ = 1;}
-	  else
-	    {direction_to_pacman_ = 2;}
-	  return;
-	}
-
-      //else walk towards pacman in y direction
-      if (pacman_y < box.y) 
-	{direction_to_pacman_ = 3;}
+      if( pacman_x > box.x ) //if pacman is to the right, go right
+	{first_way_to_pacman_ = 2;}
+      else 
+	{first_way_to_pacman_ = 1;} //else, go left
+      
+      if ( pacman_y > box.y ) //if pacman is below the ghost, go downwards
+	{second_way_to_pacman_ = 4;}
       else
-	{direction_to_pacman_ = 4;}
-      return;    
+	{second_way_to_pacman_ = 3;} //else, go up
     }
-
+     
+  else
+    {
+      if (pacman_y > box.y) //biggest distance is in y direction, so walk in y direction first
+	{first_way_to_pacman_ = 4;}
+      else
+	{first_way_to_pacman_ = 3;}
+      
+      if (pacman_x > box.x)
+	{second_way_to_pacman_ = 2;} //go right
+      else 
+	{second_way_to_pacman_ = 1;} //go left
+    }
+  if (scared_ == true) //if the ghost is scared, reverse the moving direction
+    {
+      if (first_way_to_pacman_ == 1 || 3)
+	{first_way_to_pacman_ += 1;}
+      else
+	{first_way_to_pacman_ -= 1;}
+      
+      if (second_way_to_pacman_ == 1 || 3)
+	{second_way_to_pacman_ += 1;}
+      else
+	{second_way_to_pacman_ -= 1;}
+    }
+  
 }
+
+
+
+
 
 void Ghost::show()
 {
