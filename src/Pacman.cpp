@@ -48,6 +48,7 @@ SDL_Surface *screen = NULL;
 SDL_Surface *ghost = NULL;
 SDL_Surface *menu = NULL;
 SDL_Surface *score = NULL;
+SDL_Surface *startup=NULL;
 
 SDL_Surface *food = NULL;
 SDL_Surface *special_food = NULL;
@@ -240,14 +241,15 @@ class Menu
 private:
   // The button
   SDL_Rect button;
+  bool start;
 
 public:
   //Initialize variable
   Menu(int x, int  y);
-
+  void showstart();
   void show();
-  void pause();
-  void unpause();
+  bool get_start();
+  void change_start();
 
 };
 
@@ -293,42 +295,9 @@ public:
   SDL_Rect get_box();
 };
 
-//Menu
-
-Menu::Menu(int x, int y)
-{
-  //Initialize offset
-  button.x = x;
-  button.y = y;
-
-  //Set dimension
-  button.w = BUTTON_WIDTH;
-  button.h = BUTTON_HEIGHT;
-
-}
-
-void Menu::pause()
-{
-  //If a key was pressed
-    if( event.type == SDL_KEYDOWN )
-    {
-      if(event.key.keysym.sym == SDLK_s)
-	{
-	  while(event.type != SDL_KEYDOWN);
-	  while(event.key.keysym.sym != SDLK_s) ;
-	  
-        
-	}
-    }
-    
-}
 
 
 
-void Menu::unpause()
-{
-  while(event.key.keysym.sym != SDLK_s);
-}
 
 
 
@@ -577,7 +546,15 @@ bool load_files()
       {
 	return false;
       }
+//Load the startup image
+    startup = load_image( "img/startup.bmp" );
 
+    //If there was a problem in loading the startup picture
+    if( startup == NULL)
+      {
+        return false;
+      }
+    
 
     //If everything loaded fine
     return true;
@@ -595,7 +572,9 @@ void clean_up()
     //Free the surface
     SDL_FreeSurface( pacman );
     SDL_FreeSurface( ghost );   
-    SDL_FreeSurface( score );               //prova ta bort vid problem med ghost
+    SDL_FreeSurface( score );
+    SDL_FreeSurface( startup);
+               //prova ta bort vid problem med ghost
     //Quit SDL
     SDL_Quit();
 }
@@ -1587,22 +1566,51 @@ void Score::show()
   apply_surface(0,0,score, screen);
 }
 
+//============================================================================
+//  Class: Menu
+//============================================================================
 
+Menu::Menu(int x, int y)
+{
+  //Initialize offset
+  button.x = x;
+  button.y = y;
+  start=true;
+
+
+  //Set dimension
+  button.w = BUTTON_WIDTH;
+  button.h = BUTTON_HEIGHT;
+
+}
+bool Menu::get_start()
+{
+  return start;
+}
+
+
+void Menu::change_start()
+{ 
+ start=false;
+}
 
 void Menu::show()
 {
-  //Show the ghost
+  //Show the startbuttons
+ 
    SDL_FillRect( screen, &button, SDL_MapRGB( screen->format, 0xEF, 0xEF, 0xEF) );
+
 
    text = TTF_RenderText_Solid( font, "Chicken tandoori" , textColor );
    apply_surface(button.x, button.y,text, screen);
 }
 
+void Menu::showstart()
+{
 
-
-//============================================================================
-//  MAIN
-//============================================================================
+ apply_surface(0,0,startup,screen);
+  std::cout<<"hej"<<std::endl; 
+}
 
 
 
@@ -1700,10 +1708,15 @@ SDL_Rect Special_Food::get_box()
 //  MAIN
 //============================================================================
 
+
+
 int main( int argc, char* args[] )
 {
     //Quit flag
     bool quit = false;
+
+    //Menu
+    Menu Startup(0,0);
 
     //The pacman
     Pacman myPacman;
@@ -1754,8 +1767,44 @@ int main( int argc, char* args[] )
     //While the user hasn't quit
     while( quit == false )
       {
+
+
+	if(Startup.get_start()==true)
+	  {	
+	    bool cont = false;
+	    Startup.showstart();
+	 
+	    //Show penguin
+	    apply_surface( MAP_WIDTH, 0, menu, screen );
+	    theButton.show();
+
+	 
+	    //Update the screen
+	     if( SDL_Flip( screen ) == -1 )
+	  {
+            return 1;
+	    }
+	  
+	    while(!cont)
+	      {
+
+		while(SDL_PollEvent( &event)){
+		  if(event.type == SDL_KEYDOWN)
+		    {
+		      if(event.key.keysym.sym == SDLK_s)
+			cont=true;
+		      Startup.change_start();
+		    }
+		}
+	      }
+	  }
+	
+
 	//Start the frame timer
 	fps.start();
+
+
+
 
 	//While there's events to handle
 	while( SDL_PollEvent( &event ) )
@@ -1764,12 +1813,12 @@ int main( int argc, char* args[] )
 	    //If a key was pressed
 	    if( event.type == SDL_KEYDOWN )
 	      {
-             
+             	bool cont = false;
 		//If p was pressed
 		if( event.key.keysym.sym == SDLK_p )
 		  {
 		    std::cout <<"Fel" << std:: endl;
-		    bool cont = false;
+		    
 		    //Pause the timer
 		    while(!cont)
 		      {
