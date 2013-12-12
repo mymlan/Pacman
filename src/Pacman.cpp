@@ -125,7 +125,7 @@ public:
   //Keeps tracks of pacmans lives and when he dies
   int life();
   bool game_over();
-  bool eat_eaten(class Ghost&, class Score);
+  bool eat_eaten(class Ghost&, class Score&);
 
   //Takes key presses and adjusts the square's velocity
   void handle_input();
@@ -242,6 +242,7 @@ public:
   void reset_score();
   void add_points(int);
   std::string get_score();
+  void show();
 };
 
 Menu::Menu(int x, int y)
@@ -508,7 +509,8 @@ void clean_up()
 {
     //Free the surface
     SDL_FreeSurface( pacman );
-    SDL_FreeSurface( ghost );                  //prova ta bort vid problem med ghost
+    SDL_FreeSurface( ghost );   
+    SDL_FreeSurface( score );               //prova ta bort vid problem med ghost
     //Quit SDL
     SDL_Quit();
 }
@@ -911,19 +913,19 @@ bool Pacman::game_over()
 }
 
 //Collision between
-bool Pacman::eat_eaten(Ghost& ghost_object,Score myScore)
+bool Pacman::eat_eaten(Ghost& ghost_object,Score& myScore)
 {
   if (check_collision(box, ghost_object.get_box()))
       {
 	if (ghost_object.is_scared())
 	  {
-	    myScore.add_points(10);
+	    myScore.add_points(1);
 	  }
 	else
 	  {
 	    lives=lives-1;
+	    get_home();
 	  }
-	get_home();
 	ghost_object.get_home();
 	return true;
       }
@@ -940,8 +942,6 @@ void Pacman::get_home()
 //  Class: Ghost
 //============================================================================
 
-
-
 Ghost::Ghost()
 {
   //Initialize the offsets
@@ -952,7 +952,7 @@ Ghost::Ghost()
   direction_to_pacman_ = 0;
 
   //Initialize the angry or scared mode
-  scared_ = false;
+  scared_ = true;
 
   //Initialize crashed
   crashed_ = false;
@@ -1427,7 +1427,7 @@ void Score::reset_score()
 
 void Score::add_points(int new_points)
 {
-  points = points + new_points;
+  points += new_points;
 }
 
 std::string Score::get_score()
@@ -1437,6 +1437,12 @@ std::string Score::get_score()
   stream << points;
   stream >> text; 
   return text;
+}
+
+void Score::show()
+{
+  score = TTF_RenderText_Solid( font, get_score().c_str(), textColor );
+  apply_surface(0,0,score, screen);
 }
 
 //============================================================================
@@ -1593,9 +1599,8 @@ int main( int argc, char* args[] )
 	theButton.show();
 
 	//Show score on the side of the screen
-	const char* string1 = myScore.get_score().c_str();
-	score = TTF_RenderText_Solid( font, string1, textColor );
-	apply_surface(0,0,score,screen);
+	myScore.show();
+
 
         //Update the screen
         if( SDL_Flip( screen ) == -1 )
@@ -1608,8 +1613,6 @@ int main( int argc, char* args[] )
 	  {
             SDL_Delay( ( 1000 / FRAMES_PER_SECOND ) - fps.get_ticks() );
 	  }
-	
-	//rita ut poäng
     }
     
     //Clean up
