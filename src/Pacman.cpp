@@ -229,7 +229,7 @@ Menu::Menu(int x, int y)
 void Menu::show()
 {
   //Show the ghost
-   SDL_FillRect( screen, &button, SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF) );
+   SDL_FillRect( screen, &button, SDL_MapRGB( screen->format, 0xEF, 0xEF, 0xEF) );
 
 }
 
@@ -1280,7 +1280,7 @@ int main( int argc, char* args[] )
     Timer fps;
 
     //The buttons
-    Menu theButton(750,240);
+    Menu theButton(700,100);
 
     //Initialize
     if( init() == false )
