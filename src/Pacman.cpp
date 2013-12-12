@@ -14,6 +14,8 @@
 #include "SDL/SDL_ttf.h"
 #include <sstream>
 
+//void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect* clip = NULL );
+
 //Screen attributes
 const int SCREEN_WIDTH = 1000; //640;
 const int SCREEN_HEIGHT = 480;
@@ -37,7 +39,7 @@ const int PACMAN_DOWN = 3;
 
 //The attributes of the Buttons
 const int BUTTON_WIDTH = 220;
-const int BUTTON_HEIGHT = 60;
+const int BUTTON_HEIGHT = 40;
 
 
 //The surfaces
@@ -47,6 +49,7 @@ SDL_Surface *ghost = NULL;
 SDL_Surface *menu = NULL;
 SDL_Surface *score = NULL;
 SDL_Surface *food = NULL;
+SDL_Surface *text = NULL;
 
 //The event structure
 SDL_Event event;
@@ -276,12 +279,9 @@ Menu::Menu(int x, int y)
 
 }
 
-void Menu::show()
-{
-  //Show the ghost
-   SDL_FillRect( screen, &button, SDL_MapRGB( screen->format, 0xEF, 0xEF, 0xEF) );
 
-}
+
+
 
 //============================================================================
 // Images 
@@ -1484,6 +1484,19 @@ void Score::show()
   score = TTF_RenderText_Solid( font, get_score().c_str(), textColor );
   apply_surface(0,0,score,screen);
 }
+
+
+
+void Menu::show()
+{
+  //Show the ghost
+   SDL_FillRect( screen, &button, SDL_MapRGB( screen->format, 0xEF, 0xEF, 0xEF) );
+
+   text = TTF_RenderText_Solid( font, "Chicken tandoori" , textColor );
+   apply_surface(button.x, button.y,text, screen);
+}
+
+
 
 //============================================================================
 //  Class: Food
