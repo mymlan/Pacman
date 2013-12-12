@@ -1130,9 +1130,7 @@ void Menu::show()
 
 void Menu::showstart()
 {
-
- apply_surface(0,0,startup,screen);
-  std::cout<<"hej"<<std::endl; 
+  apply_surface(0,0,startup,screen); 
 }
 
 
@@ -1363,7 +1361,7 @@ int main( int argc, char* args[] )
 		//If p was pressed
 		if( event.key.keysym.sym == SDLK_p )
 		  {
-		    std::cout <<"Fel" << std:: endl;
+		    std::cout <<"Spel pausat" << std:: endl;
 		    
 		    //Pause the timer
 		    while(!cont)
