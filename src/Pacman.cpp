@@ -542,6 +542,18 @@ bool load_files()
       }
 
 
+    //Load the foods image
+    food = load_image( "img/food-picture1.bmp" );
+
+    //If there was a problem in loading the food picture
+    if( food == NULL)
+      {
+        return false;
+      }
+    
+
+
+
  //Load the menu image
     menu = load_image( "img/pingvin.png" );
 
@@ -1893,6 +1905,10 @@ int main( int argc, char* args[] )
 
 	//show the lives on the screen
 	myPacman.showlife();
+
+	//show the button
+
+	theButton.show();
 
 
 	//Show score on the side of the screen
