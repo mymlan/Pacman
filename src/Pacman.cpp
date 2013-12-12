@@ -14,6 +14,8 @@
 #include "SDL/SDL_ttf.h"
 #include <sstream>
 
+//void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect* clip = NULL );
+
 //Screen attributes
 const int SCREEN_WIDTH = 1000; //640;
 const int SCREEN_HEIGHT = 480;
@@ -37,7 +39,7 @@ const int PACMAN_DOWN = 3;
 
 //The attributes of the Buttons
 const int BUTTON_WIDTH = 220;
-const int BUTTON_HEIGHT = 60;
+const int BUTTON_HEIGHT = 40;
 
 
 //The surfaces
@@ -46,6 +48,9 @@ SDL_Surface *screen = NULL;
 SDL_Surface *ghost = NULL;
 SDL_Surface *menu = NULL;
 SDL_Surface *score = NULL;
+SDL_Surface *food = NULL;
+SDL_Surface *special_food = NULL;
+SDL_Surface *text = NULL;
 
 //The event structure
 SDL_Event event;
@@ -125,7 +130,13 @@ public:
   //Keeps tracks of pacmans lives and when he dies
   int life();
   bool game_over();
-  bool eat_eaten(class Ghost&, class Score&);
+  bool eat_eaten_ghost(class Ghost&, class Score&);
+
+  //Pacman eats food for points
+  bool eat_food(class Food&, class Score&);
+
+  //Pacman eats special_food - ghosts flees
+  bool eat_special_food(class Special_Food&, class Score&, class Ghost&);
 
   //Takes key presses and adjusts the square's velocity
   void handle_input();
@@ -182,6 +193,9 @@ public:
 
   //Returns if ghost is scared/angry
   bool is_scared();
+
+  //Switches ghost between chase and flee states
+  void change_mood();
 };
 
 
@@ -245,6 +259,35 @@ public:
   void show();
 };
 
+//Food
+class Food
+{
+private:
+  SDL_Rect box;
+  bool eaten_;
+public:
+  Food(int,int);
+  bool eaten();
+  void was_eaten();
+  void show();
+  SDL_Rect get_box();
+};
+
+//Special_Food
+class Special_Food
+{
+private:
+  SDL_Rect box;
+  bool eaten_;
+public:
+  Special_Food(int,int);
+  bool eaten();
+  void was_eaten();
+  void show();
+  SDL_Rect get_box();
+};
+
+//Menu
 Menu::Menu(int x, int y)
 {
   //Initialize offset
@@ -257,12 +300,9 @@ Menu::Menu(int x, int y)
 
 }
 
-void Menu::show()
-{
-  //Show the ghost
-   SDL_FillRect( screen, &button, SDL_MapRGB( screen->format, 0xEF, 0xEF, 0xEF) );
 
-}
+
+
 
 //============================================================================
 // Images 
@@ -472,8 +512,17 @@ bool load_files()
 	return false;
       }
 
+    //Load the foods image
+    food = load_image( "img/food-picture1.bmp" );
 
- //Load the menu image
+    //If there was a problem in loading the food picture
+    if( food == NULL)
+      {
+	return false;
+      }
+    
+
+    //Load the menu image
     menu = load_image( "img/pingvin.png" );
 
     //If there was a problem in loading the ghost picture
@@ -490,7 +539,12 @@ bool load_files()
 	return false;
       }
 
-
+    //Load Special_Food
+    special_food = load_image( "img/special_food-picture.bmp" );
+    if (special_food ==NULL)
+      {
+	return false;
+      }
 
 
 
@@ -912,8 +966,8 @@ bool Pacman::game_over()
   return (life()==-1);
 }
 
-//Collision between
-bool Pacman::eat_eaten(Ghost& ghost_object,Score& myScore)
+//Collision between pacman and ghost
+bool Pacman::eat_eaten_ghost(Ghost& ghost_object,Score& myScore)
 {
   if (check_collision(box, ghost_object.get_box()))
       {
@@ -927,6 +981,30 @@ bool Pacman::eat_eaten(Ghost& ghost_object,Score& myScore)
 	    get_home();
 	  }
 	ghost_object.get_home();
+	return true;
+      }
+  return false;
+}
+
+//Pacman eats food
+bool Pacman::eat_food(Food& food_object,Score& myScore)
+{
+  if (check_collision(box, food_object.get_box()) && !food_object.eaten())
+      {
+	myScore.add_points(1);
+	food_object.was_eaten();
+	return true;
+      }
+  return false;
+}
+
+//Pacman eats special_food
+bool Pacman::eat_special_food(Special_Food& special_food_object,Score& myScore, Ghost& myGhost)
+{
+  if (check_collision(box, special_food_object.get_box()) && !special_food_object.eaten())
+      {
+	myGhost.change_mood();//funktion att spöken flyr
+	special_food_object.was_eaten();
 	return true;
       }
   return false;
@@ -1317,6 +1395,18 @@ bool Ghost::is_scared()
   return (scared_);
 }
 
+void Ghost::change_mood()
+{
+  if (is_scared())
+    {
+      scared_=false;
+    }
+  else
+    {
+      scared_=true;
+    }
+}
+
 //============================================================================
 //  Class: Timer
 //============================================================================
@@ -1442,14 +1532,105 @@ std::string Score::get_score()
 void Score::show()
 {
   score = TTF_RenderText_Solid( font, get_score().c_str(), textColor );
-  apply_surface(0,0,score, screen);
+  apply_surface(0,0,score,screen);
+}
+
+
+
+void Menu::show()
+{
+  //Show the ghost
+   SDL_FillRect( screen, &button, SDL_MapRGB( screen->format, 0xEF, 0xEF, 0xEF) );
+
+   text = TTF_RenderText_Solid( font, "Chicken tandoori" , textColor );
+   apply_surface(button.x, button.y,text, screen);
+}
+
+
+
+//============================================================================
+//  Class: Food
+//============================================================================
+Food::Food(int x_cord, int y_cord)
+{
+  bool eaten_=false;
+
+  //Initialize the offsets
+  box.x = x_cord;
+  box.y = y_cord;
+
+  //Set the foods dimensions
+  box.w = PACMAN_WIDTH;    //we should change the global constants names PACMAN_WIDTH to CHARACTER_WIDTH
+  box.h = PACMAN_HEIGHT;
+}
+
+void Food::was_eaten()
+{
+  eaten_=true;
+}
+
+bool Food::eaten()
+{
+  return eaten_;
+}
+
+void Food::show()
+{
+  if (!eaten())
+    {
+      apply_surface(box.x,box.y,food, screen);
+    }
+}
+
+//Returns SDL-object of ghost
+SDL_Rect Food::get_box()
+{
+  return box;
+}
+
+//============================================================================
+//  Class: Special_Food
+//============================================================================
+Special_Food::Special_Food(int x_cord, int y_cord)
+{
+  bool eaten_=false;
+
+  //Initialize the offsets
+  box.x = x_cord;
+  box.y = y_cord;
+
+  //Set the foods dimensions
+  box.w = PACMAN_WIDTH;    //we should change the global constants names PACMAN_WIDTH to CHARACTER_WIDTH
+  box.h = PACMAN_HEIGHT;
+}
+
+void Special_Food::was_eaten()
+{
+  eaten_=true;
+}
+
+bool Special_Food::eaten()
+{
+  return eaten_;
+}
+
+void Special_Food::show()
+{
+  if (!eaten())
+    {
+      apply_surface(box.x,box.y,special_food, screen);
+    }
+}
+
+//Returns SDL-object of ghost
+SDL_Rect Special_Food::get_box()
+{
+  return box;
 }
 
 //============================================================================
 //  MAIN
 //============================================================================
-
-
 
 int main( int argc, char* args[] )
 {
@@ -1464,6 +1645,12 @@ int main( int argc, char* args[] )
 
     //Player score
     Score myScore;
+
+    //Food
+    Food myFood(370,100);
+
+    //Special_food
+    Special_Food mySpecial_Food(370,0);
 
     //The frame rate regulator
     Timer fps;
@@ -1524,12 +1711,24 @@ int main( int argc, char* args[] )
 	myGhost.move();
 
 	//Is a ghost eating Pacman or are Pacman eating a ghost
-	if (myPacman.eat_eaten(myGhost, myScore)){
+	if (myPacman.eat_eaten_ghost(myGhost, myScore)){
 	  if (myPacman.game_over()){
 	    quit=true;
 	  }
 	}
 
+	//Is a Pacman eating food
+	if (myPacman.eat_food(myFood, myScore)){
+	  // if (alla food-pluttar uppätna - spel slut){
+	  //  quit=true;
+	  
+	}
+
+	//Is a Pacman eating special_food
+	if (myPacman.eat_special_food(mySpecial_Food, myScore, myGhost)){
+	  // timer räkna ner
+	  //
+	}
 
         //Fill the screen white
         SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0xFF, 0xFF, 0xFF ) );
@@ -1590,6 +1789,11 @@ int main( int argc, char* args[] )
 	//Show ghost on the screen
 	myGhost.show();
 
+	//Show food on the screen
+	myFood.show();
+
+	//Show special_food on the screen
+	mySpecial_Food.show();
 	
 	//Show penguin
   apply_surface( MAP_WIDTH, 0, menu, screen );
