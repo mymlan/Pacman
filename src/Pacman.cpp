@@ -37,7 +37,7 @@ const int PACMAN_DOWN = 3;
 
 //The attributes of the Buttons
 const int BUTTON_WIDTH = 220;
-const int BUTTON_HEIGHT = 60;
+const int BUTTON_HEIGHT = 40;
 
 
 //The surfaces
