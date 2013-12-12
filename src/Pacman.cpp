@@ -1082,8 +1082,8 @@ SDL_Rect Ghost::get_box()
 //Returns ghost to start position
 void Ghost::get_home()
 {
-  box.x = 100;
-  box.y = 100;
+  box.x = 0;
+  box.y = 0;
 }
 
 //============================================================================
