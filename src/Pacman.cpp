@@ -198,7 +198,7 @@ public:
   Ghost2();
 
   //Moves the ghost
-  void move();
+  void move(std::vector<SDL_Rect>);
 
   //Finds out how to move to Pacman. This ghost does it at random
   void seek();
@@ -913,12 +913,53 @@ Ghost2::Ghost2()
 
 void Ghost::move(std::vector<SDL_Rect> maze)
 {
- 
   //If the ghost recently crashed into a wall, go towards pacman in the second most desirable way
   if (crashed_ == true)
     {first_way_to_pacman_ = second_way_to_pacman_;}
 
   //Set velocity and direction
+  switch(first_way_to_pacman_)
+    {
+    case 1: yVel = 0; xVel = -10; break; //left
+    case 2: yVel = 0; xVel = 10; break;  //right
+    case 3: yVel = -10; xVel = 0; break;  //up      y increases downwards
+    case 4: yVel = 10; xVel = 0; break; //down
+    }
+
+  crashed_ = false;  
+  //Move the ghost left or right
+    box.x += xVel;
+
+
+    //If the ghost went too far to the left or right or has collided with the walls
+    for (std::vector<SDL_Rect>::iterator it = maze.begin() ; it != maze.end(); ++it)
+      {
+	if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, *it ) ) )
+	  {
+	    //Move back
+	    box.x -= xVel;
+	    crashed_ = true;
+	  }
+      }    
+
+    //Move the ghost up or down
+    box.y += yVel;
+
+    //If the square went too far up or down or has collided with the walls
+    for (std::vector<SDL_Rect>::iterator it = maze.begin() ; it != maze.end(); ++it)
+      {
+	if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, *it ) ) )
+	  {
+	    //Move back
+	    box.y -= yVel;
+	    crashed_ = true;
+	  }
+      }
+}
+void Ghost2::move(std::vector<SDL_Rect> maze)
+{
+ 
+ //Set velocity and direction
   switch(first_way_to_pacman_)
     {
     case 1: yVel = 0; xVel = -10; break; //left
@@ -955,7 +996,6 @@ void Ghost::move(std::vector<SDL_Rect> maze)
 	  }
       }
 }
-
 
 //Sets the moving direction towards pacman
 void Ghost::seek(Pacman paccy)
@@ -1010,9 +1050,12 @@ void Ghost::seek(Pacman paccy)
 
 //sets the moving direction towards pacman at random
 void Ghost2::seek()
-{first_way_to_pacman_ = rand()% 4 + 1}
-
-
+{
+  if (crashed_ == true)
+    {
+      first_way_to_pacman_ = rand()% 4 + 1;
+    }
+}
 
 void Ghost::show()
 {
@@ -1023,7 +1066,7 @@ void Ghost::show()
 void Ghost2::show()
 {
   //Show the ghost
-  apply_surface( box.x, box.y, ghost2, screen );
+  apply_surface( box.x, box.y, ghost, screen );
 }
 
 
@@ -1315,45 +1358,48 @@ SDL_Rect Special_Food::get_box()
 
 int main( int argc, char* args[] )
 {
-    //Quit flag
-    bool quit = false;
+  //Quit flag
+  bool quit = false;
+  
+  //The pacman
+  Pacman myPacman;
+  
+  //The first ghost
+  Ghost myGhost;
+      
+  //The second ghost
+  Ghost2 myGhost2;
+  
+  //Player score
+  Score myScore;
+  
+  
+  //Food
+  Food myFood(370,100);
+  
+  //Special_food
+  Special_Food mySpecial_Food(370,0);
+  
+  
+  //The frame rate regulator
+  Timer fps;
 
-    //The pacman
-    Pacman myPacman;
+  //The buttons
+  Menu theButton(700,100);
 
-    //The ghost
-    Ghost myGhost
-
-    //Player score
-    Score myScore;
-
-
-    //Food
-    Food myFood(370,100);
-
-    //Special_food
-    Special_Food mySpecial_Food(370,0);
-
-
-    //The frame rate regulator
-    Timer fps;
-
-    //The buttons
-    Menu theButton(700,100);
-
-    //Initialize
-    if( init() == false )
+  //Initialize
+  if( init() == false )
     {
-        return 1;
+      return 1;
     }
     
-    //Load the files
-    if( load_files() == false )
+  //Load the files
+  if( load_files() == false )
     {
       std::cout << "trubbel att ladda filerna" << std::endl;
       return 1;
     }
-    //Initialize walls
+  //Initialize walls
     SDL_Rect wall1 = {40,40,40,200};
     SDL_Rect wall2 = {80,40,80,40};
     SDL_Rect wall3 = {80,120,40,40};
@@ -1440,10 +1486,12 @@ int main( int argc, char* args[] )
 	
 	//Ghost finds out where pacman is
 	myGhost.seek(myPacman);
-	
+	myGhost2.seek();
+
 	//Move the ghost
 	myGhost.move(maze);
-	
+	myGhost2.move(maze);
+
 	//Is a ghost eating Pacman or are Pacman eating a ghost
 	if (myPacman.eat_eaten(myGhost, myScore)){
 	  if (myPacman.game_over()){
@@ -1482,6 +1530,7 @@ int main( int argc, char* args[] )
 
 	//Show ghost on the screen
 	myGhost.show();
+	myGhost2.show();
 
 
 	//Show food on the screen
