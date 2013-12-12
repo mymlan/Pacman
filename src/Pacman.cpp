@@ -47,6 +47,7 @@ SDL_Surface *ghost = NULL;
 SDL_Surface *menu = NULL;
 SDL_Surface *score = NULL;
 
+
 //The event structure
 SDL_Event event;
 
@@ -124,6 +125,7 @@ public:
 
   //Keeps tracks of pacmans lives and when he dies
   int life();
+  void showlife();
   bool game_over();
   bool eat_eaten(class Ghost&, class Score&);
 
@@ -454,7 +456,7 @@ bool init()
 bool load_files()
 {
     //Load the Pacman image
-  pacman = load_image( "img/Pacman.bmp" ); //pacman-test bilden har fel dimensioner
+  pacman = load_image( "img/Pacman.bmp" ); //
 
     //If there was a problem in loading the Pacman
     if( pacman == NULL )
@@ -489,7 +491,6 @@ bool load_files()
       {
 	return false;
       }
-
 
 
 
@@ -566,6 +567,27 @@ int Pacman::life()
   return life;
 }
 
+
+void Pacman::showlife()
+{ 
+  if (lives==2)
+    {
+      apply_surface(910,440 ,pacman, screen, &clipsLeft[1] );
+       apply_surface(910+PACMAN_WIDTH,440 ,pacman, screen, &clipsLeft[1] );
+       apply_surface(910+2*PACMAN_WIDTH,440 ,pacman, screen, &clipsLeft[1] );
+    }   
+ else if (lives==1)
+    {
+
+      apply_surface(910,440 ,pacman, screen, &clipsLeft[1] );
+      apply_surface(910+PACMAN_WIDTH,440 ,pacman, screen, &clipsLeft[1] );
+    }
+    
+ else if( lives==0)
+   {
+     apply_surface(910,440 ,pacman, screen, &clipsLeft[1] );
+   }
+}
 void Pacman::handle_input()
 {
     //If a key was pressed
@@ -880,10 +902,10 @@ void Pacman::show()
         frame = 0;
     }
 
-    //Show the stick figure
+    //Show the pacman
     if( status == PACMAN_RIGHT )
     {
-        apply_surface(box.x, box.y, pacman, screen, &clipsRight[ frame ] );
+        apply_surface(box.x, box.y, pacman, screen, &clipsRight[ frame] );
     }
     else if( status == PACMAN_LEFT )
     {
@@ -1464,7 +1486,7 @@ int main( int argc, char* args[] )
 
     //Player score
     Score myScore;
-
+    
     //The frame rate regulator
     Timer fps;
 
@@ -1586,6 +1608,8 @@ int main( int argc, char* args[] )
 
         //Show pacman on the screen
         myPacman.show();
+	
+
 
 	//Show ghost on the screen
 	myGhost.show();
@@ -1594,6 +1618,8 @@ int main( int argc, char* args[] )
 	//Show penguin
   apply_surface( MAP_WIDTH, 0, menu, screen );
 
+	//show the lives on the screen
+	myPacman.showlife();
 
 	//Show Button
 	theButton.show();
