@@ -11,6 +11,8 @@
 #include "SDL/SDL_image.h"
 #include <string>
 #include <iostream>  //for felsokning med std::cout
+#include "SDL/SDL_ttf.h"
+#include <sstream>
 
 //Screen attributes
 const int SCREEN_WIDTH = 1000; //640;
@@ -37,9 +39,16 @@ SDL_Surface *pacman = NULL;
 SDL_Surface *screen = NULL;
 SDL_Surface *ghost = NULL;
 SDL_Surface *menu = NULL;
+SDL_Surface *score = NULL;
 
 //The event structure
 SDL_Event event;
+
+//The font
+TTF_Font *font = NULL;
+
+//The color of the font
+SDL_Color textColor = {0,0,0};
 
 //The wall
 SDL_Rect wall1 = {40,40,40,200};
@@ -112,7 +121,7 @@ public:
 };
 
 //The ghost 
-class Ghost
+class Ghost //need a way to set crashed_ to false. Do this by checking if there was no crash
 {
 private:
   //The collission box of the ghost
@@ -212,6 +221,7 @@ public:
   Score();
   void reset_score();
   void add_points(int);
+  std::string get_score();
 };
 
 Menu::Menu(int x, int y)
@@ -364,6 +374,12 @@ bool init()
     //Set the window caption
     SDL_WM_SetCaption( "Pacman", NULL );
 
+    //Initialize SDL_ttf
+    if(TTF_Init() == -1)
+      {
+	return false;
+      }
+
     //If everything initialized fine
     return true;
 }
@@ -395,6 +411,14 @@ bool load_files()
 
     //If there was a problem in loading the ghost picture
     if( ghost == NULL)
+      {
+	return false;
+      }
+
+    //Load player score
+    font = TTF_OpenFont("img/arial.ttf",28);
+
+    if (font ==NULL)
       {
 	return false;
       }
@@ -769,7 +793,7 @@ bool Pacman::eat_eaten(Ghost& ghost_object,Score myScore)
   return false;
 }
 
-//Returns Pacman to startposition
+//Returns Pacman to starting position
 void Pacman::get_home()
 {
   box.x = 320;
@@ -810,6 +834,19 @@ Ghost::Ghost()
 void Ghost::move()
 {
   
+  //If pacman recently crashed against a wall, try moving another way, but not opposite.
+  if (crashed_ == true)
+    {
+      if (direction_to_pacman_ == 1 || 2)
+	{
+	  direction_to_pacman_ = rand() % 4 + 3; //if this fails, try 3 + 4 instead
+	}
+      if(direction_to_pacman_ == 3 || 4)
+	{
+	  direction_to_pacman_ == rand() % 2 + 1;
+	}
+    }
+
   //If the ghost is scared, then go right instead of left and up instead of down etc...
   if (scared_ == true)
     {
@@ -1134,8 +1171,8 @@ SDL_Rect Ghost::get_box()
 //Returns ghost to start position
 void Ghost::get_home()
 {
-  box.x = 100;
-  box.y = 100;
+  box.x = 0;
+  box.y = 0;
 }
 
 bool Ghost::is_scared()
@@ -1253,7 +1290,16 @@ void Score::reset_score()
 
 void Score::add_points(int new_points)
 {
-  points +=new_points;
+  points = points + new_points;
+}
+
+std::string Score::get_score()
+{
+  std::stringstream stream;
+  std::string text;
+  stream << points;
+  stream >> text; 
+  return text;
 }
 
 //============================================================================
@@ -1402,8 +1448,14 @@ int main( int argc, char* args[] )
 	//Show penguin
   apply_surface( MAP_WIDTH, 0, menu, screen );
 
+
 	//Show Button
 	theButton.show();
+
+	//Show score on the side of the screen
+	const char* string1 = myScore.get_score().c_str();
+	score = TTF_RenderText_Solid( font, string1, textColor );
+	apply_surface(0,0,score,screen);
 
         //Update the screen
         if( SDL_Flip( screen ) == -1 )
@@ -1413,11 +1465,13 @@ int main( int argc, char* args[] )
 
         //Cap the frame rate
         if( fps.get_ticks() < 1000 / FRAMES_PER_SECOND )
-        {
+	  {
             SDL_Delay( ( 1000 / FRAMES_PER_SECOND ) - fps.get_ticks() );
-        }
+	  }
+	
+	//rita ut poäng
     }
-
+    
     //Clean up
     clean_up();
 
