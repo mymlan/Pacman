@@ -46,6 +46,7 @@ const int BUTTON_HEIGHT = 40;
 SDL_Surface *pacman = NULL;
 SDL_Surface *screen = NULL;
 SDL_Surface *ghost = NULL;
+SDL_Surface *ghost2 = NULL;
 SDL_Surface *menu = NULL;
 SDL_Surface *score = NULL;
 
@@ -181,8 +182,51 @@ public:
   //Moves the ghost
   void move();
 
-  //Finds out how to move to Pacman. Seek sets the first and second way to pacman member unit".
+  //Finds out how to move to Pacman. Seek sets the "first and second way to pacman" member units.
   void seek(Pacman);
+
+
+  SDL_Rect get_box();
+
+  //Shows the ghost on the screen
+  void show();
+
+  //Sets Ghost position to startposition
+  void get_home();
+
+  //Returns if ghost is scared/angry
+  bool is_scared();
+
+  //Switches ghost between chase and flee states
+  void change_mood();
+};
+
+//The second ghost
+class Ghost2 //this is a whimsy  ghost, it moves in random directions. It is also never scared
+{
+private:
+  //The collission box of the ghost
+  SDL_Rect box;
+
+  //The velocity of the ghost
+  int xVel, yVel;
+
+  //if ghost crashes into a wall it will change direction, otherwise will keep going.
+  bool crashed_;
+
+  //1 is left, 2 is right, 3 is up, and 4 is down. 0 will be the starting value, meaning the ghost hasn't found out where pacman is
+  int first_way_to_pacman_;
+
+
+public:
+  //Initializes the variables
+  Ghost2();
+
+  //Moves the ghost
+  void move();
+
+  //Finds out how to move to Pacman. This ghost does it at random
+  void seek();
 
 
   SDL_Rect get_box();
@@ -1095,6 +1139,26 @@ Ghost::Ghost()
   yVel = 0;
 }
 
+Ghost2::Ghost2()
+{
+  //Initialize the offsets
+  box.x = 100;
+  box.y = 0;
+  
+  //Initialize the seek and destroy directions. first way to pacman is the most desirable way to go.
+  first_way_to_pacman_ = 0;
+
+  //Initialize crashed
+  crashed_ = false;
+
+  //Set the ghost's dimensions
+  box.w = PACMAN_WIDTH;    //we should change the global constants names PACMAN_WIDTH to CHARACTER_WIDTH
+  box.h = PACMAN_HEIGHT;
+
+  //Initialize the velocity
+  xVel = 10;
+  yVel = 0;
+}
 
 
 void Ghost::move()
@@ -1405,6 +1469,8 @@ void Ghost::seek(Pacman paccy)
       else 
 	{second_way_to_pacman_ = 1;} //go left
     }
+
+
   if (scared_ == true) //if the ghost is scared, reverse the moving direction
     {
       if (first_way_to_pacman_ == 1 || 3)
@@ -1420,7 +1486,9 @@ void Ghost::seek(Pacman paccy)
   
 }
 
-
+//sets the moving direction towards pacman at random
+void Ghost2::seek()
+{first_way_to_pacman_ = rand()% 4 + 1}
 
 
 
@@ -1430,8 +1498,21 @@ void Ghost::show()
   apply_surface( box.x, box.y, ghost, screen );
 }
 
+void Ghost2::show()
+{
+  //Show the ghost
+  apply_surface( box.x, box.y, ghost2, screen );
+}
+
+
 //Returns SDL-object of ghost
 SDL_Rect Ghost::get_box()
+{
+  return box;
+}
+
+//Returns SDL-object of ghost2
+SDL_Rect Ghost2::get_box()
 {
   return box;
 }
@@ -1443,10 +1524,19 @@ void Ghost::get_home()
   box.y = 0;
 }
 
+//Returns ghost2 to start position
+void Ghost2::get_home()
+{
+  box.x = 20;
+  box.y = 0;
+}
+
 bool Ghost::is_scared()
 {
   return (scared_);
 }
+
+
 
 void Ghost::change_mood()
 {
@@ -1710,7 +1800,7 @@ int main( int argc, char* args[] )
     Pacman myPacman;
 
     //The ghost
-    Ghost myGhost;
+    Ghost myGhost
 
     //Player score
     Score myScore;
