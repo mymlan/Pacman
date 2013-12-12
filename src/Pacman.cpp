@@ -120,7 +120,7 @@ public:
   void handle_input();
 
   //Moves the Pacman
-  void move(std::vector<SDL_Rect>);
+  void move(std::vector<SDL_Rect>, SDL_Rect);
 
   //Shows the Pacman on the screen
   void show();
@@ -661,7 +661,7 @@ void Pacman::handle_input()
     }
 }
 
-void Pacman::move(std::vector<SDL_Rect> maze)
+void Pacman::move(std::vector<SDL_Rect> maze, SDL_Rect wall25)
 {
     //Move pacman left or right
     box.x += xVel;
@@ -673,7 +673,12 @@ void Pacman::move(std::vector<SDL_Rect> maze)
 	    //Move back
 	    box.x -= xVel;
 	  }
-      }    
+      }   
+	if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall25 ) ) )
+	  {
+	    //Move back
+	    box.x -= xVel;
+	  } 
 
     //Move pacman up or down
     box.y += yVel;
@@ -1288,6 +1293,7 @@ int main( int argc, char* args[] )
     SDL_Rect wall22 = {520,320,40,120};
     SDL_Rect wall23 = {560,360,40,40};
     SDL_Rect wall24 = {600,440,40,40};
+    SDL_Rect wall25 = {350,160,10,40};
 
     //Create vector with all walls in, called maze
     std::vector<SDL_Rect> maze = {wall1,wall2,wall3,wall4,wall5,wall6,wall7,wall8,wall9,wall10,wall11,wall12,wall13,wall14,wall15,wall16,wall17,wall18,wall19,wall20,wall21,wall22,wall23,wall24};
@@ -1346,7 +1352,7 @@ int main( int argc, char* args[] )
 	  }
 	
         //Move the pacman
-        myPacman.move(maze);
+        myPacman.move(maze, wall25);
 	
 	//Ghost finds out where pacman is
 	myGhost.seek(myPacman);
@@ -1384,6 +1390,8 @@ int main( int argc, char* args[] )
 	  {
 	    SDL_FillRect( screen, &(*it), SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF) );
 	  }
+	//Show wall 25 the wall that separates the ghosts nest from playfield
+	SDL_FillRect( screen, &wall25, SDL_MapRGB( screen->format, 0xAF, 0x00, 0x00) );
 
         //Show pacman on the screen
         myPacman.show();
