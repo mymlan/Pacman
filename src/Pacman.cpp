@@ -26,8 +26,19 @@ const int MAP_WIDTH = 640;
 const int FRAMES_PER_SECOND = 20;
 
 //The attributes of the Pacman
-const int PACMAN_WIDTH = 20;
-const int PACMAN_HEIGHT = 20;
+const int PACMAN_WIDTH = 30;
+const int PACMAN_HEIGHT = 29;
+
+//the directions of the pacman
+const int PACMAN_RIGHT = 0;
+const int PACMAN_LEFT = 1;
+const int PACMAN_UP = 2;
+const int PACMAN_DOWN = 3;
+
+//The attributes of the Buttons
+const int BUTTON_WIDTH = 220;
+const int BUTTON_HEIGHT = 60;
+
 
 //The surfaces
 SDL_Surface *pacman = NULL;
@@ -38,6 +49,13 @@ SDL_Surface *score = NULL;
 
 //The event structure
 SDL_Event event;
+
+
+//The areas of the pacmansheet
+SDL_Rect clipsRight[ 2 ];
+SDL_Rect clipsLeft[ 2 ];
+SDL_Rect clipsDown[ 2 ];
+SDL_Rect clipsUp[ 2 ];
 
 //The font
 TTF_Font *font = NULL;
@@ -82,12 +100,19 @@ class Pacman
 private:
   //The collision box of the square
   SDL_Rect box;
+  int x, y;
 
   //The velocity of the square
   int xVel, yVel;
 
   //Pacmans lives
   int lives;
+ 
+  //Its current frame
+    int frame;
+
+    //Its animation status
+    int status;
 
 public:
   //Initializes the variables
@@ -193,6 +218,20 @@ public:
   bool is_paused();
 };
 
+class Menu
+{
+private:
+  // The button
+  SDL_Rect button;
+
+public:
+  //Initialize variable
+  Menu(int x, int  y);
+
+  void show();
+
+};
+
 //Score
 class Score
 {
@@ -206,6 +245,24 @@ public:
   void show();
 };
 
+Menu::Menu(int x, int y)
+{
+  //Initialize offset
+  button.x = x;
+  button.y = y;
+
+  //Set dimension
+  button.w = BUTTON_WIDTH;
+  button.h = BUTTON_HEIGHT;
+
+}
+
+void Menu::show()
+{
+  //Show the ghost
+   SDL_FillRect( screen, &button, SDL_MapRGB( screen->format, 0xEF, 0xEF, 0xEF) );
+
+}
 
 //============================================================================
 // Images 
@@ -257,7 +314,53 @@ void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination,
 
     //Blit
     SDL_BlitSurface( source, clip, destination, &offset );
+
 }
+
+void set_clips()
+{
+    //Clip the sprites
+    clipsRight[ 0 ].x = 0;
+    clipsRight[ 0 ].y = 0;
+    clipsRight[ 0 ].w = PACMAN_WIDTH;
+    clipsRight[ 0 ].h = PACMAN_HEIGHT;
+
+    clipsRight[ 1 ].x = 0;
+    clipsRight[ 1 ].y = PACMAN_HEIGHT;
+    clipsRight[ 1 ].w = PACMAN_WIDTH;
+    clipsRight[ 1 ].h = PACMAN_HEIGHT;
+
+    clipsDown[ 0 ].x = PACMAN_WIDTH;
+    clipsDown[ 0 ].y = 0;
+    clipsDown[ 0 ].w = PACMAN_WIDTH;
+    clipsDown[ 0 ].h = PACMAN_HEIGHT;
+
+    clipsDown[ 1 ].x = PACMAN_WIDTH ;
+    clipsDown[ 1 ].y = PACMAN_HEIGHT;
+    clipsDown[ 1 ].w = PACMAN_WIDTH;
+    clipsDown[ 1 ].h = PACMAN_HEIGHT;
+    
+    clipsLeft[ 0 ].x = PACMAN_WIDTH * 2 ;
+    clipsLeft[ 0 ].y = 0 ;
+    clipsLeft[ 0 ].w = PACMAN_WIDTH;
+    clipsLeft[ 0 ].h = PACMAN_HEIGHT;
+
+    clipsLeft[ 1 ].x = PACMAN_WIDTH * 2;
+    clipsLeft[ 1 ].y = PACMAN_HEIGHT;
+    clipsLeft[ 1 ].w = PACMAN_WIDTH;
+    clipsLeft[ 1 ].h = PACMAN_HEIGHT;
+
+    clipsUp[ 0 ].x = PACMAN_WIDTH * 3;
+    clipsUp[ 0 ].y = 0;
+    clipsUp[ 0 ].w = PACMAN_WIDTH;
+    clipsUp[ 0 ].h = PACMAN_HEIGHT;
+
+    clipsUp[ 1 ].x = PACMAN_WIDTH * 3;
+    clipsUp[ 1 ].y = PACMAN_HEIGHT;
+    clipsUp[ 1 ].w = PACMAN_WIDTH;
+    clipsUp[ 1 ].h = PACMAN_HEIGHT;
+}
+
 
 
 //============================================================================
@@ -351,7 +454,7 @@ bool init()
 bool load_files()
 {
     //Load the Pacman image
-  pacman = load_image( "img/square.bmp" ); //pacman-test bilden har fel dimensioner
+  pacman = load_image( "img/Pacman.bmp" ); //pacman-test bilden har fel dimensioner
 
     //If there was a problem in loading the Pacman
     if( pacman == NULL )
@@ -415,7 +518,7 @@ void clean_up()
 
 
 //============================================================================
-//  Class: Pacman
+//  Class: Pacman (KOD)
 //============================================================================
 
 
@@ -433,10 +536,17 @@ Pacman::Pacman()
     //Initialize the velocity
     xVel = 10;
     yVel = 0;
+    x= 320;
+    y= 440;
 
     //Initialize lives of Pacman
     lives = 2;
+
+ //Initialize animation variables
+    frame = 0;
+    status = PACMAN_LEFT;
 }
+
 
 int Pacman::reveal_position_x()
 {
@@ -724,13 +834,77 @@ void Pacman::move()
         box.y -= yVel;
     }
 }
-
-
 void Pacman::show()
+{
+  
+    //If Pacman is moving left
+    if( xVel < 0 )
+    {
+        //Set the animation to left
+        status = PACMAN_LEFT;
+
+        //Move to the next frame in the animation
+        frame++;
+    }
+    //If Foo is moving right
+    else if( xVel > 0 )
+    {
+        //Set the animation to right
+        status = PACMAN_RIGHT;
+
+        //Move to the next frame in the animation
+        frame++;
+    }
+    //If pacman is moving up
+    else if ( yVel < 0)
+      {
+	status = PACMAN_UP;
+	frame++;
+      }
+    //if pacman is moving down
+    else if (yVel > 0)
+      {
+	status = PACMAN_DOWN;
+	frame ++;
+      }
+    //If Foo standing
+    else
+    {
+        //Restart the animation
+        frame = 0;
+    }
+
+    //Loop the animation
+    if( frame >= 2 )
+    {
+        frame = 0;
+    }
+
+    //Show the stick figure
+    if( status == PACMAN_RIGHT )
+    {
+        apply_surface(box.x, box.y, pacman, screen, &clipsRight[ frame ] );
+    }
+    else if( status == PACMAN_LEFT )
+    {
+        apply_surface( box.x,box.y, pacman, screen, &clipsLeft[ frame ] );
+    }
+    else if( status == PACMAN_UP)
+      {
+	apply_surface (box.x, box.y, pacman, screen, &clipsUp[ frame ]);
+      }
+
+ else if( status == PACMAN_DOWN)
+      {
+	apply_surface (box.x,box.y, pacman , screen, &clipsDown[ frame ]);
+      }
+}
+
+/*void Pacman::show()
 {
     //Show the Pacman
     apply_surface( box.x, box.y, pacman, screen );
-}
+}*/
 
 //Check if Pacman has no more lives
 bool Pacman::game_over()
@@ -1294,6 +1468,9 @@ int main( int argc, char* args[] )
     //The frame rate regulator
     Timer fps;
 
+    //The buttons
+    Menu theButton(700,100);
+
     //Initialize
     if( init() == false )
     {
@@ -1313,6 +1490,9 @@ int main( int argc, char* args[] )
     wall.w = 40;
     wall.h = 400;
     */
+    // Clip the sprite sheet
+    set_clips();
+ 
 
     //While the user hasn't quit
     while( quit == false )
@@ -1410,7 +1590,13 @@ int main( int argc, char* args[] )
 	//Show ghost on the screen
 	myGhost.show();
 
-	apply_surface( MAP_WIDTH, 0, menu, screen );
+	
+	//Show penguin
+  apply_surface( MAP_WIDTH, 0, menu, screen );
+
+
+	//Show Button
+	theButton.show();
 
 	//Show score on the side of the screen
 	myScore.show();
