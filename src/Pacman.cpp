@@ -183,8 +183,6 @@ public:
   //Finds out how to move to Pacman. Seek sets the "direction_to_pacman datamedlem".
   void seek(Pacman);
 
-  //Finds out how to move away from Pacman. Uses seek, but instead of going towards pacman by right, flee goes left.
-  //std::string flee();
 
   SDL_Rect get_box();
 
