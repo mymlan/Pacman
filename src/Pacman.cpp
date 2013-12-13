@@ -16,7 +16,7 @@
 #include <fstream>
 #include <vector>
 #include <iterator>
-
+#include <algorithm>
 
 
 //void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect* clip = NULL );
@@ -309,13 +309,16 @@ private:
   int highscore;
   std::string name;
 public:
+  std::vector<int> highscoretable;
   Highscore(int, std::string);
   // void load();
   // void close();
   bool is_new_highscore(Score&);
   void save_new_highscore(Score&);
-  std::string get_highscore();
+  std::string get_highscore_name();
+  int get_highscore();
   void show();
+  void load_list();
 };
 
 //###############################################################################################
@@ -678,7 +681,7 @@ Pacman::Pacman()
     y= 440;
 
     //Initialize lives of Pacman
-    lives = 2;
+    lives = 0;
 
  //Initialize animation variables
     frame = 0;
@@ -1340,6 +1343,11 @@ Highscore::Highscore(int myScore, std::string myName)
 
 bool Highscore::is_new_highscore(Score& myScore) // ev. ta in namn också
 {
+  load_list();
+  int size=highscoretable.size();
+  if ((size<10) || (myScore.return_score() > highscoretable[size-1])){
+    return true;}
+  return false;
   /*std::ifstream InputFile ("highscore.txt");
   std::vector<Highscore> highscoretable;
   // int lowest_highscore{0};
@@ -1358,36 +1366,54 @@ bool Highscore::is_new_highscore(Score& myScore) // ev. ta in namn också
     {
       return true;
       }*/
-  return false;
+    // return false;
 }
 
 void Highscore::save_new_highscore(Score& new_highscore)
 {
-  /* std::ofstream OutputFile ("highscore.txt");
-  int new_score = new_highscore.return_score();
-  Highscore highscore_entry{new_score, "Ingrid"};
-  std::vector<Highscore> highscoretable;
- highscoretable.push_back(highscore_entry);
- for (int i = 0 ; i < highscoretable.size() ; i++)
-   { 
-     OutputFile << highscoretable[i] << std::endl;   
-   }
-    // OutputFile << highscoretable;
-   OutputFile.close();
-  //ladda fil
-  //lägg in på rätt palts
-  //kolla listans längd
-  //stäng fil*/
+  //Load highscore list to vector
+  load_list();
+
+  //Save highscore list to file
+  std::ofstream outputFile ("src/highscore.txt", std::ios::binary);
+  //Highscore highscore_entry{new_score, "Ingrid"};
+  highscoretable.push_back(new_highscore.return_score());
+  std::stable_sort (highscoretable.begin(), highscoretable.end());
+  std::reverse(highscoretable.begin(),highscoretable.end());
+  if (highscoretable.size() > 10)
+    {
+      highscoretable.pop_back();
+    }
+  for ( int i = 0 ; i < highscoretable.size() ; i++)
+    { 
+      outputFile << highscoretable[i] << std::endl;
+      //  outputFile << highscoretable[i].get_highscore_name << std::endl;
+    }
+  outputFile.close();
 }
 
-std::string Highscore::get_highscore()
+void Highscore::load_list()
 {
-  // std::stringstream stream;
-  std::string text;
-  // stream << points;
-  // stream >> text; 
-  return text;
+  std::ifstream inputfile ("src/highscore.txt");
+  int entry;
+  highscoretable.erase(highscoretable.begin(),highscoretable.end());
+  while (inputfile >> entry)
+    { 
+      highscoretable.push_back(entry);
+    }
+  inputfile.close();
 }
+
+std::string Highscore::get_highscore_name()
+{
+  return name;
+}
+
+int Highscore::get_highscore()
+{
+  return highscore;
+}
+
 
 void Highscore::show()
 {
@@ -1774,14 +1800,15 @@ int main( int argc, char* args[] )
 	  {
 	    if (myPacman.game_over())
 	      {
-
-		if (myHighscore.is_new_highscore(myScore))
+	    	if (myHighscore.is_new_highscore(myScore))
 		  {
-		    quit=true;
-		    myHighscore.save_new_highscore(myScore);	
+		    std::cout << "Nytt rekord" << std::endl;
+		    myHighscore.save_new_highscore(myScore);
+		    quit=true;	
 		  }
 	      }
 	  }
+
 	*/
 	if (myPacman.eat_eaten(myGhost1, myScore))
 	  {
@@ -1808,9 +1835,6 @@ int main( int argc, char* args[] )
 		  }
 	      }
 	  }
-
-
-
 
 
 	//Is a Pacman eating food
