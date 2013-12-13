@@ -953,7 +953,7 @@ void Ghost::move(std::vector<SDL_Rect> maze)
     case 4: yVel = 10; xVel = 0; break; //down
     }
 
-  crashed_ = false;  //if there is no collision, crashed_ will be false
+ 
   //Move the ghost left or right
     box.x += xVel;
 
@@ -965,7 +965,8 @@ void Ghost::move(std::vector<SDL_Rect> maze)
 	  {
 	    //Move back
 	    box.x -= xVel;
-	    crashed_ = true; 
+	    crashed_ = true;
+	    first_way_to_pacman_ = second_way_to_pacman_; 
 	  }
       }    
 
@@ -1040,6 +1041,7 @@ void Ghost1::seek(Pacman paccy)
 	}
   
     }
+  crashed_ = false;
 }
 
 //sets the moving direction towards pacman at random
@@ -1050,6 +1052,7 @@ void Ghost2::seek()
       first_way_to_pacman_ = rand()% 4 + 1;
       second_way_to_pacman_ = first_way_to_pacman_;
     }
+  crashed_ = false;
 }
 
 void Ghost1::show()
