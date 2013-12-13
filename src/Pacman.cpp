@@ -222,7 +222,7 @@ private:
 };
 
 //The third ghost
-class Ghost3 : public Ghost //this ghost mixes up the first and second most desirable directions towards pacman
+//class Ghost3 : public Ghost //this ghost mixes up the first and second most desirable directions towards pacman
 
 //The timer
 class Timer
