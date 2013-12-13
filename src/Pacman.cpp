@@ -668,6 +668,8 @@ void Pacman::showlife()
      apply_surface(910+2*PACMAN_WIDTH,440 ,pacman, screen, &clipsLeft[1] );
    }
 }
+
+
 void Pacman::handle_input()
 {
     //If a key was pressed
@@ -717,6 +719,9 @@ void Pacman::move(std::vector<SDL_Rect> maze, SDL_Rect wall25)
       } 
 
 }
+
+
+
 void Pacman::show()
 {
   
@@ -783,17 +788,16 @@ void Pacman::show()
       }
 }
 
-/*void Pacman::show()
-{
-    //Show the Pacman
-    apply_surface( box.x, box.y, pacman, screen );
-}*/
+
+
+
 
 //Check if Pacman has no more lives
 bool Pacman::game_over()
 {
   return (life()==-1);
 }
+
 
 //Collision between
 bool Pacman::eat_eaten(Ghost& ghost_object,Score& myScore)
@@ -814,6 +818,7 @@ bool Pacman::eat_eaten(Ghost& ghost_object,Score& myScore)
       }
   return false;
 }
+
 
 //Pacman eats food
 bool Pacman::eat_food(Food& food_object,Score& myScore)
@@ -839,12 +844,16 @@ bool Pacman::eat_special_food(Special_Food& special_food_object,Score& myScore, 
   return false;
 }
 
+
+
 //Returns Pacman to starting position
 void Pacman::get_home()
 {
   box.x = 320;
   box.y = 440;
 }
+
+
 //============================================================================
 //  Class: Ghost
 //============================================================================
@@ -940,6 +949,8 @@ void Ghost::move(std::vector<SDL_Rect> maze)
 	  }
       }
 }
+
+
 void Ghost2::move(std::vector<SDL_Rect> maze)
 {
  
@@ -980,6 +991,7 @@ void Ghost2::move(std::vector<SDL_Rect> maze)
 	  }
       }
 }
+
 
 //Sets the moving direction towards pacman
 void Ghost::seek(Pacman paccy)
@@ -1031,6 +1043,7 @@ void Ghost::seek(Pacman paccy)
     }
   
 }
+
 
 //sets the moving direction towards pacman at random
 void Ghost2::seek()
@@ -1456,10 +1469,11 @@ int main( int argc, char* args[] )
     while( quit == false )
       {
 
+	//=================== Startup =========================
 
 	if(Startup.get_start()==true)
 	  {	
-	    bool cont = false;
+	    bool proceed = false;
 	    Startup.showstart();
 	 
 	    //Show penguin
@@ -1469,24 +1483,39 @@ int main( int argc, char* args[] )
 	 
 	    //Update the screen
 	     if( SDL_Flip( screen ) == -1 )
-	  {
-            return 1;
-	    }
-	  
-	    while(!cont)
-	      {
+	       {
+		 return 1;
+	       }
+	     
+	     while(!proceed)
+	       {
 
-		while(SDL_PollEvent( &event)){
-		  if(event.type == SDL_KEYDOWN)
-		    {
-		      if(event.key.keysym.sym == SDLK_s)
-			cont=true;
-		      Startup.change_start();
-		    }
-		}
-	      }
+
+		 //If the user has Xed out the window
+		 if( event.type == SDL_QUIT )
+		   {
+		     //Quit the program
+		     quit = true; proceed = true;
+		   }
+
+
+
+		 while(SDL_PollEvent( &event))
+		   {
+		     if(event.type == SDL_KEYDOWN)
+		       {
+			 switch(event.key.keysym.sym)
+			   {
+			   case SDLK_s: proceed=true; break;
+			   case SDLK_q: quit=true; proceed=true; break;
+			   }
+			 Startup.change_start();
+		       }
+		   }
+	       }
 	  }
 	
+
 
 	//Start the frame timer
 	fps.start();
@@ -1501,23 +1530,34 @@ int main( int argc, char* args[] )
 	    //If a key was pressed
 	    if( event.type == SDL_KEYDOWN )
 	      {
-             	bool cont = false;
+
+
+		// ======================= PAUSE ==========================
+   
 		//If p was pressed
 		if( event.key.keysym.sym == SDLK_p )
 		  {
+		    bool cont = false;
 		    std::cout <<"Spel pausat" << std:: endl;
 		    
-		    //Pause the timer
+		    //Pause the game
 		    while(!cont)
 		      {
-			while(SDL_PollEvent( &event)){
-			  if(event.type == SDL_KEYDOWN)
-			    {
-			      if(event.key.keysym.sym == SDLK_p)
-				cont=true;
-			 
-			    }}
-		      }}
+			while(SDL_PollEvent( &event))
+			  {
+			    //Unpause the game 
+			    if(event.type == SDL_KEYDOWN)
+			      {
+				switch(event.key.keysym.sym)
+				  {
+				  case SDLK_p: cont = true; break;
+				  case SDLK_q: cont = true ; quit = true; break;
+				  }
+				
+			      }
+			  }
+		      }
+		  }
 	      }
 	  
 
