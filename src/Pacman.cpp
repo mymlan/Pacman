@@ -13,7 +13,11 @@
 #include <iostream>  //for felsokning med std::cout
 #include "SDL/SDL_ttf.h"
 #include <sstream>
+#include <fstream>
 #include <vector>
+#include <iterator>
+
+
 
 //void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect* clip = NULL );
 
@@ -42,6 +46,9 @@ const int PACMAN_DOWN = 3;
 const int BUTTON_WIDTH = 220;
 const int BUTTON_HEIGHT = 40;
 
+//The attributes of the Infopanel
+const int INFOPANEL_WIDTH=40;
+const int INFOPANEL_HEIGHT=480;
 
 //The surfaces
 SDL_Surface *pacman = NULL;
@@ -55,6 +62,7 @@ SDL_Surface *startup=NULL;
 SDL_Surface *food = NULL;
 SDL_Surface *special_food = NULL;
 SDL_Surface *text = NULL;
+SDL_Surface *highscore = NULL;
 
 
 //The event structure
@@ -66,6 +74,8 @@ SDL_Rect clipsRight[ 2 ];
 SDL_Rect clipsLeft[ 2 ];
 SDL_Rect clipsDown[ 2 ];
 SDL_Rect clipsUp[ 2 ];
+SDL_Rect clipsStartscr[ 1 ];
+SDL_Rect clipsInfopanel[ 1 ];
 
 //The font
 TTF_Font *font = NULL;
@@ -266,7 +276,25 @@ public:
   Score();
   void reset_score();
   void add_points(int);
-  std::string get_score();
+  std::string get_score(); // return score as string
+  void show();
+  int return_score(); // returns score as int
+};
+
+
+//Highscore
+class Highscore
+{
+private:
+  int highscore;
+  std::string name;
+public:
+  Highscore(int, std::string);
+  // void load();
+  // void close();
+  bool is_new_highscore(Score&);
+  void save_new_highscore(Score&);
+  std::string get_highscore();
   void show();
 };
 
@@ -401,6 +429,17 @@ void set_clips()
     clipsUp[ 1 ].y = PACMAN_HEIGHT;
     clipsUp[ 1 ].w = PACMAN_WIDTH;
     clipsUp[ 1 ].h = PACMAN_HEIGHT;
+
+    clipsStartscr[ 0 ].x = 0;
+    clipsStartscr[ 0 ].y = 0;
+    clipsStartscr[ 0 ].w = MAP_WIDTH;
+    clipsStartscr[ 0 ].h = SCREEN_HEIGHT;
+
+    clipsInfopanel[ 0 ].x = MAP_WIDTH;
+    clipsInfopanel[ 0 ].y = 0;
+    clipsInfopanel[ 0 ].w = INFOPANEL_WIDTH;
+    clipsInfopanel[ 0 ].h = INFOPANEL_HEIGHT;
+
 }
 
 
@@ -566,6 +605,7 @@ bool load_files()
 
 
 
+
 //============================================================================
 //  Memory release
 //============================================================================
@@ -656,6 +696,8 @@ void Pacman::showlife()
      apply_surface(910+2*PACMAN_WIDTH,440 ,pacman, screen, &clipsLeft[1] );
    }
 }
+
+
 void Pacman::handle_input()
 {
     //If a key was pressed
@@ -705,6 +747,9 @@ void Pacman::move(std::vector<SDL_Rect> maze, SDL_Rect wall25)
       } 
 
 }
+
+
+
 void Pacman::show()
 {
   
@@ -771,17 +816,16 @@ void Pacman::show()
       }
 }
 
-/*void Pacman::show()
-{
-    //Show the Pacman
-    apply_surface( box.x, box.y, pacman, screen );
-}*/
+
+
+
 
 //Check if Pacman has no more lives
 bool Pacman::game_over()
 {
   return (life()==-1);
 }
+
 
 //Collision between
 bool Pacman::eat_eaten(Ghost& ghost_object,Score& myScore)
@@ -802,8 +846,6 @@ bool Pacman::eat_eaten(Ghost& ghost_object,Score& myScore)
       }
   return false;
 }
-
-
 
 
 
@@ -830,12 +872,16 @@ bool Pacman::eat_special_food(Special_Food& special_food_object,Score& myScore)
   return false;
 }
 
+
+
 //Returns Pacman to starting position
 void Pacman::get_home()
 {
   box.x = 320;
   box.y = 440;
 }
+
+
 //============================================================================
 //  Class: Ghost
 //============================================================================
@@ -933,6 +979,8 @@ void Ghost::move(std::vector<SDL_Rect> maze)
 }
 
 
+
+
 //Sets the moving direction towards pacman
 void Ghost1::seek(Pacman paccy)
 {
@@ -987,6 +1035,7 @@ void Ghost1::seek(Pacman paccy)
   
     }
 }
+
 //sets the moving direction towards pacman at random
 void Ghost2::seek()
 {
@@ -1168,6 +1217,11 @@ std::string Score::get_score()
   return text;
 }
 
+int Score::return_score()
+{
+  return points;
+}
+
 void Score::show()
 {
   score = TTF_RenderText_Solid( font, get_score().c_str(), textColor );
@@ -1196,7 +1250,6 @@ bool Menu::get_start()
   return start;
 }
 
-
 void Menu::change_start()
 { 
  start=false;
@@ -1206,8 +1259,13 @@ void Menu::show()
 {
   //Show the startbuttons
  
-   SDL_FillRect( screen, &button, SDL_MapRGB( screen->format, 0xEF, 0xEF, 0xEF) );
+  SDL_FillRect( screen, &button, SDL_MapRGB( screen->format, 0xEF, 0xEF, 0xEF) );
+   for (int i=0; i<=8; i++)
+    { 
 
+    apply_surface( (MAP_WIDTH+i*INFOPANEL_WIDTH), 0, startup, screen, &clipsInfopanel[0] );
+   
+  }
 
    text = TTF_RenderText_Solid( font, "Chicken tandoori" , textColor );
    apply_surface(button.x, button.y,text, screen);
@@ -1215,10 +1273,73 @@ void Menu::show()
 
 void Menu::showstart()
 {
-  apply_surface(0,0,startup,screen); 
+  apply_surface(0,0,startup,screen);
+}
+//============================================================================
+//  Class: Highscore
+//============================================================================
+Highscore::Highscore(int myScore, std::string myName)
+{
+  highscore=myScore;
+  name=myName;
 }
 
+bool Highscore::is_new_highscore(Score& myScore) // ev. ta in namn också
+{
+  /*std::ifstream InputFile ("highscore.txt");
+  std::vector<Highscore> highscoretable;
+  // int lowest_highscore{0};
+  // std::string highscore;
+  int new_score = myScore.return_score();
+  if (InputFile.is_open())
+    {
+      for (int i{0}; i<1; i++) // 10
+	{
+	  InputFile >> highscore;
+	}
+      lowest_highscore=std::stoi(highscore);
+      InputFile.close();
+    }   
+  if (new_score > lowest_highscore)
+    {
+      return true;
+      }*/
+  return false;
+}
 
+void Highscore::save_new_highscore(Score& new_highscore)
+{
+  /* std::ofstream OutputFile ("highscore.txt");
+  int new_score = new_highscore.return_score();
+  Highscore highscore_entry{new_score, "Ingrid"};
+  std::vector<Highscore> highscoretable;
+ highscoretable.push_back(highscore_entry);
+ for (int i = 0 ; i < highscoretable.size() ; i++)
+   { 
+     OutputFile << highscoretable[i] << std::endl;   
+   }
+    // OutputFile << highscoretable;
+   OutputFile.close();
+  //ladda fil
+  //lägg in på rätt palts
+  //kolla listans längd
+  //stäng fil*/
+}
+
+std::string Highscore::get_highscore()
+{
+  // std::stringstream stream;
+  std::string text;
+  // stream << points;
+  // stream >> text; 
+  return text;
+}
+
+void Highscore::show()
+{
+  //highscore = TTF_RenderText_Solid( font, get_highscore().c_str(), textColor );
+  apply_surface(0,0,score,screen);
+}
 
 //============================================================================
 //  FOOD
@@ -1337,6 +1458,9 @@ int main( int argc, char* args[] )
     //Player score
     Score myScore;
 
+    //Highscore
+    Highscore myHighscore(0,"Ingrid");
+
 
     //Food
     Food myFood(370,100);
@@ -1403,37 +1527,51 @@ int main( int argc, char* args[] )
     while( quit == false )
       {
 
+	//=================== Startup =========================
 
 	if(Startup.get_start()==true)
 	  {	
-	    bool cont = false;
+	    bool proceed = false;
 	    Startup.showstart();
-	 
 	    //Show penguin
-	    apply_surface( MAP_WIDTH, 0, menu, screen );
+	    //  apply_surface( MAP_WIDTH, 0, startup, screen );
 	    theButton.show();
 
 	 
 	    //Update the screen
 	     if( SDL_Flip( screen ) == -1 )
-	  {
-            return 1;
-	    }
-	  
-	    while(!cont)
-	      {
+	       {
+		 return 1;
+	       }
+	     
+	     while(!proceed)
+	       {
 
-		while(SDL_PollEvent( &event)){
-		  if(event.type == SDL_KEYDOWN)
-		    {
-		      if(event.key.keysym.sym == SDLK_s)
-			cont=true;
-		      Startup.change_start();
-		    }
-		}
-	      }
+		 //========================== Xed out ======================
+		 //If the user has Xed out the window
+		 if( event.type == SDL_QUIT )
+		   {
+		     //Quit the program
+		     quit = true; proceed = true;
+		   }
+		 //=========================================================
+
+		 while(SDL_PollEvent( &event))
+		   {
+		     if(event.type == SDL_KEYDOWN)
+		       {
+			 switch(event.key.keysym.sym)
+			   {
+			   case SDLK_s: proceed=true; std::cout<<" Spela!!!" <<std::endl;  break;
+			   case SDLK_q: quit=true; proceed=true; break;
+			   }
+			 Startup.change_start();
+		       }
+		   }
+	       }
 	  }
 	
+
 
 	//Start the frame timer
 	fps.start();
@@ -1448,23 +1586,44 @@ int main( int argc, char* args[] )
 	    //If a key was pressed
 	    if( event.type == SDL_KEYDOWN )
 	      {
-             	bool cont = false;
+
+
+		// ======================= PAUSE ==========================
+   
 		//If p was pressed
 		if( event.key.keysym.sym == SDLK_p )
 		  {
+		    bool cont = false;
 		    std::cout <<"Spel pausat" << std:: endl;
 		    
-		    //Pause the timer
+		    //Pause the game
 		    while(!cont)
 		      {
-			while(SDL_PollEvent( &event)){
-			  if(event.type == SDL_KEYDOWN)
-			    {
-			      if(event.key.keysym.sym == SDLK_p)
-				cont=true;
-			 
-			    }}
-		      }}
+			
+			while(SDL_PollEvent( &event))
+			  {
+			    //========================== Xed out ======================
+			    //If the user has Xed out the window
+			    if( event.type == SDL_QUIT )
+			      {
+				//Quit the program
+				quit = true; cont = true;
+			      }
+			    //=========================================================
+			    
+			    //Unpause the game 
+			    if(event.type == SDL_KEYDOWN)
+			      {
+				switch(event.key.keysym.sym)
+				  {
+				  case SDLK_p: cont = true; std::cout << "Spela!!"<< std::endl; break;
+				  case SDLK_q: cont = true ; quit = true; break;
+				  }
+				
+			      }
+			  }
+		      }
+		  }
 	      }
 	  
 
@@ -1495,26 +1654,47 @@ int main( int argc, char* args[] )
 	myGhost2.move(maze);
 
 	//Is a ghost eating Pacman or are Pacman eating a ghost
-	if (myPacman.eat_eaten(myGhost1, myScore)){
-	  if (myPacman.game_over()){
-	    quit=true;
-	  }
-	}
-	
-	if (myPacman.eat_eaten(myGhost2, myScore)){
-	  if (myPacman.game_over()){
-	    quit=true;
-	  }
-	}
-	
 
+	/*
+	if (myPacman.eat_eaten(myGhost, myScore))
+	  {
+	    if (myPacman.game_over())
+	      {
 
-	//Is a ghost eating Pacman or are Pacman eating a ghost
-	if (myPacman.eat_eaten(myGhost2, myScore)){
-	  if (myPacman.game_over()){
-	    quit=true;
+		if (myHighscore.is_new_highscore(myScore))
+		  {
+		    quit=true;
+		    myHighscore.save_new_highscore(myScore);	
+		  }
+	      }
 	  }
-	}
+	*/
+	if (myPacman.eat_eaten(myGhost1, myScore))
+	  {
+	    if (myPacman.game_over())
+	      {
+
+		if (myHighscore.is_new_highscore(myScore))
+		  {
+		    quit=true;
+		    myHighscore.save_new_highscore(myScore);	
+		  }
+	      }
+	  }
+
+	if (myPacman.eat_eaten(myGhost2, myScore))
+	  {
+	    if (myPacman.game_over())
+	      {
+
+		if (myHighscore.is_new_highscore(myScore))
+		  {
+		    quit=true;
+		    myHighscore.save_new_highscore(myScore);	
+		  }
+	      }
+	  }
+
 
 
 
@@ -1524,7 +1704,7 @@ int main( int argc, char* args[] )
 	  //  quit=true;
 	  
 	}
-
+	
 	//Is a Pacman eating special_food
 	if (myPacman.eat_special_food(mySpecial_Food, myScore))
 	  {
@@ -1564,7 +1744,7 @@ int main( int argc, char* args[] )
 
 	
 	//Show penguin
-	apply_surface( MAP_WIDTH, 0, menu, screen );
+	//apply_surface( MAP_WIDTH, 0, startup, screen, &clipsInfopanel[0] );
 
 
 	//show the lives on the screen
