@@ -259,10 +259,11 @@ private:
   // The button
   SDL_Rect button;
   bool start;
+  std::string message_;
 
 public:
   //Initialize variable
-  Menu(int x, int  y);
+  Menu(int x, int  y, std::string text = "");
   void showstart();
   void show();
   bool get_start();
@@ -1245,12 +1246,13 @@ void Score::show()
 //  Class: Menu
 //============================================================================
 
-Menu::Menu(int x, int y)
+Menu::Menu(int x, int y, std::string text)
 {
   //Initialize offset
   button.x = x;
   button.y = y;
   start=true;
+  message_ = text;
 
 
   //Set dimension
@@ -1276,7 +1278,7 @@ void Menu::show()
    SDL_FillRect( screen, &button, SDL_MapRGB( screen->format, 0xEF, 0xEF, 0xEF) );
 
 
-   text = TTF_RenderText_Solid( font, "Chicken tandoori" , textColor );
+   text = TTF_RenderText_Solid( font, message_.c_str() , textColor );
    apply_surface(button.x, button.y,text, screen);
 }
 
@@ -1417,7 +1419,7 @@ int main( int argc, char* args[] )
 
 
   //The buttons
-  Menu theButton(700,100);
+    Menu theButton(700,100,"McFeast");
 
   //Initialize
   if( init() == false )
@@ -1495,10 +1497,11 @@ int main( int argc, char* args[] )
 		 //If the user has Xed out the window
 		 if( event.type == SDL_QUIT )
 		   {
+		     std::cout << "Game quit" << std::endl;
 		     //Quit the program
 		     quit = true; proceed = true;
 		   }
-		 //=========================================================
+		 //========================================================###
 
 		 while(SDL_PollEvent( &event))
 		   {
@@ -1507,7 +1510,7 @@ int main( int argc, char* args[] )
 			 switch(event.key.keysym.sym)
 			   {
 			   case SDLK_s: proceed=true; std::cout<<" Spela!!!" <<std::endl;  break;
-			   case SDLK_q: quit=true; proceed=true; break;
+			   case SDLK_q: quit=true; proceed=true; std::cout << "Game quit" << std::endl ; break;
 			   }
 			 Startup.change_start();
 		       }
@@ -1515,11 +1518,10 @@ int main( int argc, char* args[] )
 	       }
 	  }
 	
-
+	//==================================================##
 
 	//Start the frame timer
 	fps.start();
-
 
 
 
@@ -1527,9 +1529,15 @@ int main( int argc, char* args[] )
 	while( SDL_PollEvent( &event ) )
 	  {
 
+	    
 	    //If a key was pressed
 	    if( event.type == SDL_KEYDOWN )
 	      {
+		if( event.key.keysym.sym == SDLK_q)
+		  {
+		    std::cout << "Game quit" << std::endl;
+		    quit = true;
+		  }
 
 
 		// ======================= PAUSE ==========================
@@ -1561,7 +1569,7 @@ int main( int argc, char* args[] )
 				switch(event.key.keysym.sym)
 				  {
 				  case SDLK_p: cont = true; std::cout << "Spela!!"<< std::endl; break;
-				  case SDLK_q: cont = true ; quit = true; break;
+				  case SDLK_q: cont = true ; quit = true; std::cout << "Game quit" << std::endl; break;
 				  }
 				
 			      }
