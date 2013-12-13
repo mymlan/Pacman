@@ -81,7 +81,7 @@ SDL_Rect clipsInfopanel[ 1 ];
 TTF_Font *font = NULL;
 
 //The color of the font
-SDL_Color textColor = {0,0,0};
+SDL_Color textColor = {0,100,0};
 
 
 //============================================================================
@@ -121,12 +121,12 @@ public:
   void showlife();
   bool game_over();
   bool eat_eaten(class Ghost&, class Score&);
-
+ 
  //Pacman eats food for points
-  bool eat_food(class Food&, class Score&);
+  void eat_food(std::vector<class Food>&, class Score&); //bool eat_food(class Food&, class Score&);
 
   //Pacman eats special_food - ghosts flees
-  bool eat_special_food(class Special_Food&, class Score&, class Ghost&);
+  bool eat_special_food(class Special_Food&, class Score&);
 
   //Takes key presses and adjusts the square's velocity
   void handle_input();
@@ -142,92 +142,83 @@ public:
 };
 
 //The ghost 
-class Ghost //need a way to set crashed_ to false. Do this by checking if there was no crash
+class Ghost
 {
-private:
-  //The collission box of the ghost
+protected:
+  //if ghost crashes into a wall it will change direction, otherwise will keep going.
+  bool crashed_;
+
+//The collission box of the ghost
   SDL_Rect box;
 
   //The velocity of the ghost
   int xVel, yVel;
 
-  //Angry or scare ghost. 0 angry, 1 scared
+  //Angry or scare ghost. false is  angry, true is scared
   bool scared_;
 
-  //if ghost crashes into a wall it will change direction, otherwise will keep going.
-  bool crashed_;
 
   //1 is left, 2 is right, 3 is up, and 4 is down. 0 will be the starting value, meaning the ghost hasn't found out where pacman is
   int first_way_to_pacman_;
   int second_way_to_pacman_;
-
 public:
-  //Initializes the variables
-  Ghost();
-
+  Ghost() = default;
+  
   //Moves the ghost
   void move(std::vector<SDL_Rect>);
-
-  //Finds out how to move to Pacman. Seek sets the "first and second way to pacman" member units.
-  void seek(Pacman);
-
-
+  
+  
   SDL_Rect get_box();
 
-  //Shows the ghost on the screen
-  void show();
-
+  
   //Sets Ghost position to startposition
-  void get_home();
-
+  virtual void get_home() = 0;
+  
   //Returns if ghost is scared/angry
   bool is_scared();
-
+  
   //Switches ghost between chase and flee states
   void change_mood();
 };
 
-//The second ghost
-class Ghost2 //this is a whimsy  ghost, it moves in random directions. It is also never scared
+
+
+class Ghost1 : public Ghost
 {
-private:
-  //The collission box of the ghost
-  SDL_Rect box;
-
-  //The velocity of the ghost
-  int xVel, yVel;
-
-  //if ghost crashes into a wall it will change direction, otherwise will keep going.
-  bool crashed_;
-
-  //1 is left, 2 is right, 3 is up, and 4 is down. 0 will be the starting value, meaning the ghost hasn't found out where pacman is
-  int first_way_to_pacman_;
-
-
 public:
+ //Finds out how to move to Pacman. Seek sets the "first and second way to pacman" member units.
+  void seek(Pacman);
+
   //Initializes the variables
-  Ghost2();
+  Ghost1();
 
-  //Moves the ghost
-  void move(std::vector<SDL_Rect>);
-
-  //Finds out how to move to Pacman. This ghost does it at random
-  void seek();
-
-
-  SDL_Rect get_box();
+  void get_home();  
 
   //Shows the ghost on the screen
   void show();
 
-  //Sets Ghost position to startposition
+private: 
+ 
+};
+
+ 
+
+
+//The second ghost
+  class Ghost2 : public Ghost  //this is a whimsy  ghost, it moves in random directions.
+{
+public:
+  void seek();
+
+  Ghost2();
+
   void get_home();
 
-  //Returns if ghost is scared/angry
-  bool is_scared();
+  //Shows the ghost on the screen
+  void show();
+private:
+ 
 
-  //Switches ghost between chase and flee states
-  void change_mood();
 };
 
 
@@ -269,14 +260,16 @@ private:
   // The button
   SDL_Rect button;
   bool start;
+  std::string message_;
 
 public:
   //Initialize variable
-  Menu(int x, int  y);
+  Menu(int x, int  y, std::string text = "");
   void showstart();
   void show();
   bool get_start();
   void change_start();
+  void show_button();
 
 };
 
@@ -562,16 +555,16 @@ bool load_files()
    
     //Load the ghost image
     ghost = load_image( "img/ghost-picture.bmp" );
-
+    ghost2 = load_image( "img/ghost-picture2.bmp" );
     //If there was a problem in loading the ghost picture
-    if( ghost == NULL)
+    if( ghost == NULL || ghost2 == NULL)
       {
 	return false;
       }
-
+    
 
     //Load the foods image
-    food = load_image( "img/food-picture1.bmp" );
+    food = load_image( "img/food2.bmp" );
 
     //If there was a problem in loading the food picture
     if( food == NULL)
@@ -631,10 +624,11 @@ void clean_up()
 {
     //Free the surface
     SDL_FreeSurface( pacman );
-    SDL_FreeSurface( ghost );   
+    SDL_FreeSurface( ghost );
+    SDL_FreeSurface( ghost2 );   //prova ta bort vid problem med ghost
     SDL_FreeSurface( score );
     SDL_FreeSurface( startup);
-               //prova ta bort vid problem med ghost
+              
     //Quit SDL
     SDL_Quit();
 }
@@ -863,24 +857,30 @@ bool Pacman::eat_eaten(Ghost& ghost_object,Score& myScore)
 }
 
 
+
 //Pacman eats food
-bool Pacman::eat_food(Food& food_object,Score& myScore)
+void Pacman::eat_food(std::vector<Food>& food_vector, Score& myScore) //Food& food_object
 {
-  if (check_collision(box, food_object.get_box()) && !food_object.eaten())
-      {
-	myScore.add_points(1);
-	food_object.was_eaten();
-	return true;
-      }
-  return false;
+  for (std::vector<Food>::iterator it = food_vector.begin() ; it != food_vector.end(); ++it)
+    {
+    
+      if ((check_collision(box, (*it).get_box())) and ((*it).eaten() == false))
+	{
+	  myScore.add_points(1);
+	  (*it).was_eaten();
+	  
+	}
+      
+    }
+    
 }
 
 //Pacman eats special_food
-bool Pacman::eat_special_food(Special_Food& special_food_object,Score& myScore, Ghost& myGhost)
+bool Pacman::eat_special_food(Special_Food& special_food_object,Score& myScore)
 {
+
   if (check_collision(box, special_food_object.get_box()) && !special_food_object.eaten())
-      {
-	myGhost.change_mood();//funktion att spöken flyr
+      {	
 	special_food_object.was_eaten();
 	return true;
       }
@@ -901,7 +901,7 @@ void Pacman::get_home()
 //  Class: Ghost
 //============================================================================
 
-Ghost::Ghost()
+Ghost1::Ghost1()
 {
   //Initialize the offsets
   box.x = 0;
@@ -962,52 +962,10 @@ void Ghost::move(std::vector<SDL_Rect> maze)
     case 4: yVel = 10; xVel = 0; break; //down
     }
 
-  crashed_ = false;  
-  //Move the ghost left or right
-    box.x += xVel;
-
-
-    //If the ghost went too far to the left or right or has collided with the walls
-    for (std::vector<SDL_Rect>::iterator it = maze.begin() ; it != maze.end(); ++it)
-      {
-	if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, *it ) ) )
-	  {
-	    //Move back
-	    box.x -= xVel;
-	    crashed_ = true;
-	  }
-      }    
-
-    //Move the ghost up or down
-    box.y += yVel;
-
-    //If the square went too far up or down or has collided with the walls
-    for (std::vector<SDL_Rect>::iterator it = maze.begin() ; it != maze.end(); ++it)
-      {
-	if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, *it ) ) )
-	  {
-	    //Move back
-	    box.y -= yVel;
-	    crashed_ = true;
-	  }
-      }
-}
-
-
-void Ghost2::move(std::vector<SDL_Rect> maze)
-{
  
- //Set velocity and direction
-  switch(first_way_to_pacman_)
-    {
-    case 1: yVel = 0; xVel = -10; break; //left
-    case 2: yVel = 0; xVel = 10; break;  //right
-    case 3: yVel = -10; xVel = 0; break;  //up      y increases downwards
-    case 4: yVel = 10; xVel = 0; break; //down
-    }
-  
   //Move the ghost left or right
     box.x += xVel;
+
 
     //If the ghost went too far to the left or right or has collided with the walls
     for (std::vector<SDL_Rect>::iterator it = maze.begin() ; it != maze.end(); ++it)
@@ -1017,6 +975,7 @@ void Ghost2::move(std::vector<SDL_Rect> maze)
 	    //Move back
 	    box.x -= xVel;
 	    crashed_ = true;
+	    first_way_to_pacman_ = second_way_to_pacman_; 
 	  }
       }    
 
@@ -1034,59 +993,65 @@ void Ghost2::move(std::vector<SDL_Rect> maze)
 	  }
       }
 }
+
+
 
 
 //Sets the moving direction towards pacman
-void Ghost::seek(Pacman paccy)
+void Ghost1::seek(Pacman paccy)
 {
-  //pacman_x and pacman_y are the coordinates of pacman
-  int pacman_x{paccy.reveal_position_x()};
-  int pacman_y{paccy.reveal_position_y()};
-  
-  
-  //tries to minimize the distance in the shortest direction first. If pacman is one step to the right and far away at the bottom, the ghost will first go down and then take one step left.
-  if( abs(pacman_x - box.x) > abs(pacman_y - box.y) ) //if bigger difference in x than in y, then walk towards pacman i x direction
+
+  if(crashed_ == true)
     {
-      if( pacman_x > box.x ) //if pacman is to the right, go right
-	{first_way_to_pacman_ = 2;}
-      else 
-	{first_way_to_pacman_ = 1;} //else, go left
+      //pacman_x and pacman_y are the coordinates of pacman
+      int pacman_x{paccy.reveal_position_x()};
+      int pacman_y{paccy.reveal_position_y()};
+  
+  
+      //tries to minimize the distance in the shortest direction first. If pacman is one step to the right and far away at the bottom, the ghost will first go down and then take one step left.
+      if( abs(pacman_x - box.x) > abs(pacman_y - box.y) ) //if bigger difference in x than in y, then walk towards pacman i x direction
+	{
+	  if( pacman_x > box.x ) //if pacman is to the right, go right
+	    {first_way_to_pacman_ = 2;}
+	  else 
+	    {first_way_to_pacman_ = 1;} //else, go left
       
-      if ( pacman_y > box.y ) //if pacman is below the ghost, go downwards
-	{second_way_to_pacman_ = 4;}
-      else
-	{second_way_to_pacman_ = 3;} //else, go up
-    }
+	  if ( pacman_y > box.y ) //if pacman is below the ghost, go downwards
+	    {second_way_to_pacman_ = 4;}
+	  else
+	    {second_way_to_pacman_ = 3;} //else, go up
+	}
      
-  else
-    {
-      if (pacman_y > box.y) //biggest distance is in y direction, so walk in y direction first
-	{first_way_to_pacman_ = 4;}
       else
-	{first_way_to_pacman_ = 3;}
+	{
+	  if (pacman_y > box.y) //biggest distance is in y direction, so walk in y direction first
+	    {first_way_to_pacman_ = 4;}
+	  else
+	    {first_way_to_pacman_ = 3;}
       
-      if (pacman_x > box.x)
-	{second_way_to_pacman_ = 2;} //go right
-      else 
-	{second_way_to_pacman_ = 1;} //go left
-    }
+	  if (pacman_x > box.x)
+	    {second_way_to_pacman_ = 2;} //go right
+	  else 
+	    {second_way_to_pacman_ = 1;} //go left
+	}
 
 
-  if (scared_ == true) //if the ghost is scared, reverse the moving direction
-    {
-      if (first_way_to_pacman_ == 1 || 3)
-	{first_way_to_pacman_ += 1;}
-      else
-	{first_way_to_pacman_ -= 1;}
+      if (scared_ == true) //if the ghost is scared, reverse the moving direction
+	{
+	  if (first_way_to_pacman_ == 1 || 3)
+	    {first_way_to_pacman_ += 1;}
+	  else
+	    {first_way_to_pacman_ -= 1;}
       
-      if (second_way_to_pacman_ == 1 || 3)
-	{second_way_to_pacman_ += 1;}
-      else
-	{second_way_to_pacman_ -= 1;}
-    }
+	  if (second_way_to_pacman_ == 1 || 3)
+	    {second_way_to_pacman_ += 1;}
+	  else
+	    {second_way_to_pacman_ -= 1;}
+	}
   
+    }
+  crashed_ = false;
 }
-
 
 //sets the moving direction towards pacman at random
 void Ghost2::seek()
@@ -1094,19 +1059,22 @@ void Ghost2::seek()
   if (crashed_ == true)
     {
       first_way_to_pacman_ = rand()% 4 + 1;
+      second_way_to_pacman_ = first_way_to_pacman_;
     }
+  crashed_ = false;
 }
 
-void Ghost::show()
+void Ghost1::show()
 {
   //Show the ghost
   apply_surface( box.x, box.y, ghost, screen );
+  
 }
 
 void Ghost2::show()
 {
-  //Show the ghost
-  apply_surface( box.x, box.y, ghost, screen );
+  //show the ghost2
+  apply_surface( box.x, box.y, ghost2, screen );
 }
 
 
@@ -1116,14 +1084,9 @@ SDL_Rect Ghost::get_box()
   return box;
 }
 
-//Returns SDL-object of ghost2
-SDL_Rect Ghost2::get_box()
-{
-  return box;
-}
 
 //Returns ghost to start position
-void Ghost::get_home()
+void Ghost1::get_home()
 {
   box.x = 0;
   box.y = 0;
@@ -1292,12 +1255,13 @@ void Score::show()
 //  Class: Menu
 //============================================================================
 
-Menu::Menu(int x, int y)
+Menu::Menu(int x, int y, std::string text)
 {
   //Initialize offset
   button.x = x;
   button.y = y;
   start=true;
+  message_ = text;
 
 
   //Set dimension
@@ -1318,22 +1282,31 @@ void Menu::change_start()
 void Menu::show()
 {
   //Show the startbuttons
- 
-  SDL_FillRect( screen, &button, SDL_MapRGB( screen->format, 0xEF, 0xEF, 0xEF) );
+  
+  //  SDL_FillRect( screen, &button, SDL_MapRGB( screen->format, 0xEF, 0xEF, 0xEF) );
    for (int i=0; i<=8; i++)
     { 
 
     apply_surface( (MAP_WIDTH+i*INFOPANEL_WIDTH), 0, startup, screen, &clipsInfopanel[0] );
-   
-  }
-
-   text = TTF_RenderText_Solid( font, "Chicken tandoori" , textColor );
-   apply_surface(button.x, button.y,text, screen);
+  
+  
+    }
+  
 }
+
+void Menu::show_button()
+{
+  text = TTF_RenderText_Solid( font, message_.c_str() , textColor );
+  apply_surface(button.x, button.y,text, screen);
+}
+
 
 void Menu::showstart()
 {
-  apply_surface(0,0,startup,screen);
+
+  apply_surface(0,0,startup,screen, &clipsStartscr[0]); 
+  std::cout << "Hey Big Boy/Girl!!!" <<std::endl;
+  //apply_surface(0,0,startup,screen);
 }
 //============================================================================
 //  Class: Highscore
@@ -1342,6 +1315,7 @@ Highscore::Highscore(int myScore, std::string myName)
 {
   highscore=myScore;
   name=myName;
+
 }
 
 bool Highscore::is_new_highscore(Score& myScore) // ev. ta in namn också
@@ -1527,13 +1501,13 @@ int main( int argc, char* args[] )
     bool quit = false;
 
     //Menu
-    Menu Startup(0,0);
+    Menu Startup(0,0,"Press S to play");
 
     //The pacman
     Pacman myPacman;
 
     //The ghost
-    Ghost myGhost;
+    Ghost1 myGhost1;
 
     //The second ghost
     Ghost2 myGhost2;
@@ -1545,8 +1519,58 @@ int main( int argc, char* args[] )
     Highscore myHighscore(0,"Ingrid");
 
 
-    //Food
-    Food myFood(370,100);
+    //Initialize Food
+    Food myFood1(10,50);
+    Food myFood2(10,90);
+    Food myFood3(10,130);
+    Food myFood4(10,170);
+    Food myFood5(10,210);
+    Food myFood6(10,250);
+    Food myFood7(10,290);
+    Food myFood8(10,330);
+    Food myFood9(10,370);
+    Food myFood10(10,410);
+
+    Food myFood11(50,10);
+    Food myFood12(50,250);
+    Food myFood13(50,450);
+
+    Food myFood14(90,10);
+    Food myFood15(90,170);
+    Food myFood16(90,210);
+    Food myFood17(90,250);
+    Food myFood18(90,290);
+    Food myFood19(90,330);
+    Food myFood20(90,370);
+    Food myFood21(90,410);
+    Food myFood22(90,450);
+
+    Food myFood23(130,10);
+    Food myFood24(130,170);
+    Food myFood25(130,450);
+
+    Food myFood26(170,10);
+    Food myFood27(170,50);
+    Food myFood28(170,90);
+    Food myFood29(170,130);
+    Food myFood30(170,170);
+    Food myFood31(170,210);
+    Food myFood32(170,250);
+    Food myFood33(170,290);
+    Food myFood34(170,330);
+    Food myFood35(170,370);
+    Food myFood36(170,410);
+    Food myFood37(170,450);
+
+    Food myFood38(210,10);
+    Food myFood39(210,90);
+    Food myFood40(210,250);
+    Food myFood41(210,450);
+
+    //create vectorwith all food in, called food_vector
+    std::vector<Food> food_vector = {myFood1,myFood2,myFood3,myFood4,myFood5,myFood6,myFood7,myFood8,myFood9,myFood10,myFood11,myFood12,myFood13,myFood14,myFood15,myFood16,myFood17,myFood18,myFood19,myFood20,myFood21,myFood22,myFood23,myFood24,myFood25,myFood26,myFood27,myFood28,myFood29,myFood30,myFood31,myFood32,myFood33,myFood34,myFood35,myFood36,myFood37,myFood38,myFood39,myFood40};
+
+    std::cerr << food_vector.size()<< std::endl;
 
     //Special_food
     Special_Food mySpecial_Food(370,0);
@@ -1557,7 +1581,9 @@ int main( int argc, char* args[] )
 
 
   //The buttons
-  Menu theButton(700,100);
+    Menu theButton(700,100,"1. Chicken Tandoori 75kr ");
+    Menu theButton2(700, 150,"2. Tikka Massaala 70kr ");
+    Menu theButton3(700, 200,"3. Curry Chicken 70kr");
 
   //Initialize
   if( init() == false )
@@ -1618,7 +1644,8 @@ int main( int argc, char* args[] )
 	    Startup.showstart();
 	    //Show penguin
 	    //  apply_surface( MAP_WIDTH, 0, startup, screen );
-	    theButton.show();
+	    Startup.show();
+	    Startup.show_button();
 
 	 
 	    //Update the screen
@@ -1634,10 +1661,11 @@ int main( int argc, char* args[] )
 		 //If the user has Xed out the window
 		 if( event.type == SDL_QUIT )
 		   {
+		     std::cout << "Game quit" << std::endl;
 		     //Quit the program
 		     quit = true; proceed = true;
 		   }
-		 //=========================================================
+		 //========================================================###
 
 		 while(SDL_PollEvent( &event))
 		   {
@@ -1646,7 +1674,7 @@ int main( int argc, char* args[] )
 			 switch(event.key.keysym.sym)
 			   {
 			   case SDLK_s: proceed=true; std::cout<<" Spela!!!" <<std::endl;  break;
-			   case SDLK_q: quit=true; proceed=true; break;
+			   case SDLK_q: quit=true; proceed=true; std::cout << "Game quit" << std::endl ; break;
 			   }
 			 Startup.change_start();
 		       }
@@ -1654,11 +1682,10 @@ int main( int argc, char* args[] )
 	       }
 	  }
 	
-
+	//==================================================##
 
 	//Start the frame timer
 	fps.start();
-
 
 
 
@@ -1666,9 +1693,15 @@ int main( int argc, char* args[] )
 	while( SDL_PollEvent( &event ) )
 	  {
 
+	    
 	    //If a key was pressed
 	    if( event.type == SDL_KEYDOWN )
 	      {
+		if( event.key.keysym.sym == SDLK_q)
+		  {
+		    std::cout << "Game quit" << std::endl;
+		    quit = true;
+		  }
 
 
 		// ======================= PAUSE ==========================
@@ -1700,7 +1733,7 @@ int main( int argc, char* args[] )
 				switch(event.key.keysym.sym)
 				  {
 				  case SDLK_p: cont = true; std::cout << "Spela!!"<< std::endl; break;
-				  case SDLK_q: cont = true ; quit = true; break;
+				  case SDLK_q: cont = true ; quit = true; std::cout << "Game quit" << std::endl; break;
 				  }
 				
 			      }
@@ -1729,14 +1762,17 @@ int main( int argc, char* args[] )
         myPacman.move(maze, wall25);
 	
 	//Ghost finds out where pacman is
-	myGhost.seek(myPacman);
+	myGhost1.seek(myPacman);
 	myGhost2.seek();
 
 	//Move the ghost
-	myGhost.move(maze);
+	myGhost1.move(maze);
 	myGhost2.move(maze);
 
 	//Is a ghost eating Pacman or are Pacman eating a ghost
+
+
+	/*
 	if (myPacman.eat_eaten(myGhost, myScore))
 	  {
 	    if (myPacman.game_over())
@@ -1749,21 +1785,56 @@ int main( int argc, char* args[] )
 		  }
 	      }
 	  }
-	
+
+	*/
+	if (myPacman.eat_eaten(myGhost1, myScore))
+	  {
+	    if (myPacman.game_over())
+	      {
+
+		if (myHighscore.is_new_highscore(myScore))
+		  {
+		    quit=true;
+		    myHighscore.save_new_highscore(myScore);	
+		  }
+	      }
+	  }
+
+	if (myPacman.eat_eaten(myGhost2, myScore))
+	  {
+	    if (myPacman.game_over())
+	      {
+
+		if (myHighscore.is_new_highscore(myScore))
+		  {
+		    quit=true;
+		    myHighscore.save_new_highscore(myScore);	
+		  }
+	      }
+	  }
+
 
 	//Is a Pacman eating food
-	if (myPacman.eat_food(myFood, myScore)){
+	myPacman.eat_food(food_vector, myScore);
+
+	//myPacman.eat_food(food_vector, myScore);
+      /* {
 	  // if (alla food-pluttar uppätna - spel slut){
 	  //  quit=true;
 	  
-	}
-	
-	//Is a Pacman eating special_food
-	if (myPacman.eat_special_food(mySpecial_Food, myScore, myGhost)){
-	  // timer räkna ner
-	  //
-	}
 
+	  }*/
+
+
+	//Is a Pacman eating special_food
+	if (myPacman.eat_special_food(mySpecial_Food, myScore))
+	  {
+	    myGhost1.change_mood();
+	    myGhost2.change_mood();
+	    // timer räkna ner
+	    //
+	  }
+	
 
         //Fill the screen white
         SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0xFF, 0xFF, 0xFF ) );
@@ -1779,15 +1850,18 @@ int main( int argc, char* args[] )
         //Show pacman on the screen
         myPacman.show();
 	
-
+	//Show food on the screen
+	for (std::vector<Food>::iterator it = food_vector.begin() ; it != food_vector.end(); ++it)
+	  {
+	    (*it).show();
+	  }
 
 	//Show ghost on the screen
-	myGhost.show();
+	myGhost1.show();
 	myGhost2.show();
 
 
-	//Show food on the screen
-	myFood.show();
+
 
 	//Show special_food on the screen
 	mySpecial_Food.show();
@@ -1800,9 +1874,12 @@ int main( int argc, char* args[] )
 	//show the lives on the screen
 	myPacman.showlife();
 
-	//show the button
+	//show the buttons
 
 	theButton.show();
+	theButton.show_button();
+	theButton2.show_button();
+theButton3.show_button();
 
 
 	//Show score on the side of the screen
