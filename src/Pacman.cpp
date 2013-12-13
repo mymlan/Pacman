@@ -1176,27 +1176,27 @@ void Ghost3::seek(Pacman paccy)
       if( abs(pacman_x - box.x) > abs(pacman_y - box.y) ) //if bigger difference in x than in y, then walk towards pacman i x direction
 	{
 	  if( pacman_x > box.x ) //if pacman is to the right, go right
-	    {first_way_to_pacman_ = 2;}
+	    {second_way_to_pacman_ = 2;}
 	  else 
-	    {first_way_to_pacman_ = 1;} //else, go left
+	    {second_way_to_pacman_ = 1;} //else, go left
       
 	  if ( pacman_y > box.y ) //if pacman is below the ghost, go downwards
-	    {second_way_to_pacman_ = 4;}
+	    {first_way_to_pacman_ = 4;}
 	  else
-	    {second_way_to_pacman_ = 3;} //else, go up
+	    {first_way_to_pacman_ = 3;} //else, go up
 	}
      
       else
 	{
 	  if (pacman_y > box.y) //biggest distance is in y direction, so walk in y direction first
-	    {first_way_to_pacman_ = 4;}
+	    {second_way_to_pacman_ = 4;}
 	  else
-	    {first_way_to_pacman_ = 3;}
+	    {second_way_to_pacman_ = 3;}
       
 	  if (pacman_x > box.x)
-	    {second_way_to_pacman_ = 2;} //go right
+	    {first_way_to_pacman_ = 2;} //go right
 	  else 
-	    {second_way_to_pacman_ = 1;} //go left
+	    {first_way_to_pacman_ = 1;} //go left
 	}
      
 
