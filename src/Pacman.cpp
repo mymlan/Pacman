@@ -81,7 +81,7 @@ SDL_Rect clipsInfopanel[ 1 ];
 TTF_Font *font = NULL;
 
 //The color of the font
-SDL_Color textColor = {0,0,0};
+SDL_Color textColor = {0,100,0};
 
 
 //============================================================================
@@ -260,14 +260,16 @@ private:
   // The button
   SDL_Rect button;
   bool start;
+  std::string message_;
 
 public:
   //Initialize variable
-  Menu(int x, int  y);
+  Menu(int x, int  y, std::string text = "");
   void showstart();
   void show();
   bool get_start();
   void change_start();
+  void show_button();
 
 };
 
@@ -1241,12 +1243,13 @@ void Score::show()
 //  Class: Menu
 //============================================================================
 
-Menu::Menu(int x, int y)
+Menu::Menu(int x, int y, std::string text)
 {
   //Initialize offset
   button.x = x;
   button.y = y;
   start=true;
+  message_ = text;
 
 
   //Set dimension
@@ -1267,22 +1270,31 @@ void Menu::change_start()
 void Menu::show()
 {
   //Show the startbuttons
- 
-  SDL_FillRect( screen, &button, SDL_MapRGB( screen->format, 0xEF, 0xEF, 0xEF) );
+  
+  //  SDL_FillRect( screen, &button, SDL_MapRGB( screen->format, 0xEF, 0xEF, 0xEF) );
    for (int i=0; i<=8; i++)
     { 
 
     apply_surface( (MAP_WIDTH+i*INFOPANEL_WIDTH), 0, startup, screen, &clipsInfopanel[0] );
-   
-  }
-
-   text = TTF_RenderText_Solid( font, "Chicken tandoori" , textColor );
-   apply_surface(button.x, button.y,text, screen);
+  
+  
+    }
+  
 }
+
+void Menu::show_button()
+{
+  text = TTF_RenderText_Solid( font, message_.c_str() , textColor );
+  apply_surface(button.x, button.y,text, screen);
+}
+
 
 void Menu::showstart()
 {
-  apply_surface(0,0,startup,screen);
+
+  apply_surface(0,0,startup,screen, &clipsStartscr[0]); 
+  std::cout << "Hey Big Boy/Girl!!!" <<std::endl;
+  //apply_surface(0,0,startup,screen);
 }
 //============================================================================
 //  Class: Highscore
@@ -1291,6 +1303,7 @@ Highscore::Highscore(int myScore, std::string myName)
 {
   highscore=myScore;
   name=myName;
+
 }
 
 bool Highscore::is_new_highscore(Score& myScore) // ev. ta in namn också
@@ -1453,7 +1466,7 @@ int main( int argc, char* args[] )
     bool quit = false;
 
     //Menu
-    Menu Startup(0,0);
+    Menu Startup(0,0,"Press S to play");
 
     //The pacman
     Pacman myPacman;
@@ -1483,7 +1496,9 @@ int main( int argc, char* args[] )
 
 
   //The buttons
-  Menu theButton(700,100);
+    Menu theButton(700,100,"1. Chicken Tandoori 75kr ");
+    Menu theButton2(700, 150,"2. Tikka Massaala 70kr ");
+    Menu theButton3(700, 200,"3. Curry Chicken 70kr");
 
   //Initialize
   if( init() == false )
@@ -1544,7 +1559,8 @@ int main( int argc, char* args[] )
 	    Startup.showstart();
 	    //Show penguin
 	    //  apply_surface( MAP_WIDTH, 0, startup, screen );
-	    theButton.show();
+	    Startup.show();
+	    Startup.show_button();
 
 	 
 	    //Update the screen
@@ -1560,10 +1576,11 @@ int main( int argc, char* args[] )
 		 //If the user has Xed out the window
 		 if( event.type == SDL_QUIT )
 		   {
+		     std::cout << "Game quit" << std::endl;
 		     //Quit the program
 		     quit = true; proceed = true;
 		   }
-		 //=========================================================
+		 //========================================================###
 
 		 while(SDL_PollEvent( &event))
 		   {
@@ -1572,7 +1589,7 @@ int main( int argc, char* args[] )
 			 switch(event.key.keysym.sym)
 			   {
 			   case SDLK_s: proceed=true; std::cout<<" Spela!!!" <<std::endl;  break;
-			   case SDLK_q: quit=true; proceed=true; break;
+			   case SDLK_q: quit=true; proceed=true; std::cout << "Game quit" << std::endl ; break;
 			   }
 			 Startup.change_start();
 		       }
@@ -1580,11 +1597,10 @@ int main( int argc, char* args[] )
 	       }
 	  }
 	
-
+	//==================================================##
 
 	//Start the frame timer
 	fps.start();
-
 
 
 
@@ -1592,9 +1608,15 @@ int main( int argc, char* args[] )
 	while( SDL_PollEvent( &event ) )
 	  {
 
+	    
 	    //If a key was pressed
 	    if( event.type == SDL_KEYDOWN )
 	      {
+		if( event.key.keysym.sym == SDLK_q)
+		  {
+		    std::cout << "Game quit" << std::endl;
+		    quit = true;
+		  }
 
 
 		// ======================= PAUSE ==========================
@@ -1626,7 +1648,7 @@ int main( int argc, char* args[] )
 				switch(event.key.keysym.sym)
 				  {
 				  case SDLK_p: cont = true; std::cout << "Spela!!"<< std::endl; break;
-				  case SDLK_q: cont = true ; quit = true; break;
+				  case SDLK_q: cont = true ; quit = true; std::cout << "Game quit" << std::endl; break;
 				  }
 				
 			      }
@@ -1759,9 +1781,12 @@ int main( int argc, char* args[] )
 	//show the lives on the screen
 	myPacman.showlife();
 
-	//show the button
+	//show the buttons
 
 	theButton.show();
+	theButton.show_button();
+	theButton2.show_button();
+theButton3.show_button();
 
 
 	//Show score on the side of the screen
