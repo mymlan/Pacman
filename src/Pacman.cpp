@@ -76,7 +76,7 @@ SDL_Rect clipsInfopanel[ 1 ];
 TTF_Font *font = NULL;
 
 //The color of the font
-SDL_Color textColor = {0,0,0};
+SDL_Color textColor = {0,100,0};
 
 
 //============================================================================
@@ -273,6 +273,7 @@ public:
   void show();
   bool get_start();
   void change_start();
+  void show_button();
 
 };
 
@@ -1290,22 +1291,29 @@ void Menu::change_start()
 void Menu::show()
 {
   //Show the startbuttons
- 
-  SDL_FillRect( screen, &button, SDL_MapRGB( screen->format, 0xEF, 0xEF, 0xEF) );
+  
+  //  SDL_FillRect( screen, &button, SDL_MapRGB( screen->format, 0xEF, 0xEF, 0xEF) );
    for (int i=0; i<=8; i++)
     { 
 
     apply_surface( (MAP_WIDTH+i*INFOPANEL_WIDTH), 0, startup, screen, &clipsInfopanel[0] );
-   
-  }
-
-   text = TTF_RenderText_Solid( font, message_.c_str() , textColor );
-   apply_surface(button.x, button.y,text, screen);
+  
+  
+    }
+  
 }
+
+void Menu::show_button()
+{
+  text = TTF_RenderText_Solid( font, message_.c_str() , textColor );
+  apply_surface(button.x, button.y,text, screen);
+}
+
 
 void Menu::showstart()
 {
   apply_surface(0,0,startup,screen, &clipsStartscr[0]); 
+  std::cout << "Hey Big Boy/Girl!!!" <<std::endl;
 }
 
 
@@ -1413,7 +1421,7 @@ int main( int argc, char* args[] )
     bool quit = false;
 
     //Menu
-    Menu Startup(0,0);
+    Menu Startup(0,0,"Press S to play");
 
     //The pacman
     Pacman myPacman;
@@ -1440,7 +1448,9 @@ int main( int argc, char* args[] )
 
 
   //The buttons
-    Menu theButton(700,100,"McFeast");
+    Menu theButton(700,100,"1. Chicken Tandoori 75kr ");
+    Menu theButton2(700, 150,"2. Tikka Massaala 70kr ");
+    Menu theButton3(700, 200,"3. Curry Chicken 70kr");
 
   //Initialize
   if( init() == false )
@@ -1501,7 +1511,8 @@ int main( int argc, char* args[] )
 	    Startup.showstart();
 	    //Show penguin
 	    //  apply_surface( MAP_WIDTH, 0, startup, screen );
-	    theButton.show();
+	    Startup.show();
+	    Startup.show_button();
 
 	 
 	    //Update the screen
@@ -1682,9 +1693,12 @@ int main( int argc, char* args[] )
 	//show the lives on the screen
 	myPacman.showlife();
 
-	//show the button
+	//show the buttons
 
 	theButton.show();
+	theButton.show_button();
+	theButton2.show_button();
+theButton3.show_button();
 
 
 	//Show score on the side of the screen
