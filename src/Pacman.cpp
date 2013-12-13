@@ -73,10 +73,14 @@ SDL_Rect clipsStartscr[ 1 ];
 SDL_Rect clipsInfopanel[ 1 ];
 
 //The font
-TTF_Font *font = NULL;
+TTF_Font *scoreFont = NULL;
+TTF_Font *headerFont= NULL;
+TTF_Font *infoFont=NULL;
 
 //The color of the font
-SDL_Color textColor = {0,0,0};
+SDL_Color textColor = {0,0,0,0};
+SDL_Color headerColor = {255,255,0,0};
+SDL_Color infoColor = {};
 
 
 //============================================================================
@@ -565,10 +569,27 @@ bool load_files()
 	return false;
       }
 
-    //Load player score
-    font = TTF_OpenFont("img/arial.ttf",28);
+    //Load  headerFont
+    headerFont = TTF_OpenFont("img/xtrusion.ttf",45);
 
-    if (font ==NULL)
+    if (headerFont ==NULL)
+      {
+	return false;
+      }
+
+ //Load infoFont
+    infoFont = TTF_OpenFont("img/KarmaFuture.ttf",35);
+
+    if (infoFont ==NULL)
+      {
+	return false;
+      }
+
+
+  //Load player scoreFont
+   scoreFont = TTF_OpenFont("img/arial.ttf",28);
+
+    if (scoreFont ==NULL)
       {
 	return false;
       }
@@ -1253,7 +1274,7 @@ std::string Score::get_score()
 
 void Score::show()
 {
-  score = TTF_RenderText_Solid( font, get_score().c_str(), textColor );
+  score = TTF_RenderText_Solid( scoreFont, get_score().c_str(), textColor );
   apply_surface(0,0,score, screen);
 }
 
@@ -1297,7 +1318,7 @@ void Menu::show()
    
   }
 
-   text = TTF_RenderText_Solid( font, "Chicken tandoori" , textColor );
+   text = TTF_RenderText_Solid( headerFont, "PACMAN" , headerColor );
    apply_surface(button.x, button.y,text, screen);
 }
 
@@ -1438,7 +1459,7 @@ int main( int argc, char* args[] )
 
 
   //The buttons
-  Menu theButton(700,100);
+  Menu theButton(690,30);
 
   //Initialize
   if( init() == false )
@@ -1667,8 +1688,7 @@ int main( int argc, char* args[] )
 	mySpecial_Food.show();
 
 	
-	//Show penguin
-	//apply_surface( MAP_WIDTH, 0, startup, screen, &clipsInfopanel[0] );
+
 
 
 	//show the lives on the screen
