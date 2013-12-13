@@ -123,7 +123,7 @@ public:
   bool eat_eaten(class Ghost&, class Score&);
  
  //Pacman eats food for points
-  bool eat_food(class Food&, class Score&);
+  void eat_food(std::vector<class Food>&, class Score&); //bool eat_food(class Food&, class Score&);
 
   //Pacman eats special_food - ghosts flees
   bool eat_special_food(class Special_Food&, class Score&);
@@ -561,7 +561,7 @@ bool load_files()
     
 
     //Load the foods image
-    food = load_image( "img/food-picture1.bmp" );
+    food = load_image( "img/food2.bmp" );
 
     //If there was a problem in loading the food picture
     if( food == NULL)
@@ -856,20 +856,26 @@ bool Pacman::eat_eaten(Ghost& ghost_object,Score& myScore)
 
 
 //Pacman eats food
-bool Pacman::eat_food(Food& food_object,Score& myScore)
+void Pacman::eat_food(std::vector<Food>& food_vector, Score& myScore) //Food& food_object
 {
-  if (check_collision(box, food_object.get_box()) && !food_object.eaten())
-      {
-	myScore.add_points(1);
-	food_object.was_eaten();
-	return true;
-      }
-  return false;
+  for (std::vector<Food>::iterator it = food_vector.begin() ; it != food_vector.end(); ++it)
+    {
+    
+      if ((check_collision(box, (*it).get_box())) and ((*it).eaten() == false))
+	{
+	  myScore.add_points(1);
+	  (*it).was_eaten();
+	  
+	}
+      
+    }
+    
 }
 
 //Pacman eats special_food
 bool Pacman::eat_special_food(Special_Food& special_food_object,Score& myScore)
 {
+
   if (check_collision(box, special_food_object.get_box()) && !special_food_object.eaten())
       {	
 	special_food_object.was_eaten();
@@ -1487,8 +1493,58 @@ int main( int argc, char* args[] )
     Highscore myHighscore(0,"Ingrid");
 
 
-    //Food
-    Food myFood(370,100);
+    //Initialize Food
+    Food myFood1(10,50);
+    Food myFood2(10,90);
+    Food myFood3(10,130);
+    Food myFood4(10,170);
+    Food myFood5(10,210);
+    Food myFood6(10,250);
+    Food myFood7(10,290);
+    Food myFood8(10,330);
+    Food myFood9(10,370);
+    Food myFood10(10,410);
+
+    Food myFood11(50,10);
+    Food myFood12(50,250);
+    Food myFood13(50,450);
+
+    Food myFood14(90,10);
+    Food myFood15(90,170);
+    Food myFood16(90,210);
+    Food myFood17(90,250);
+    Food myFood18(90,290);
+    Food myFood19(90,330);
+    Food myFood20(90,370);
+    Food myFood21(90,410);
+    Food myFood22(90,450);
+
+    Food myFood23(130,10);
+    Food myFood24(130,170);
+    Food myFood25(130,450);
+
+    Food myFood26(170,10);
+    Food myFood27(170,50);
+    Food myFood28(170,90);
+    Food myFood29(170,130);
+    Food myFood30(170,170);
+    Food myFood31(170,210);
+    Food myFood32(170,250);
+    Food myFood33(170,290);
+    Food myFood34(170,330);
+    Food myFood35(170,370);
+    Food myFood36(170,410);
+    Food myFood37(170,450);
+
+    Food myFood38(210,10);
+    Food myFood39(210,90);
+    Food myFood40(210,250);
+    Food myFood41(210,450);
+
+    //create vectorwith all food in, called food_vector
+    std::vector<Food> food_vector = {myFood1,myFood2,myFood3,myFood4,myFood5,myFood6,myFood7,myFood8,myFood9,myFood10,myFood11,myFood12,myFood13,myFood14,myFood15,myFood16,myFood17,myFood18,myFood19,myFood20,myFood21,myFood22,myFood23,myFood24,myFood25,myFood26,myFood27,myFood28,myFood29,myFood30,myFood31,myFood32,myFood33,myFood34,myFood35,myFood36,myFood37,myFood38,myFood39,myFood40};
+
+    std::cerr << food_vector.size()<< std::endl;
 
     //Special_food
     Special_Food mySpecial_Food(370,0);
@@ -1689,6 +1745,7 @@ int main( int argc, char* args[] )
 
 	//Is a ghost eating Pacman or are Pacman eating a ghost
 
+
 	/*
 	if (myPacman.eat_eaten(myGhost, myScore))
 	  {
@@ -1732,13 +1789,19 @@ int main( int argc, char* args[] )
 
 
 
+
 	//Is a Pacman eating food
-	if (myPacman.eat_food(myFood, myScore)){
+	myPacman.eat_food(food_vector, myScore);
+
+	//myPacman.eat_food(food_vector, myScore);
+      /* {
 	  // if (alla food-pluttar uppätna - spel slut){
 	  //  quit=true;
 	  
-	}
-	
+
+	  }*/
+
+
 	//Is a Pacman eating special_food
 	if (myPacman.eat_special_food(mySpecial_Food, myScore))
 	  {
@@ -1763,15 +1826,18 @@ int main( int argc, char* args[] )
         //Show pacman on the screen
         myPacman.show();
 	
-
+	//Show food on the screen
+	for (std::vector<Food>::iterator it = food_vector.begin() ; it != food_vector.end(); ++it)
+	  {
+	    (*it).show();
+	  }
 
 	//Show ghost on the screen
 	myGhost1.show();
 	myGhost2.show();
 
 
-	//Show food on the screen
-	myFood.show();
+
 
 	//Show special_food on the screen
 	mySpecial_Food.show();
