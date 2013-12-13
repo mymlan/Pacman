@@ -42,6 +42,9 @@ const int PACMAN_DOWN = 3;
 const int BUTTON_WIDTH = 220;
 const int BUTTON_HEIGHT = 40;
 
+//The attributes of the Infopanel
+const int INFOPANEL_WIDTH=40;
+const int INFOPANEL_HEIGHT=480;
 
 //The surfaces
 SDL_Surface *pacman = NULL;
@@ -66,6 +69,8 @@ SDL_Rect clipsRight[ 2 ];
 SDL_Rect clipsLeft[ 2 ];
 SDL_Rect clipsDown[ 2 ];
 SDL_Rect clipsUp[ 2 ];
+SDL_Rect clipsStartscr[ 1 ];
+SDL_Rect clipsInfopanel[ 1 ];
 
 //The font
 TTF_Font *font = NULL;
@@ -415,6 +420,17 @@ void set_clips()
     clipsUp[ 1 ].y = PACMAN_HEIGHT;
     clipsUp[ 1 ].w = PACMAN_WIDTH;
     clipsUp[ 1 ].h = PACMAN_HEIGHT;
+
+    clipsStartscr[ 0 ].x = 0;
+    clipsStartscr[ 0 ].y = 0;
+    clipsStartscr[ 0 ].w = MAP_WIDTH;
+    clipsStartscr[ 0 ].h = SCREEN_HEIGHT;
+
+    clipsInfopanel[ 0 ].x = MAP_WIDTH;
+    clipsInfopanel[ 0 ].y = 0;
+    clipsInfopanel[ 0 ].w = INFOPANEL_WIDTH;
+    clipsInfopanel[ 0 ].h = INFOPANEL_HEIGHT;
+
 }
 
 
@@ -1275,8 +1291,13 @@ void Menu::show()
 {
   //Show the startbuttons
  
-   SDL_FillRect( screen, &button, SDL_MapRGB( screen->format, 0xEF, 0xEF, 0xEF) );
+  SDL_FillRect( screen, &button, SDL_MapRGB( screen->format, 0xEF, 0xEF, 0xEF) );
+   for (int i=0; i<=8; i++)
+    { 
 
+    apply_surface( (MAP_WIDTH+i*INFOPANEL_WIDTH), 0, startup, screen, &clipsInfopanel[0] );
+   
+  }
 
    text = TTF_RenderText_Solid( font, message_.c_str() , textColor );
    apply_surface(button.x, button.y,text, screen);
@@ -1284,7 +1305,7 @@ void Menu::show()
 
 void Menu::showstart()
 {
-  apply_surface(0,0,startup,screen); 
+  apply_surface(0,0,startup,screen, &clipsStartscr[0]); 
 }
 
 
@@ -1478,9 +1499,8 @@ int main( int argc, char* args[] )
 	  {	
 	    bool proceed = false;
 	    Startup.showstart();
-	 
 	    //Show penguin
-	    apply_surface( MAP_WIDTH, 0, menu, screen );
+	    //  apply_surface( MAP_WIDTH, 0, startup, screen );
 	    theButton.show();
 
 	 
@@ -1656,7 +1676,7 @@ int main( int argc, char* args[] )
 
 	
 	//Show penguin
-	apply_surface( MAP_WIDTH, 0, menu, screen );
+	//apply_surface( MAP_WIDTH, 0, startup, screen, &clipsInfopanel[0] );
 
 
 	//show the lives on the screen
