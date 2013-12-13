@@ -64,7 +64,7 @@ SDL_Surface *food = NULL;
 SDL_Surface *special_food = NULL;
 SDL_Surface *text = NULL;
 SDL_Surface *highscore = NULL;
-
+SDL_Surface *checkpoint = NULL;
 
 //The event structure
 SDL_Event event;
@@ -180,7 +180,7 @@ public:
   Ghost() = default;
   
   //Moves the ghost
-  void move(std::vector<SDL_Rect>);
+  void move(std::vector<SDL_Rect>, std::vector<SDL_Rect>);
   
   
   SDL_Rect get_box();
@@ -368,7 +368,20 @@ public:
 };
 
 
+/*
+//Ghosts checkpoints, to make their ways in the maze
+class Checkpoint
+{
+private:
+  SDL_Rect box;
 
+public:
+  Checkpoint(int, int);
+  SDL_Rect get_box();
+  void show(); //används för att testa, ska egentligen vara osynlig
+ 
+};
+*/
 
 
 
@@ -606,6 +619,15 @@ bool load_files()
         return false;
       }
     
+    //load the checkpoint image, only for testing. The checkpoints shall be invisible
+    checkpoint = load_image( "img/checkpoint.bmp" );
+    
+    //If there was a problem in loading the checkpoint picture
+    if( checkpoint == NULL)
+      {
+        return false;
+      }
+    
 
 
 
@@ -642,6 +664,8 @@ bool load_files()
       {
 	return false;
       }
+
+
 
     //Load Special_Food
     special_food = load_image( "img/special_food-picture.bmp" );
@@ -929,6 +953,8 @@ void Pacman::eat_food(std::vector<Food>& food_vector, Score& myScore) //Food& fo
     
 }
 
+
+
 //Pacman eats special_food
 bool Pacman::eat_special_food(Special_Food& special_food_object,Score& myScore)
 {
@@ -977,7 +1003,7 @@ Ghost1::Ghost1()
   
   //Initialize the seek and destroy directions. first way to pacman is the most desirable way to go.
   first_way_to_pacman_ = 2;
-  second_way_to_pacman_ = 0;
+  second_way_to_pacman_ = 4;
   //Initialize the angry or scared mode
   scared_ = false;
 
@@ -1022,7 +1048,7 @@ Ghost3::Ghost3()
   
   //Initialize the seek and destroy directions. first way to pacman is the most desirable way to go.
   first_way_to_pacman_ = 4;
-  second_way_to_pacman_ = 0;
+  second_way_to_pacman_ = 1;
 
   //Initialize the angry or scared mode
   scared_ = false;
@@ -1052,7 +1078,7 @@ void Ghost::reverse_direction()
     {second_way_to_pacman_ -= 1;}
 }
 
-void Ghost::move(std::vector<SDL_Rect> maze)
+void Ghost::move(std::vector<SDL_Rect> maze, std::vector<SDL_Rect> checkmaze)
 {
  
    
@@ -1071,7 +1097,7 @@ void Ghost::move(std::vector<SDL_Rect> maze)
 
 
     //If the ghost went too far to the left or right or has collided with the walls
-    for (std::vector<SDL_Rect>::iterator it = maze.begin() ; it != maze.end(); ++it)
+    for (std::vector<SDL_Rect>::iterator it = maze.begin() ; it != maze.end(); ++it) //try all the walls
       {
 	if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, *it ) ) )
 	  {
@@ -1080,13 +1106,34 @@ void Ghost::move(std::vector<SDL_Rect> maze)
 	    first_way_to_pacman_ = second_way_to_pacman_; 
 	    second_way_to_pacman_ = 0;
 	  }
-      }    
-
+      }
+    for(std::vector<SDL_Rect>::iterator it = checkmaze.begin() ; it != checkmaze.end(); ++it) //try all the checkpoints
+      {
+	if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, *it ) ) )
+	  {
+	    //Move back
+	    box.x -= xVel;
+	    first_way_to_pacman_ = second_way_to_pacman_; 
+	    second_way_to_pacman_ = 0;
+	  }   
+      }
+    
     //Move the ghost up or down
     box.y += yVel;
 
     //If the square went too far up or down or has collided with the walls
     for (std::vector<SDL_Rect>::iterator it = maze.begin() ; it != maze.end(); ++it)
+      {
+	if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, *it ) ) )
+	  {
+	    //Move back
+	    box.y -= yVel;
+	    first_way_to_pacman_ = second_way_to_pacman_; 
+	    second_way_to_pacman_ = 0;
+	  }
+      }
+    for (std::vector<SDL_Rect>::iterator it = checkmaze.begin() ; it != checkmaze.end(); ++it)
+
       {
 	if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, *it ) ) )
 	  {
@@ -1104,8 +1151,11 @@ void Ghost::move(std::vector<SDL_Rect> maze)
 //Sets the moving direction towards pacman
 void Ghost1::seek(Pacman paccy)
 {
+  if(first_way_to_pacman_ == 0 && second_way_to_pacman_ == 0) //om spöket fastnat, slumpa riktning
+    first_way_to_pacman_ = rand()% 4 + 1;
 
-  if(first_way_to_pacman_ == 0)
+  else if
+    (first_way_to_pacman_ == 0)
     {
       //pacman_x and pacman_y are the coordinates of pacman
       int pacman_x{paccy.reveal_position_x()};
@@ -1164,48 +1214,51 @@ void Ghost2::seek()
 //sets the moving direction towards pacman, works as ghost1 but switches the first and second ways to pacman,
 void Ghost3::seek(Pacman paccy) 
 {
-
-  if(first_way_to_pacman_ == 0)
-    {
-      //pacman_x and pacman_y are the coordinates of pacman
-      int pacman_x{paccy.reveal_position_x()};
-      int pacman_y{paccy.reveal_position_y()};
+  if(first_way_to_pacman_ == 0 && second_way_to_pacman_ == 0) //om spöket fastnat, slumpa riktning
+    first_way_to_pacman_ = rand()% 4 + 1;
+  {
+    if(first_way_to_pacman_ == 0)
+      {
+	//pacman_x and pacman_y are the coordinates of pacman
+	int pacman_x{paccy.reveal_position_x()};
+	int pacman_y{paccy.reveal_position_y()};
   
   
-      //tries to minimize the distance in the shortest direction first. If pacman is one step to the right and far away at the bottom, the ghost will first go down and then take one step left.
-      if( abs(pacman_x - box.x) > abs(pacman_y - box.y) ) //if bigger difference in x than in y, then walk towards pacman i x direction
-	{
-	  if( pacman_x > box.x ) //if pacman is to the right, go right
-	    {second_way_to_pacman_ = 2;}
-	  else 
-	    {second_way_to_pacman_ = 1;} //else, go left
+	//tries to minimize the distance in the shortest direction first. If pacman is one step to the right and far away at the bottom, the ghost will first go down and then take one step left.
+	if( abs(pacman_x - box.x) > abs(pacman_y - box.y) ) //if bigger difference in x than in y, then walk towards pacman i x direction
+	  {
+	    if( pacman_x > box.x ) //if pacman is to the right, go right
+	      {second_way_to_pacman_ = 2;}
+	    else 
+	      {second_way_to_pacman_ = 1;} //else, go left
       
-	  if ( pacman_y > box.y ) //if pacman is below the ghost, go downwards
-	    {first_way_to_pacman_ = 4;}
-	  else
-	    {first_way_to_pacman_ = 3;} //else, go up
-	}
+	    if ( pacman_y > box.y ) //if pacman is below the ghost, go downwards
+	      {first_way_to_pacman_ = 4;}
+	    else
+	      {first_way_to_pacman_ = 3;} //else, go up
+	  }
      
-      else
-	{
-	  if (pacman_y > box.y) //biggest distance is in y direction, so walk in y direction first
-	    {second_way_to_pacman_ = 4;}
-	  else
-	    {second_way_to_pacman_ = 3;}
+	else
+	  {
+	    if (pacman_y > box.y) //biggest distance is in y direction, so walk in y direction first
+	      {second_way_to_pacman_ = 4;}
+	    else
+	      {second_way_to_pacman_ = 3;}
       
-	  if (pacman_x > box.x)
-	    {first_way_to_pacman_ = 2;} //go right
-	  else 
-	    {first_way_to_pacman_ = 1;} //go left
-	}
+	    if (pacman_x > box.x)
+	      {first_way_to_pacman_ = 2;} //go right
+	    else 
+	      {first_way_to_pacman_ = 1;} //go left
+	  }
      
 
-      if (scared_ == true) //if the ghost is scared, reverse the moving direction
-	{
-	  reverse_direction(); 
-	}
+	if (scared_ == true) //if the ghost is scared, reverse the moving direction
+	  {
+	    reverse_direction(); 
+	  }
       
-    }
+      }
+  }
  
 }
 
@@ -1654,6 +1707,28 @@ SDL_Rect Special_Food::get_box()
   return box;
 }
 
+
+/*
+//============================================================================
+// Class: Checkpoint
+//============================================================================
+Checkpoint::Checkpoint(int x_cord, int y_cord)
+{
+  //initialize the offsets
+  box.x = x_cord;
+  box.y = y_cord;
+
+//set the checkpoints dimensions
+  box.w = 1;
+  box.h = 1;
+}
+
+void Checkpoint::show()
+{
+  apply_surface(box.x, box.y, checkpoint, screen);
+}
+*/
+
 //============================================================================
 //  MAIN
 //============================================================================
@@ -1772,35 +1847,52 @@ int main( int argc, char* args[] )
       return 1;
     }
   //Initialize walls
-    SDL_Rect wall1 = {40,40,40,200};
-    SDL_Rect wall2 = {80,40,80,40};
-    SDL_Rect wall3 = {80,120,40,40};
-    SDL_Rect wall4 = {120,40,40,120};
-    SDL_Rect wall5 = {200,40,160,40};
-    SDL_Rect wall6 = {320,80,40,40};
-    SDL_Rect wall7 = {200,120,160,40};
-    SDL_Rect wall8 = {200,160,40,40};
-    SDL_Rect wall9 = {200,200,160,40};
-    SDL_Rect wall10 = {400,40,200,40};
-    SDL_Rect wall11 = {400,120,200,40};
-    SDL_Rect wall12 = {40,280,40,160};
-    SDL_Rect wall13 = {120,200,40,240};
-    SDL_Rect wall14 = {200,280,40,160};
-    SDL_Rect wall15 = {280,280,120,40};
-    SDL_Rect wall16 = {360,320,40,40};
-    SDL_Rect wall17 = {280,360,120,80};
-    SDL_Rect wall18 = {400,200,200,40};
-    SDL_Rect wall19 = {440,240,40,200};
-    SDL_Rect wall20 = {520,240,40,40};
-    SDL_Rect wall21 = {600,280,40,40};
-    SDL_Rect wall22 = {520,320,40,120};
-    SDL_Rect wall23 = {560,360,40,40};
-    SDL_Rect wall24 = {600,440,40,40};
-    SDL_Rect wall25 = {350,160,10,40};
+  SDL_Rect wall1 = {40,40,40,200}; //dessa två har samma parametrar som checkpoint1 och checkpoint2
+  SDL_Rect wall2 = {80,40,80,40}; //
+  SDL_Rect wall3 = {80,120,40,40};
+  SDL_Rect wall4 = {120,40,40,120};
+  SDL_Rect wall5 = {200,40,160,40};
+  SDL_Rect wall6 = {320,80,40,40};
+  SDL_Rect wall7 = {200,120,160,40};
+  SDL_Rect wall8 = {200,160,40,40};
+  SDL_Rect wall9 = {200,200,160,40};
+  SDL_Rect wall10 = {400,40,200,40};
+  SDL_Rect wall11 = {400,120,200,40};
+  SDL_Rect wall12 = {40,280,40,160};
+  SDL_Rect wall13 = {120,200,40,240};
+  SDL_Rect wall14 = {200,280,40,160};
+  SDL_Rect wall15 = {280,280,120,40};
+  SDL_Rect wall16 = {360,320,40,40};
+  SDL_Rect wall17 = {280,360,120,80};
+  SDL_Rect wall18 = {400,200,200,40};
+  SDL_Rect wall19 = {440,240,40,200};
+  SDL_Rect wall20 = {520,240,40,40};
+  SDL_Rect wall21 = {600,280,40,40};
+  SDL_Rect wall22 = {520,320,40,120};
+  SDL_Rect wall23 = {560,360,40,40};
+  SDL_Rect wall24 = {600,440,40,40};
+  SDL_Rect wall25 = {350,160,10,40};
 
-    //Create vector with all walls in, called maze
-    std::vector<SDL_Rect> maze = {wall1,wall2,wall3,wall4,wall5,wall6,wall7,wall8,wall9,wall10,wall11,wall12,wall13,wall14,wall15,wall16,wall17,wall18,wall19,wall20,wall21,wall22,wall23,wall24};
+  //Create vector with all walls in, called maze
+  std::vector<SDL_Rect> maze = {wall1,wall2,wall3,wall4,wall5,wall6,wall7,wall8,wall9,wall10,wall11,wall12,wall13,wall14,wall15,wall16,wall17,wall18,wall19,wall20,wall21,wall22,wall23,wall24};
 
+  //Initialize checkpoints
+  SDL_Rect checkpoint1 = {40,40,40,200};
+  SDL_Rect checkpoint2 = {80, 40,80,40};
+
+  /* more chekpoints
+     SDL_Rect checkpoint = {};
+     SDL_Rect checkpoint = {};
+     SDL_Rect checkpoint = {};
+     SDL_Rect checkpoint = {};
+  */
+ 
+  
+  //Create a vector with all the checkpoints
+
+  std::vector<SDL_Rect> checkmaze = {checkpoint1, checkpoint2};
+
+  
 
     // Clip the sprite sheet
     set_clips();
@@ -1943,9 +2035,9 @@ int main( int argc, char* args[] )
 	myGhost3.seek(myPacman);
 
 	//Move the ghosts
-	myGhost1.move(maze);
-	myGhost2.move(maze);
-	myGhost3.move(maze);
+	myGhost1.move(maze, checkmaze);
+	myGhost2.move(maze, checkmaze);
+	myGhost3.move(maze, checkmaze);
 
 	//Is a ghost eating Pacman or are Pacman eating a ghost
 
@@ -2043,6 +2135,14 @@ int main( int argc, char* args[] )
 	  {
 	    SDL_FillRect( screen, &(*it), SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF) );
 	  }
+
+	//Show the checkpoints - just for testing
+	for (std::vector<SDL_Rect>::iterator it = checkmaze.begin() ; it != checkmaze.end(); ++it)
+	  {
+	    SDL_FillRect( screen, &(*it), SDL_MapRGB( screen->format, 0x00, 0xEF, 0xEF) );
+	  }
+
+
 	//Show wall 25 the wall that separates the ghosts nest from playfield
 	SDL_FillRect( screen, &wall25, SDL_MapRGB( screen->format, 0xAF, 0x00, 0x00) );
 
