@@ -976,7 +976,7 @@ Ghost1::Ghost1()
   box.y = 0;
   
   //Initialize the seek and destroy directions. first way to pacman is the most desirable way to go.
-  first_way_to_pacman_ = 0;
+  first_way_to_pacman_ = 2;
   second_way_to_pacman_ = 0;
   //Initialize the angry or scared mode
   scared_ = false;
@@ -1000,7 +1000,7 @@ Ghost2::Ghost2()
   box.y = 0;
   
   //Initialize the seek and destroy directions. first way to pacman is the most desirable way to go.
-  first_way_to_pacman_ = 0;
+  first_way_to_pacman_ = 1;
 
   //Initialize crashed
   crashed_ = false;
@@ -1021,7 +1021,7 @@ Ghost3::Ghost3()
   box.y = 100;
   
   //Initialize the seek and destroy directions. first way to pacman is the most desirable way to go.
-  first_way_to_pacman_ = 0;
+  first_way_to_pacman_ = 4;
   second_way_to_pacman_ = 0;
 
   //Initialize the angry or scared mode
@@ -1054,10 +1054,8 @@ void Ghost::reverse_direction()
 
 void Ghost::move(std::vector<SDL_Rect> maze)
 {
-  //If the ghost recently crashed into a wall, go towards pacman in the second most desirable way
-  if (crashed_ == true)
-    {first_way_to_pacman_ = second_way_to_pacman_;}
-
+ 
+   
   //Set velocity and direction
   switch(first_way_to_pacman_)
     {
@@ -1079,8 +1077,8 @@ void Ghost::move(std::vector<SDL_Rect> maze)
 	  {
 	    //Move back
 	    box.x -= xVel;
-	    crashed_ = true;
 	    first_way_to_pacman_ = second_way_to_pacman_; 
+	    second_way_to_pacman_ = 0;
 	  }
       }    
 
@@ -1094,7 +1092,8 @@ void Ghost::move(std::vector<SDL_Rect> maze)
 	  {
 	    //Move back
 	    box.y -= yVel;
-	    crashed_ = true;
+	    first_way_to_pacman_ = second_way_to_pacman_; 
+	    second_way_to_pacman_ = 0;
 	  }
       }
 }
@@ -1106,7 +1105,7 @@ void Ghost::move(std::vector<SDL_Rect> maze)
 void Ghost1::seek(Pacman paccy)
 {
 
-  if(crashed_ == true)
+  if(first_way_to_pacman_ == 0)
     {
       //pacman_x and pacman_y are the coordinates of pacman
       int pacman_x{paccy.reveal_position_x()};
@@ -1147,18 +1146,18 @@ void Ghost1::seek(Pacman paccy)
 	}
   
     }
-  crashed_ = false;
+ 
 }
 
 //sets the moving direction towards pacman at random
 void Ghost2::seek()
 {
-  if (crashed_ == true)
+  if (first_way_to_pacman_ == 0)
     {
       first_way_to_pacman_ = rand()% 4 + 1;
       second_way_to_pacman_ = first_way_to_pacman_;
     }
-  crashed_ = false;
+ 
 }
 
 
@@ -1166,7 +1165,7 @@ void Ghost2::seek()
 void Ghost3::seek(Pacman paccy) 
 {
 
-  if(crashed_ == true)
+  if(first_way_to_pacman_ == 0)
     {
       //pacman_x and pacman_y are the coordinates of pacman
       int pacman_x{paccy.reveal_position_x()};
@@ -1207,7 +1206,7 @@ void Ghost3::seek(Pacman paccy)
 	}
       
     }
-  crashed_ = false;
+ 
 }
 
 
