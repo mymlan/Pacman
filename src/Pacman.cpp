@@ -55,6 +55,7 @@ SDL_Surface *pacman = NULL;
 SDL_Surface *screen = NULL;
 SDL_Surface *ghost = NULL;
 SDL_Surface *ghost2 = NULL;
+SDL_Surface *ghost3 = NULL;
 SDL_Surface *menu = NULL;
 SDL_Surface *score = NULL;
 SDL_Surface *startup=NULL;
@@ -169,8 +170,10 @@ public:
   
   
   SDL_Rect get_box();
-
   
+  //use reverse_direction when ghost toggles scared_
+  void reverse_direction();
+ 
   //Sets Ghost position to startposition
   virtual void get_home() = 0;
   
@@ -197,15 +200,13 @@ public:
   //Shows the ghost on the screen
   void show();
 
-private: 
- 
 };
 
  
 
 
 //The second ghost
-  class Ghost2 : public Ghost  //this is a whimsy  ghost, it moves in random directions.
+class Ghost2 : public Ghost  //this is a whimsy  ghost, it moves in random directions.
 {
 public:
   void seek();
@@ -216,13 +217,27 @@ public:
 
   //Shows the ghost on the screen
   void show();
-private:
+
  
 
 };
 
 //The third ghost
-//class Ghost3 : public Ghost //this ghost mixes up the first and second most desirable directions towards pacman
+class Ghost3 : public Ghost //this ghost mixes up the first and second most desirable directions towards pacman
+{
+public:
+  void seek(Pacman paccy);
+
+  Ghost3();
+
+  void get_home();
+
+  //Shows the ghost on the screen
+  void show();
+
+
+};
+
 
 //The timer
 class Timer
@@ -555,8 +570,9 @@ bool load_files()
     //Load the ghost image
     ghost = load_image( "img/ghost-picture.bmp" );
     ghost2 = load_image( "img/ghost-picture2.bmp" );
+    ghost3 = load_image( "img/ghost-picture3.bmp" );
     //If there was a problem in loading the ghost picture
-    if( ghost == NULL || ghost2 == NULL)
+    if( ghost == NULL || ghost2 == NULL || ghost3 == NULL)
       {
 	return false;
       }
@@ -945,6 +961,43 @@ Ghost2::Ghost2()
   yVel = 0;
 }
 
+Ghost3::Ghost3()
+{
+  //Initialize the offsets
+  box.x = 0;
+  box.y = 100;
+  
+  //Initialize the seek and destroy directions. first way to pacman is the most desirable way to go.
+  first_way_to_pacman_ = 0;
+  second_way_to_pacman_ = 0;
+
+  //Initialize the angry or scared mode
+  scared_ = false;
+
+  //Initialize crashed
+  crashed_ = false;
+
+  //Set the ghost's dimensions
+  box.w = PACMAN_WIDTH;    //we should change the global constants names PACMAN_WIDTH to CHARACTER_WIDTH
+  box.h = PACMAN_HEIGHT;
+
+  //Initialize the velocity
+  xVel = 0;
+  yVel = 10;
+}
+
+void Ghost::reverse_direction()
+{
+  if (first_way_to_pacman_ == 1 || 3)
+    {first_way_to_pacman_ += 1;}
+  else
+    {first_way_to_pacman_ -= 1;}
+  
+  if (second_way_to_pacman_ == 1 || 3)
+    {second_way_to_pacman_ += 1;}
+  else
+    {second_way_to_pacman_ -= 1;}
+}
 
 void Ghost::move(std::vector<SDL_Rect> maze)
 {
@@ -1037,15 +1090,7 @@ void Ghost1::seek(Pacman paccy)
 
       if (scared_ == true) //if the ghost is scared, reverse the moving direction
 	{
-	  if (first_way_to_pacman_ == 1 || 3)
-	    {first_way_to_pacman_ += 1;}
-	  else
-	    {first_way_to_pacman_ -= 1;}
-      
-	  if (second_way_to_pacman_ == 1 || 3)
-	    {second_way_to_pacman_ += 1;}
-	  else
-	    {second_way_to_pacman_ -= 1;}
+	  reverse_direction();
 	}
   
     }
@@ -1063,6 +1108,56 @@ void Ghost2::seek()
   crashed_ = false;
 }
 
+
+//sets the moving direction towards pacman, works as ghost1 but switches the first and second ways to pacman,
+void Ghost3::seek(Pacman paccy) 
+{
+
+  if(crashed_ == true)
+    {
+      //pacman_x and pacman_y are the coordinates of pacman
+      int pacman_x{paccy.reveal_position_x()};
+      int pacman_y{paccy.reveal_position_y()};
+  
+  
+      //tries to minimize the distance in the shortest direction first. If pacman is one step to the right and far away at the bottom, the ghost will first go down and then take one step left.
+      if( abs(pacman_x - box.x) > abs(pacman_y - box.y) ) //if bigger difference in x than in y, then walk towards pacman i x direction
+	{
+	  if( pacman_x > box.x ) //if pacman is to the right, go right
+	    {first_way_to_pacman_ = 2;}
+	  else 
+	    {first_way_to_pacman_ = 1;} //else, go left
+      
+	  if ( pacman_y > box.y ) //if pacman is below the ghost, go downwards
+	    {second_way_to_pacman_ = 4;}
+	  else
+	    {second_way_to_pacman_ = 3;} //else, go up
+	}
+     
+      else
+	{
+	  if (pacman_y > box.y) //biggest distance is in y direction, so walk in y direction first
+	    {first_way_to_pacman_ = 4;}
+	  else
+	    {first_way_to_pacman_ = 3;}
+      
+	  if (pacman_x > box.x)
+	    {second_way_to_pacman_ = 2;} //go right
+	  else 
+	    {second_way_to_pacman_ = 1;} //go left
+	}
+     
+
+      if (scared_ == true) //if the ghost is scared, reverse the moving direction
+	{
+	  reverse_direction(); 
+	}
+      
+    }
+  crashed_ = false;
+}
+
+
 void Ghost1::show()
 {
   //Show the ghost
@@ -1076,6 +1171,11 @@ void Ghost2::show()
   apply_surface( box.x, box.y, ghost2, screen );
 }
 
+void Ghost3::show()
+{
+  //show the ghost2
+  apply_surface( box.x, box.y, ghost3, screen );
+}
 
 //Returns SDL-object of ghost
 SDL_Rect Ghost::get_box()
@@ -1098,6 +1198,14 @@ void Ghost2::get_home()
   box.y = 0;
 }
 
+//Returns ghost3 to start position
+void Ghost3::get_home()
+{
+  box.x = 40;
+  box.y = 0;
+}
+
+
 bool Ghost::is_scared()
 {
   return (scared_);
@@ -1115,6 +1223,7 @@ void Ghost::change_mood()
     {
       scared_=true;
     }
+  reverse_direction();
 }
 
 //============================================================================
@@ -1488,6 +1597,9 @@ int main( int argc, char* args[] )
     //The second ghost
     Ghost2 myGhost2;
 
+    //The third ghost
+    Ghost3 myGhost3;
+
     //Player score
     Score myScore;
 
@@ -1737,13 +1849,15 @@ int main( int argc, char* args[] )
         //Move the pacman
         myPacman.move(maze, wall25);
 	
-	//Ghost finds out where pacman is
+	//Ghosts finds out where pacman is
 	myGhost1.seek(myPacman);
-	myGhost2.seek();
+	myGhost2.seek(); 
+	myGhost3.seek(myPacman);
 
-	//Move the ghost
+	//Move the ghosts
 	myGhost1.move(maze);
 	myGhost2.move(maze);
+	myGhost3.move(maze);
 
 	//Is a ghost eating Pacman or are Pacman eating a ghost
 
@@ -1787,6 +1901,18 @@ int main( int argc, char* args[] )
 		  }
 	      }
 	  }
+	if (myPacman.eat_eaten(myGhost3, myScore))
+	  {
+	    if (myPacman.game_over())
+	      {
+
+		if (myHighscore.is_new_highscore(myScore))
+		  {
+		    quit=true;
+		    myHighscore.save_new_highscore(myScore);	
+		  }
+	      }
+	  }
 
 
 
@@ -1809,6 +1935,7 @@ int main( int argc, char* args[] )
 	  {
 	    myGhost1.change_mood();
 	    myGhost2.change_mood();
+	    myGhost3.change_mood();
 	    // timer räkna ner
 	    //
 	  }
@@ -1837,6 +1964,7 @@ int main( int argc, char* args[] )
 	//Show ghost on the screen
 	myGhost1.show();
 	myGhost2.show();
+	myGhost3.show();
 
 
 
@@ -1857,7 +1985,7 @@ int main( int argc, char* args[] )
 	theButton.show();
 	theButton.show_button();
 	theButton2.show_button();
-theButton3.show_button();
+	theButton3.show_button();
 
 
 	//Show score on the side of the screen
