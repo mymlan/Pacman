@@ -108,6 +108,9 @@ private:
     //Its animation status
     int status;
 
+  //food left
+  int food_left;
+
 public:
   //Initializes the variables
   Pacman();
@@ -139,6 +142,12 @@ public:
   
   //Sets Pacmans position to startposition
   void get_home();
+
+  //returns true if there is no food left
+  bool no_food_left();
+
+  
+
 };
 
 //The ghost 
@@ -660,6 +669,8 @@ Pacman::Pacman()
  //Initialize animation variables
     frame = 0;
     status = PACMAN_LEFT;
+
+    food_left = 40;
 }
 
 
@@ -865,7 +876,8 @@ void Pacman::eat_food(std::vector<Food>& food_vector, Score& myScore) //Food& fo
 	{
 	  myScore.add_points(1);
 	  (*it).was_eaten();
-	  
+	  food_left = food_left - 1;
+	 
 	}
       
     }
@@ -891,6 +903,20 @@ void Pacman::get_home()
 {
   box.x = 320;
   box.y = 440;
+}
+
+
+//Returns true if there is no food left
+bool Pacman::no_food_left()
+{
+  if(food_left == 0)
+    {
+      return true;
+    }
+  else
+    {
+      return false;
+    }
 }
 
 
@@ -1380,7 +1406,7 @@ void Highscore::show()
 Food::Food(int x_cord, int y_cord)
 {
   bool eaten_=false;
-
+ 
   //Initialize the offsets
   box.x = x_cord;
   box.y = y_cord;
@@ -1393,6 +1419,7 @@ Food::Food(int x_cord, int y_cord)
 void Food::was_eaten()
 {
   eaten_=true;
+
 }
 
 bool Food::eaten()
@@ -1544,7 +1571,7 @@ int main( int argc, char* args[] )
     //create vectorwith all food in, called food_vector
     std::vector<Food> food_vector = {myFood1,myFood2,myFood3,myFood4,myFood5,myFood6,myFood7,myFood8,myFood9,myFood10,myFood11,myFood12,myFood13,myFood14,myFood15,myFood16,myFood17,myFood18,myFood19,myFood20,myFood21,myFood22,myFood23,myFood24,myFood25,myFood26,myFood27,myFood28,myFood29,myFood30,myFood31,myFood32,myFood33,myFood34,myFood35,myFood36,myFood37,myFood38,myFood39,myFood40};
 
-    std::cerr << food_vector.size()<< std::endl;
+   
 
     //Special_food
     Special_Food mySpecial_Food(370,0);
@@ -1785,7 +1812,12 @@ int main( int argc, char* args[] )
 		  }
 	      }
 	  }
-
+	
+	//Om alla Food objekt är uppätna avslutas spelet. Ska troligtvis ske något annat
+	if(myPacman.no_food_left())
+	  {
+	    quit=true;
+	  }
 
 
 
@@ -1855,7 +1887,7 @@ int main( int argc, char* args[] )
 	theButton.show();
 	theButton.show_button();
 	theButton2.show_button();
-theButton3.show_button();
+	theButton3.show_button();
 
 
 	//Show score on the side of the screen
