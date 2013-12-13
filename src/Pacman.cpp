@@ -16,7 +16,7 @@
 #include <fstream>
 #include <vector>
 #include <iterator>
-
+#include <algorithm>
 
 
 //void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect* clip = NULL );
@@ -128,7 +128,7 @@ public:
   bool eat_eaten(class Ghost&, class Score&);
  
  //Pacman eats food for points
-  bool eat_food(class Food&, class Score&);
+  void eat_food(std::vector<class Food>&, class Score&); //bool eat_food(class Food&, class Score&);
 
   //Pacman eats special_food - ghosts flees
   bool eat_special_food(class Special_Food&, class Score&);
@@ -300,13 +300,16 @@ private:
   int highscore;
   std::string name;
 public:
+  std::vector<int> highscoretable;
   Highscore(int, std::string);
   // void load();
   // void close();
   bool is_new_highscore(Score&);
   void save_new_highscore(Score&);
-  std::string get_highscore();
+  std::string get_highscore_name();
+  int get_highscore();
   void show();
+  void load_list();
 };
 
 
@@ -566,7 +569,7 @@ bool load_files()
     
 
     //Load the foods image
-    food = load_image( "img/food-picture1.bmp" );
+    food = load_image( "img/food2.bmp" );
 
     //If there was a problem in loading the food picture
     if( food == NULL)
@@ -677,7 +680,7 @@ Pacman::Pacman()
     y= 440;
 
     //Initialize lives of Pacman
-    lives = 2;
+    lives = 0;
 
  //Initialize animation variables
     frame = 0;
@@ -878,20 +881,26 @@ bool Pacman::eat_eaten(Ghost& ghost_object,Score& myScore)
 
 
 //Pacman eats food
-bool Pacman::eat_food(Food& food_object,Score& myScore)
+void Pacman::eat_food(std::vector<Food>& food_vector, Score& myScore) //Food& food_object
 {
-  if (check_collision(box, food_object.get_box()) && !food_object.eaten())
-      {
-	myScore.add_points(1);
-	food_object.was_eaten();
-	return true;
-      }
-  return false;
+  for (std::vector<Food>::iterator it = food_vector.begin() ; it != food_vector.end(); ++it)
+    {
+    
+      if ((check_collision(box, (*it).get_box())) and ((*it).eaten() == false))
+	{
+	  myScore.add_points(1);
+	  (*it).was_eaten();
+	  
+	}
+      
+    }
+    
 }
 
 //Pacman eats special_food
 bool Pacman::eat_special_food(Special_Food& special_food_object,Score& myScore)
 {
+
   if (check_collision(box, special_food_object.get_box()) && !special_food_object.eaten())
       {	
 	special_food_object.was_eaten();
@@ -975,7 +984,7 @@ void Ghost::move(std::vector<SDL_Rect> maze)
     case 4: yVel = 10; xVel = 0; break; //down
     }
 
-  crashed_ = false;  //if there is no collision, crashed_ will be false
+ 
   //Move the ghost left or right
     box.x += xVel;
 
@@ -987,7 +996,8 @@ void Ghost::move(std::vector<SDL_Rect> maze)
 	  {
 	    //Move back
 	    box.x -= xVel;
-	    crashed_ = true; 
+	    crashed_ = true;
+	    first_way_to_pacman_ = second_way_to_pacman_; 
 	  }
       }    
 
@@ -1062,6 +1072,7 @@ void Ghost1::seek(Pacman paccy)
 	}
   
     }
+  crashed_ = false;
 }
 
 //sets the moving direction towards pacman at random
@@ -1072,6 +1083,7 @@ void Ghost2::seek()
       first_way_to_pacman_ = rand()% 4 + 1;
       second_way_to_pacman_ = first_way_to_pacman_;
     }
+  crashed_ = false;
 }
 
 void Ghost1::show()
@@ -1335,6 +1347,11 @@ Highscore::Highscore(int myScore, std::string myName)
 
 bool Highscore::is_new_highscore(Score& myScore) // ev. ta in namn också
 {
+  load_list();
+  int size=highscoretable.size();
+  if ((size<10) || (myScore.return_score() > highscoretable[size-1])){
+    return true;}
+  return false;
   /*std::ifstream InputFile ("highscore.txt");
   std::vector<Highscore> highscoretable;
   // int lowest_highscore{0};
@@ -1353,36 +1370,54 @@ bool Highscore::is_new_highscore(Score& myScore) // ev. ta in namn också
     {
       return true;
       }*/
-  return false;
+    // return false;
 }
 
 void Highscore::save_new_highscore(Score& new_highscore)
 {
-  /* std::ofstream OutputFile ("highscore.txt");
-  int new_score = new_highscore.return_score();
-  Highscore highscore_entry{new_score, "Ingrid"};
-  std::vector<Highscore> highscoretable;
- highscoretable.push_back(highscore_entry);
- for (int i = 0 ; i < highscoretable.size() ; i++)
-   { 
-     OutputFile << highscoretable[i] << std::endl;   
-   }
-    // OutputFile << highscoretable;
-   OutputFile.close();
-  //ladda fil
-  //lägg in på rätt palts
-  //kolla listans längd
-  //stäng fil*/
+  //Load highscore list to vector
+  load_list();
+
+  //Save highscore list to file
+  std::ofstream outputFile ("src/highscore.txt", std::ios::binary);
+  //Highscore highscore_entry{new_score, "Ingrid"};
+  highscoretable.push_back(new_highscore.return_score());
+  std::stable_sort (highscoretable.begin(), highscoretable.end());
+  std::reverse(highscoretable.begin(),highscoretable.end());
+  if (highscoretable.size() > 10)
+    {
+      highscoretable.pop_back();
+    }
+  for ( int i = 0 ; i < highscoretable.size() ; i++)
+    { 
+      outputFile << highscoretable[i] << std::endl;
+      //  outputFile << highscoretable[i].get_highscore_name << std::endl;
+    }
+  outputFile.close();
 }
 
-std::string Highscore::get_highscore()
+void Highscore::load_list()
 {
-  // std::stringstream stream;
-  std::string text;
-  // stream << points;
-  // stream >> text; 
-  return text;
+  std::ifstream inputfile ("src/highscore.txt");
+  int entry;
+  highscoretable.erase(highscoretable.begin(),highscoretable.end());
+  while (inputfile >> entry)
+    { 
+      highscoretable.push_back(entry);
+    }
+  inputfile.close();
 }
+
+std::string Highscore::get_highscore_name()
+{
+  return name;
+}
+
+int Highscore::get_highscore()
+{
+  return highscore;
+}
+
 
 void Highscore::show()
 {
@@ -1511,8 +1546,58 @@ int main( int argc, char* args[] )
     Highscore myHighscore(0,"Ingrid");
 
 
-    //Food
-    Food myFood(370,100);
+    //Initialize Food
+    Food myFood1(10,50);
+    Food myFood2(10,90);
+    Food myFood3(10,130);
+    Food myFood4(10,170);
+    Food myFood5(10,210);
+    Food myFood6(10,250);
+    Food myFood7(10,290);
+    Food myFood8(10,330);
+    Food myFood9(10,370);
+    Food myFood10(10,410);
+
+    Food myFood11(50,10);
+    Food myFood12(50,250);
+    Food myFood13(50,450);
+
+    Food myFood14(90,10);
+    Food myFood15(90,170);
+    Food myFood16(90,210);
+    Food myFood17(90,250);
+    Food myFood18(90,290);
+    Food myFood19(90,330);
+    Food myFood20(90,370);
+    Food myFood21(90,410);
+    Food myFood22(90,450);
+
+    Food myFood23(130,10);
+    Food myFood24(130,170);
+    Food myFood25(130,450);
+
+    Food myFood26(170,10);
+    Food myFood27(170,50);
+    Food myFood28(170,90);
+    Food myFood29(170,130);
+    Food myFood30(170,170);
+    Food myFood31(170,210);
+    Food myFood32(170,250);
+    Food myFood33(170,290);
+    Food myFood34(170,330);
+    Food myFood35(170,370);
+    Food myFood36(170,410);
+    Food myFood37(170,450);
+
+    Food myFood38(210,10);
+    Food myFood39(210,90);
+    Food myFood40(210,250);
+    Food myFood41(210,450);
+
+    //create vectorwith all food in, called food_vector
+    std::vector<Food> food_vector = {myFood1,myFood2,myFood3,myFood4,myFood5,myFood6,myFood7,myFood8,myFood9,myFood10,myFood11,myFood12,myFood13,myFood14,myFood15,myFood16,myFood17,myFood18,myFood19,myFood20,myFood21,myFood22,myFood23,myFood24,myFood25,myFood26,myFood27,myFood28,myFood29,myFood30,myFood31,myFood32,myFood33,myFood34,myFood35,myFood36,myFood37,myFood38,myFood39,myFood40};
+
+    std::cerr << food_vector.size()<< std::endl;
 
     //Special_food
     Special_Food mySpecial_Food(370,0);
@@ -1720,19 +1805,21 @@ int main( int argc, char* args[] )
 
 	//Is a ghost eating Pacman or are Pacman eating a ghost
 
+
 	/*
 	if (myPacman.eat_eaten(myGhost, myScore))
 	  {
 	    if (myPacman.game_over())
 	      {
-
-		if (myHighscore.is_new_highscore(myScore))
+	    	if (myHighscore.is_new_highscore(myScore))
 		  {
-		    quit=true;
-		    myHighscore.save_new_highscore(myScore);	
+		    std::cout << "Nytt rekord" << std::endl;
+		    myHighscore.save_new_highscore(myScore);
+		    quit=true;	
 		  }
 	      }
 	  }
+
 	*/
 	if (myPacman.eat_eaten(myGhost1, myScore))
 	  {
@@ -1761,15 +1848,18 @@ int main( int argc, char* args[] )
 	  }
 
 
-
-
 	//Is a Pacman eating food
-	if (myPacman.eat_food(myFood, myScore)){
+	myPacman.eat_food(food_vector, myScore);
+
+	//myPacman.eat_food(food_vector, myScore);
+      /* {
 	  // if (alla food-pluttar uppätna - spel slut){
 	  //  quit=true;
 	  
-	}
-	
+
+	  }*/
+
+
 	//Is a Pacman eating special_food
 	if (myPacman.eat_special_food(mySpecial_Food, myScore))
 	  {
@@ -1794,15 +1884,18 @@ int main( int argc, char* args[] )
         //Show pacman on the screen
         myPacman.show();
 	
-
+	//Show food on the screen
+	for (std::vector<Food>::iterator it = food_vector.begin() ; it != food_vector.end(); ++it)
+	  {
+	    (*it).show();
+	  }
 
 	//Show ghost on the screen
 	myGhost1.show();
 	myGhost2.show();
 
 
-	//Show food on the screen
-	myFood.show();
+
 
 	//Show special_food on the screen
 	mySpecial_Food.show();
