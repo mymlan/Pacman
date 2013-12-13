@@ -13,7 +13,11 @@
 #include <iostream>  //for felsokning med std::cout
 #include "SDL/SDL_ttf.h"
 #include <sstream>
+#include <fstream>
 #include <vector>
+#include <iterator>
+
+
 
 //void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect* clip = NULL );
 
@@ -58,6 +62,7 @@ SDL_Surface *startup=NULL;
 SDL_Surface *food = NULL;
 SDL_Surface *special_food = NULL;
 SDL_Surface *text = NULL;
+SDL_Surface *highscore = NULL;
 
 
 //The event structure
@@ -286,7 +291,25 @@ public:
   Score();
   void reset_score();
   void add_points(int);
-  std::string get_score();
+  std::string get_score(); // return score as string
+  void show();
+  int return_score(); // returns score as int
+};
+
+
+//Highscore
+class Highscore
+{
+private:
+  int highscore;
+  std::string name;
+public:
+  Highscore(int, std::string);
+  // void load();
+  // void close();
+  bool is_new_highscore(Score&);
+  void save_new_highscore(Score&);
+  std::string get_highscore();
   void show();
 };
 
@@ -1253,6 +1276,11 @@ std::string Score::get_score()
   return text;
 }
 
+int Score::return_score()
+{
+  return points;
+}
+
 void Score::show()
 {
   score = TTF_RenderText_Solid( font, get_score().c_str(), textColor );
@@ -1281,7 +1309,6 @@ bool Menu::get_start()
 {
   return start;
 }
-
 
 void Menu::change_start()
 { 
@@ -1312,11 +1339,77 @@ void Menu::show_button()
 
 void Menu::showstart()
 {
+
   apply_surface(0,0,startup,screen, &clipsStartscr[0]); 
   std::cout << "Hey Big Boy/Girl!!!" <<std::endl;
+  //apply_surface(0,0,startup,screen);
+}
+//============================================================================
+//  Class: Highscore
+//============================================================================
+Highscore::Highscore(int myScore, std::string myName)
+{
+  highscore=myScore;
+  name=myName;
+
 }
 
+bool Highscore::is_new_highscore(Score& myScore) // ev. ta in namn också
+{
+  /*std::ifstream InputFile ("highscore.txt");
+  std::vector<Highscore> highscoretable;
+  // int lowest_highscore{0};
+  // std::string highscore;
+  int new_score = myScore.return_score();
+  if (InputFile.is_open())
+    {
+      for (int i{0}; i<1; i++) // 10
+	{
+	  InputFile >> highscore;
+	}
+      lowest_highscore=std::stoi(highscore);
+      InputFile.close();
+    }   
+  if (new_score > lowest_highscore)
+    {
+      return true;
+      }*/
+  return false;
+}
 
+void Highscore::save_new_highscore(Score& new_highscore)
+{
+  /* std::ofstream OutputFile ("highscore.txt");
+  int new_score = new_highscore.return_score();
+  Highscore highscore_entry{new_score, "Ingrid"};
+  std::vector<Highscore> highscoretable;
+ highscoretable.push_back(highscore_entry);
+ for (int i = 0 ; i < highscoretable.size() ; i++)
+   { 
+     OutputFile << highscoretable[i] << std::endl;   
+   }
+    // OutputFile << highscoretable;
+   OutputFile.close();
+  //ladda fil
+  //lägg in på rätt palts
+  //kolla listans längd
+  //stäng fil*/
+}
+
+std::string Highscore::get_highscore()
+{
+  // std::stringstream stream;
+  std::string text;
+  // stream << points;
+  // stream >> text; 
+  return text;
+}
+
+void Highscore::show()
+{
+  //highscore = TTF_RenderText_Solid( font, get_highscore().c_str(), textColor );
+  apply_surface(0,0,score,screen);
+}
 
 //============================================================================
 //  FOOD
@@ -1434,6 +1527,9 @@ int main( int argc, char* args[] )
 
     //Player score
     Score myScore;
+
+    //Highscore
+    Highscore myHighscore(0,"Ingrid");
 
 
     //Food
@@ -1637,11 +1733,18 @@ int main( int argc, char* args[] )
 	myGhost2.move(maze);
 
 	//Is a ghost eating Pacman or are Pacman eating a ghost
-	if (myPacman.eat_eaten(myGhost, myScore)){
-	  if (myPacman.game_over()){
-	    quit=true;
+	if (myPacman.eat_eaten(myGhost, myScore))
+	  {
+	    if (myPacman.game_over())
+	      {
+
+		if (myHighscore.is_new_highscore(myScore))
+		  {
+		    quit=true;
+		    myHighscore.save_new_highscore(myScore);	
+		  }
+	      }
 	  }
-	}
 
 
 	//Is a Pacman eating food
@@ -1650,7 +1753,7 @@ int main( int argc, char* args[] )
 	  //  quit=true;
 	  
 	}
-
+	
 	//Is a Pacman eating special_food
 	if (myPacman.eat_special_food(mySpecial_Food, myScore, myGhost)){
 	  // timer räkna ner
