@@ -560,8 +560,8 @@ bool load_files()
    
     //Load the ghost image
     ghost = load_image( "img/ghost-picture.bmp" );
-    //ghost2 = load_image( "img/ghost-picture2.bmp" );
-    //If there was a problem in loading the ghost picture
+    ghost2 = load_image( "img/ghost-picture2.bmp" );
+    // If there was a problem in loading the ghost picture
     if( ghost == NULL) //|| ghost2 == NULL)
       {
 	return false;
