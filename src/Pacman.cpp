@@ -170,8 +170,6 @@ public:
   
   SDL_Rect get_box();
 
-  //Shows the ghost on the screen
-  void show();
   
   //Sets Ghost position to startposition
   virtual void get_home() = 0;
@@ -196,6 +194,9 @@ public:
 
   void get_home();  
 
+  //Shows the ghost on the screen
+  void show();
+
 private: 
  
 };
@@ -212,6 +213,9 @@ public:
   Ghost2();
 
   void get_home();
+
+  //Shows the ghost on the screen
+  void show();
 private:
  
 
@@ -548,11 +552,11 @@ bool load_files()
     ghost = load_image( "img/ghost-picture.bmp" );
     ghost2 = load_image( "img/ghost-picture2.bmp" );
     //If there was a problem in loading the ghost picture
-    if( ghost == NULL)
+    if( ghost == NULL || ghost2 == NULL)
       {
 	return false;
       }
-
+    
 
     //Load the foods image
     food = load_image( "img/food-picture1.bmp" );
@@ -1046,13 +1050,18 @@ void Ghost2::seek()
     }
 }
 
-void Ghost::show()
+void Ghost1::show()
 {
   //Show the ghost
   apply_surface( box.x, box.y, ghost, screen );
+  
 }
 
-
+void Ghost2::show()
+{
+  //show the ghost2
+  apply_surface( box.x, box.y, ghost2, screen );
+}
 
 
 //Returns SDL-object of ghost
