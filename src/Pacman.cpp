@@ -16,7 +16,7 @@
 #include <fstream>
 #include <vector>
 #include <iterator>
-
+#include <algorithm>
 
 
 //void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect* clip = NULL );
@@ -79,10 +79,15 @@ SDL_Rect clipsStartscr[ 1 ];
 SDL_Rect clipsInfopanel[ 1 ];
 
 //The font
-TTF_Font *font = NULL;
+TTF_Font *scoreFont = NULL;
+TTF_Font *headerFont= NULL;
+TTF_Font *infoFont=NULL;
 
 //The color of the font
-SDL_Color textColor = {0,100,0};
+SDL_Color textColor = {0,0,0,0};
+SDL_Color headerColor = {255,255,0,0};
+SDL_Color infoColor = {};
+
 
 
 //============================================================================
@@ -312,13 +317,16 @@ private:
   int highscore;
   std::string name;
 public:
+  std::vector<int> highscoretable;
   Highscore(int, std::string);
   // void load();
   // void close();
   bool is_new_highscore(Score&);
   void save_new_highscore(Score&);
-  std::string get_highscore();
+  std::string get_highscore_name();
+  int get_highscore();
   void show();
+  void load_list();
 };
 
 
@@ -570,9 +578,11 @@ bool load_files()
     //Load the ghost image
     ghost = load_image( "img/ghost-picture.bmp" );
     ghost2 = load_image( "img/ghost-picture2.bmp" );
+
     ghost3 = load_image( "img/ghost-picture3.bmp" );
     //If there was a problem in loading the ghost picture
     if( ghost == NULL || ghost2 == NULL || ghost3 == NULL)
+
       {
 	return false;
       }
@@ -599,10 +609,27 @@ bool load_files()
 	return false;
       }
 
-    //Load player score
-    font = TTF_OpenFont("img/arial.ttf",28);
+    //Load  headerFont
+    headerFont = TTF_OpenFont("img/xtrusion.ttf",55);
 
-    if (font ==NULL)
+    if (headerFont ==NULL)
+      {
+	return false;
+      }
+
+ //Load infoFont
+    infoFont = TTF_OpenFont("img/KarmaFuture.ttf",22);
+
+    if (infoFont ==NULL)
+      {
+	return false;
+      }
+
+
+  //Load player scoreFont
+   scoreFont = TTF_OpenFont("img/arial.ttf",28);
+
+    if (scoreFont ==NULL)
       {
 	return false;
       }
@@ -673,7 +700,7 @@ Pacman::Pacman()
     y= 440;
 
     //Initialize lives of Pacman
-    lives = 2;
+    lives = 0;
 
  //Initialize animation variables
     frame = 0;
@@ -1355,7 +1382,7 @@ int Score::return_score()
 
 void Score::show()
 {
-  score = TTF_RenderText_Solid( font, get_score().c_str(), textColor );
+  score = TTF_RenderText_Solid( scoreFont, get_score().c_str(), textColor );
   apply_surface(0,0,score, screen);
 }
 
@@ -1400,12 +1427,17 @@ void Menu::show()
   
     }
   
-}
 
-void Menu::show_button()
+
+
+   text = TTF_RenderText_Solid( headerFont, "PACMAN" , headerColor );
+   apply_surface(button.x, button.y,text, screen);
+}
+	void Menu::show_button()
 {
-  text = TTF_RenderText_Solid( font, message_.c_str() , textColor );
+  text = TTF_RenderText_Solid( infoFont, message_.c_str() , headerColor );
   apply_surface(button.x, button.y,text, screen);
+
 }
 
 
@@ -1428,6 +1460,11 @@ Highscore::Highscore(int myScore, std::string myName)
 
 bool Highscore::is_new_highscore(Score& myScore) // ev. ta in namn också
 {
+  load_list();
+  int size=highscoretable.size();
+  if ((size<10) || (myScore.return_score() > highscoretable[size-1])){
+    return true;}
+  return false;
   /*std::ifstream InputFile ("highscore.txt");
   std::vector<Highscore> highscoretable;
   // int lowest_highscore{0};
@@ -1446,36 +1483,54 @@ bool Highscore::is_new_highscore(Score& myScore) // ev. ta in namn också
     {
       return true;
       }*/
-  return false;
+    // return false;
 }
 
 void Highscore::save_new_highscore(Score& new_highscore)
 {
-  /* std::ofstream OutputFile ("highscore.txt");
-  int new_score = new_highscore.return_score();
-  Highscore highscore_entry{new_score, "Ingrid"};
-  std::vector<Highscore> highscoretable;
- highscoretable.push_back(highscore_entry);
- for (int i = 0 ; i < highscoretable.size() ; i++)
-   { 
-     OutputFile << highscoretable[i] << std::endl;   
-   }
-    // OutputFile << highscoretable;
-   OutputFile.close();
-  //ladda fil
-  //lägg in på rätt palts
-  //kolla listans längd
-  //stäng fil*/
+  //Load highscore list to vector
+  load_list();
+
+  //Save highscore list to file
+  std::ofstream outputFile ("src/highscore.txt", std::ios::binary);
+  //Highscore highscore_entry{new_score, "Ingrid"};
+  highscoretable.push_back(new_highscore.return_score());
+  std::stable_sort (highscoretable.begin(), highscoretable.end());
+  std::reverse(highscoretable.begin(),highscoretable.end());
+  if (highscoretable.size() > 10)
+    {
+      highscoretable.pop_back();
+    }
+  for ( int i = 0 ; i < highscoretable.size() ; i++)
+    { 
+      outputFile << highscoretable[i] << std::endl;
+      //  outputFile << highscoretable[i].get_highscore_name << std::endl;
+    }
+  outputFile.close();
 }
 
-std::string Highscore::get_highscore()
+void Highscore::load_list()
 {
-  // std::stringstream stream;
-  std::string text;
-  // stream << points;
-  // stream >> text; 
-  return text;
+  std::ifstream inputfile ("src/highscore.txt");
+  int entry;
+  highscoretable.erase(highscoretable.begin(),highscoretable.end());
+  while (inputfile >> entry)
+    { 
+      highscoretable.push_back(entry);
+    }
+  inputfile.close();
 }
+
+std::string Highscore::get_highscore_name()
+{
+  return name;
+}
+
+int Highscore::get_highscore()
+{
+  return highscore;
+}
+
 
 void Highscore::show()
 {
@@ -1586,7 +1641,7 @@ int main( int argc, char* args[] )
     bool quit = false;
 
     //Menu
-    Menu Startup(0,0,"Press S to play");
+    Menu Startup(660,30);
 
     //The pacman
     Pacman myPacman;
@@ -1669,9 +1724,14 @@ int main( int argc, char* args[] )
 
 
   //The buttons
-    Menu theButton(700,100,"1. Chicken Tandoori 75kr ");
-    Menu theButton2(700, 150,"2. Tikka Massaala 70kr ");
-    Menu theButton3(700, 200,"3. Curry Chicken 70kr");
+
+    Menu theButton(660,30);
+
+    Menu theButton1(660,100,"Press \"S\" to start ");
+    Menu theButton2(660, 150,"Press \"P\" to pause ");
+    Menu theButton3(660, 200,"Press \"Q\" to quit");
+    Menu theButton4(660,250,"Press \"H\" to show highscore");
+    
 
   //Initialize
   if( init() == false )
@@ -1734,8 +1794,10 @@ int main( int argc, char* args[] )
 	    //  apply_surface( MAP_WIDTH, 0, startup, screen );
 	    Startup.show();
 	    Startup.show_button();
-
-	 
+	    theButton1.show_button();
+	    theButton2.show_button();
+	    theButton3.show_button();
+	    theButton4.show_button();
 	    //Update the screen
 	     if( SDL_Flip( screen ) == -1 )
 	       {
@@ -1867,14 +1929,15 @@ int main( int argc, char* args[] )
 	  {
 	    if (myPacman.game_over())
 	      {
-
-		if (myHighscore.is_new_highscore(myScore))
+	    	if (myHighscore.is_new_highscore(myScore))
 		  {
-		    quit=true;
-		    myHighscore.save_new_highscore(myScore);	
+		    std::cout << "Nytt rekord" << std::endl;
+		    myHighscore.save_new_highscore(myScore);
+		    quit=true;	
 		  }
 	      }
 	  }
+
 	*/
 	if (myPacman.eat_eaten(myGhost1, myScore))
 	  {
@@ -1913,9 +1976,6 @@ int main( int argc, char* args[] )
 		  }
 	      }
 	  }
-
-
-
 
 
 	//Is a Pacman eating food
@@ -1973,19 +2033,21 @@ int main( int argc, char* args[] )
 	mySpecial_Food.show();
 
 	
-	//Show penguin
-	//apply_surface( MAP_WIDTH, 0, startup, screen, &clipsInfopanel[0] );
 
 
-	//show the lives on the screen
-	myPacman.showlife();
+
 
 	//show the buttons
 
 	theButton.show();
-	theButton.show_button();
+	theButton1.show_button();
 	theButton2.show_button();
 	theButton3.show_button();
+
+	theButton4.show_button();
+	
+	//show the lives on the screen
+	myPacman.showlife();
 
 
 	//Show score on the side of the screen
