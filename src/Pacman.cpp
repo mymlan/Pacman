@@ -111,12 +111,12 @@ public:
   void showlife();
   bool game_over();
   bool eat_eaten(class Ghost&, class Score&);
-
+ 
  //Pacman eats food for points
   bool eat_food(class Food&, class Score&);
 
   //Pacman eats special_food - ghosts flees
-  bool eat_special_food(class Special_Food&, class Score&, class Ghost&);
+  bool eat_special_food(class Special_Food&, class Score&);
 
   //Takes key presses and adjusts the square's velocity
   void handle_input();
@@ -132,92 +132,79 @@ public:
 };
 
 //The ghost 
-class Ghost //need a way to set crashed_ to false. Do this by checking if there was no crash
+class Ghost
 {
-private:
-  //The collission box of the ghost
+protected:
+  //if ghost crashes into a wall it will change direction, otherwise will keep going.
+  bool crashed_;
+
+//The collission box of the ghost
   SDL_Rect box;
 
   //The velocity of the ghost
   int xVel, yVel;
 
-  //Angry or scare ghost. 0 angry, 1 scared
+  //Angry or scare ghost. false is  angry, true is scared
   bool scared_;
 
-  //if ghost crashes into a wall it will change direction, otherwise will keep going.
-  bool crashed_;
 
   //1 is left, 2 is right, 3 is up, and 4 is down. 0 will be the starting value, meaning the ghost hasn't found out where pacman is
   int first_way_to_pacman_;
   int second_way_to_pacman_;
-
 public:
-  //Initializes the variables
-  Ghost();
-
+  Ghost() = default;
+  
   //Moves the ghost
   void move(std::vector<SDL_Rect>);
-
-  //Finds out how to move to Pacman. Seek sets the "first and second way to pacman" member units.
-  void seek(Pacman);
-
-
+  
+  
   SDL_Rect get_box();
 
   //Shows the ghost on the screen
   void show();
-
+  
   //Sets Ghost position to startposition
-  void get_home();
-
+  virtual void get_home() = 0;
+  
   //Returns if ghost is scared/angry
   bool is_scared();
-
+  
   //Switches ghost between chase and flee states
   void change_mood();
 };
 
-//The second ghost
-class Ghost2 //this is a whimsy  ghost, it moves in random directions. It is also never scared
+
+
+class Ghost1 : public Ghost
 {
-private:
-  //The collission box of the ghost
-  SDL_Rect box;
-
-  //The velocity of the ghost
-  int xVel, yVel;
-
-  //if ghost crashes into a wall it will change direction, otherwise will keep going.
-  bool crashed_;
-
-  //1 is left, 2 is right, 3 is up, and 4 is down. 0 will be the starting value, meaning the ghost hasn't found out where pacman is
-  int first_way_to_pacman_;
-
-
 public:
+ //Finds out how to move to Pacman. Seek sets the "first and second way to pacman" member units.
+  void seek(Pacman);
+
   //Initializes the variables
-  Ghost2();
+  Ghost1();
 
-  //Moves the ghost
-  void move(std::vector<SDL_Rect>);
+  void get_home();  
 
-  //Finds out how to move to Pacman. This ghost does it at random
+private: 
+ 
+};
+
+ 
+
+
+//The second ghost
+  class Ghost2 : public Ghost  //this is a whimsy  ghost, it moves in random directions.
+{
+public:
   void seek();
 
+  Ghost2();
 
-  SDL_Rect get_box();
-
-  //Shows the ghost on the screen
-  void show();
-
-  //Sets Ghost position to startposition
   void get_home();
+private:
+ 
 
-  //Returns if ghost is scared/angry
-  bool is_scared();
-
-  //Switches ghost between chase and flee states
-  void change_mood();
 };
 
 
@@ -520,7 +507,7 @@ bool load_files()
    
     //Load the ghost image
     ghost = load_image( "img/ghost-picture.bmp" );
-
+    ghost2 = load_image( "img/ghost-picture2.bmp" );
     //If there was a problem in loading the ghost picture
     if( ghost == NULL)
       {
@@ -588,10 +575,11 @@ void clean_up()
 {
     //Free the surface
     SDL_FreeSurface( pacman );
-    SDL_FreeSurface( ghost );   
+    SDL_FreeSurface( ghost );
+    SDL_FreeSurface( ghost2 );   //prova ta bort vid problem med ghost
     SDL_FreeSurface( score );
     SDL_FreeSurface( startup);
-               //prova ta bort vid problem med ghost
+              
     //Quit SDL
     SDL_Quit();
 }
@@ -815,6 +803,10 @@ bool Pacman::eat_eaten(Ghost& ghost_object,Score& myScore)
   return false;
 }
 
+
+
+
+
 //Pacman eats food
 bool Pacman::eat_food(Food& food_object,Score& myScore)
 {
@@ -828,11 +820,10 @@ bool Pacman::eat_food(Food& food_object,Score& myScore)
 }
 
 //Pacman eats special_food
-bool Pacman::eat_special_food(Special_Food& special_food_object,Score& myScore, Ghost& myGhost)
+bool Pacman::eat_special_food(Special_Food& special_food_object,Score& myScore)
 {
   if (check_collision(box, special_food_object.get_box()) && !special_food_object.eaten())
-      {
-	myGhost.change_mood();//funktion att spöken flyr
+      {	
 	special_food_object.was_eaten();
 	return true;
       }
@@ -849,7 +840,7 @@ void Pacman::get_home()
 //  Class: Ghost
 //============================================================================
 
-Ghost::Ghost()
+Ghost1::Ghost1()
 {
   //Initialize the offsets
   box.x = 0;
@@ -910,7 +901,7 @@ void Ghost::move(std::vector<SDL_Rect> maze)
     case 4: yVel = 10; xVel = 0; break; //down
     }
 
-  crashed_ = false;  
+  crashed_ = false;  //if there is no collision, crashed_ will be false
   //Move the ghost left or right
     box.x += xVel;
 
@@ -922,7 +913,7 @@ void Ghost::move(std::vector<SDL_Rect> maze)
 	  {
 	    //Move back
 	    box.x -= xVel;
-	    crashed_ = true;
+	    crashed_ = true; 
 	  }
       }    
 
@@ -940,104 +931,69 @@ void Ghost::move(std::vector<SDL_Rect> maze)
 	  }
       }
 }
-void Ghost2::move(std::vector<SDL_Rect> maze)
-{
- 
- //Set velocity and direction
-  switch(first_way_to_pacman_)
-    {
-    case 1: yVel = 0; xVel = -10; break; //left
-    case 2: yVel = 0; xVel = 10; break;  //right
-    case 3: yVel = -10; xVel = 0; break;  //up      y increases downwards
-    case 4: yVel = 10; xVel = 0; break; //down
-    }
-  
-  //Move the ghost left or right
-    box.x += xVel;
 
-    //If the ghost went too far to the left or right or has collided with the walls
-    for (std::vector<SDL_Rect>::iterator it = maze.begin() ; it != maze.end(); ++it)
-      {
-	if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, *it ) ) )
-	  {
-	    //Move back
-	    box.x -= xVel;
-	    crashed_ = true;
-	  }
-      }    
-
-    //Move the ghost up or down
-    box.y += yVel;
-
-    //If the square went too far up or down or has collided with the walls
-    for (std::vector<SDL_Rect>::iterator it = maze.begin() ; it != maze.end(); ++it)
-      {
-	if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, *it ) ) )
-	  {
-	    //Move back
-	    box.y -= yVel;
-	    crashed_ = true;
-	  }
-      }
-}
 
 //Sets the moving direction towards pacman
-void Ghost::seek(Pacman paccy)
+void Ghost1::seek(Pacman paccy)
 {
-  //pacman_x and pacman_y are the coordinates of pacman
-  int pacman_x{paccy.reveal_position_x()};
-  int pacman_y{paccy.reveal_position_y()};
-  
-  
-  //tries to minimize the distance in the shortest direction first. If pacman is one step to the right and far away at the bottom, the ghost will first go down and then take one step left.
-  if( abs(pacman_x - box.x) > abs(pacman_y - box.y) ) //if bigger difference in x than in y, then walk towards pacman i x direction
+
+  if(crashed_ == true)
     {
-      if( pacman_x > box.x ) //if pacman is to the right, go right
-	{first_way_to_pacman_ = 2;}
-      else 
-	{first_way_to_pacman_ = 1;} //else, go left
+      //pacman_x and pacman_y are the coordinates of pacman
+      int pacman_x{paccy.reveal_position_x()};
+      int pacman_y{paccy.reveal_position_y()};
+  
+  
+      //tries to minimize the distance in the shortest direction first. If pacman is one step to the right and far away at the bottom, the ghost will first go down and then take one step left.
+      if( abs(pacman_x - box.x) > abs(pacman_y - box.y) ) //if bigger difference in x than in y, then walk towards pacman i x direction
+	{
+	  if( pacman_x > box.x ) //if pacman is to the right, go right
+	    {first_way_to_pacman_ = 2;}
+	  else 
+	    {first_way_to_pacman_ = 1;} //else, go left
       
-      if ( pacman_y > box.y ) //if pacman is below the ghost, go downwards
-	{second_way_to_pacman_ = 4;}
-      else
-	{second_way_to_pacman_ = 3;} //else, go up
-    }
+	  if ( pacman_y > box.y ) //if pacman is below the ghost, go downwards
+	    {second_way_to_pacman_ = 4;}
+	  else
+	    {second_way_to_pacman_ = 3;} //else, go up
+	}
      
-  else
-    {
-      if (pacman_y > box.y) //biggest distance is in y direction, so walk in y direction first
-	{first_way_to_pacman_ = 4;}
       else
-	{first_way_to_pacman_ = 3;}
+	{
+	  if (pacman_y > box.y) //biggest distance is in y direction, so walk in y direction first
+	    {first_way_to_pacman_ = 4;}
+	  else
+	    {first_way_to_pacman_ = 3;}
       
-      if (pacman_x > box.x)
-	{second_way_to_pacman_ = 2;} //go right
-      else 
-	{second_way_to_pacman_ = 1;} //go left
-    }
+	  if (pacman_x > box.x)
+	    {second_way_to_pacman_ = 2;} //go right
+	  else 
+	    {second_way_to_pacman_ = 1;} //go left
+	}
 
 
-  if (scared_ == true) //if the ghost is scared, reverse the moving direction
-    {
-      if (first_way_to_pacman_ == 1 || 3)
-	{first_way_to_pacman_ += 1;}
-      else
-	{first_way_to_pacman_ -= 1;}
+      if (scared_ == true) //if the ghost is scared, reverse the moving direction
+	{
+	  if (first_way_to_pacman_ == 1 || 3)
+	    {first_way_to_pacman_ += 1;}
+	  else
+	    {first_way_to_pacman_ -= 1;}
       
-      if (second_way_to_pacman_ == 1 || 3)
-	{second_way_to_pacman_ += 1;}
-      else
-	{second_way_to_pacman_ -= 1;}
-    }
+	  if (second_way_to_pacman_ == 1 || 3)
+	    {second_way_to_pacman_ += 1;}
+	  else
+	    {second_way_to_pacman_ -= 1;}
+	}
   
+    }
 }
-
 //sets the moving direction towards pacman at random
 void Ghost2::seek()
 {
   if (crashed_ == true)
     {
       first_way_to_pacman_ = rand()% 4 + 1;
+      second_way_to_pacman_ = first_way_to_pacman_;
     }
 }
 
@@ -1047,11 +1003,7 @@ void Ghost::show()
   apply_surface( box.x, box.y, ghost, screen );
 }
 
-void Ghost2::show()
-{
-  //Show the ghost
-  apply_surface( box.x, box.y, ghost, screen );
-}
+
 
 
 //Returns SDL-object of ghost
@@ -1060,14 +1012,9 @@ SDL_Rect Ghost::get_box()
   return box;
 }
 
-//Returns SDL-object of ghost2
-SDL_Rect Ghost2::get_box()
-{
-  return box;
-}
 
 //Returns ghost to start position
-void Ghost::get_home()
+void Ghost1::get_home()
 {
   box.x = 0;
   box.y = 0;
@@ -1382,7 +1329,7 @@ int main( int argc, char* args[] )
     Pacman myPacman;
 
     //The ghost
-    Ghost myGhost;
+    Ghost1 myGhost1;
 
     //The second ghost
     Ghost2 myGhost2;
@@ -1540,19 +1487,35 @@ int main( int argc, char* args[] )
         myPacman.move(maze, wall25);
 	
 	//Ghost finds out where pacman is
-	myGhost.seek(myPacman);
+	myGhost1.seek(myPacman);
 	myGhost2.seek();
 
 	//Move the ghost
-	myGhost.move(maze);
+	myGhost1.move(maze);
 	myGhost2.move(maze);
 
 	//Is a ghost eating Pacman or are Pacman eating a ghost
-	if (myPacman.eat_eaten(myGhost, myScore)){
+	if (myPacman.eat_eaten(myGhost1, myScore)){
 	  if (myPacman.game_over()){
 	    quit=true;
 	  }
 	}
+	
+	if (myPacman.eat_eaten(myGhost2, myScore)){
+	  if (myPacman.game_over()){
+	    quit=true;
+	  }
+	}
+	
+
+
+	//Is a ghost eating Pacman or are Pacman eating a ghost
+	if (myPacman.eat_eaten(myGhost2, myScore)){
+	  if (myPacman.game_over()){
+	    quit=true;
+	  }
+	}
+
 
 
 	//Is a Pacman eating food
@@ -1563,11 +1526,14 @@ int main( int argc, char* args[] )
 	}
 
 	//Is a Pacman eating special_food
-	if (myPacman.eat_special_food(mySpecial_Food, myScore, myGhost)){
-	  // timer räkna ner
-	  //
-	}
-
+	if (myPacman.eat_special_food(mySpecial_Food, myScore))
+	  {
+	    myGhost1.change_mood();
+	    myGhost2.change_mood();
+	    // timer räkna ner
+	    //
+	  }
+	
 
         //Fill the screen white
         SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0xFF, 0xFF, 0xFF ) );
@@ -1586,7 +1552,7 @@ int main( int argc, char* args[] )
 
 
 	//Show ghost on the screen
-	myGhost.show();
+	myGhost1.show();
 	myGhost2.show();
 
 
