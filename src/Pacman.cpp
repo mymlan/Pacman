@@ -94,7 +94,7 @@ SDL_Color infoColor = {};
 //  Classes
 //============================================================================
 
-//The Pacman
+//===================== PACMAN ==============================================
 class Pacman
 {
 private:
@@ -156,7 +156,10 @@ public:
 
 };
 
-//The ghost 
+//#######################################################################################################
+
+
+//================================== GHOST ============================================================== 
 class Ghost
 {
 protected:
@@ -216,8 +219,6 @@ public:
 
 };
 
- 
-
 
 //The second ghost
 class Ghost2 : public Ghost  //this is a whimsy  ghost, it moves in random directions.
@@ -253,7 +254,11 @@ public:
 };
 
 
-//The timer
+
+//###############################################################################################
+
+
+//========================================= TIMER ===============================================
 class Timer
 {
 private:
@@ -285,6 +290,10 @@ public:
   bool is_paused();
 };
 
+//###############################################################################################
+
+//========================================== MENU ==============================================
+/*
 class Menu
 {
 private:
@@ -303,8 +312,52 @@ public:
   void show_button();
 
 };
+*/
 
-//Score
+class Menu
+{
+protected:
+  SDL_Rect button;
+  std::string message_;
+
+public:
+  virtual void show() const = 0;
+  virtual ~Menu() = default;
+};
+
+
+
+class Start : public Menu
+{
+public:
+  void show() const;
+  void show_infopanel() const;
+  bool is_start();
+  void change_start();
+
+  Start(int x, int y, std::string text);
+  ~Start() = default;
+
+private:
+  bool start;
+};
+
+
+class Button : public Menu
+{
+public:
+  ~Button()=default;
+  Button(int x, int y, std::string text);
+
+  void show() const;
+};
+
+
+
+
+//###############################################################################################
+
+//========================================== SCORE ==============================================
 class Score
 {
 private:
@@ -318,6 +371,9 @@ public:
   int return_score(); // returns score as int
 };
 
+//###############################################################################################
+
+//========================================== HIGHSCORE============================================
 
 //Highscore
 class Highscore
@@ -338,6 +394,9 @@ public:
   void load_list();
 };
 
+//###############################################################################################
+
+//========================================== FOOD ==============================================
 
 //Food
 class Food
@@ -352,6 +411,12 @@ public:
   void show();
   SDL_Rect get_box();
 };
+
+
+//###############################################################################################
+
+//========================================== SPECIAL FOOD =======================================
+
 
 //Special_Food
 class Special_Food
@@ -375,6 +440,7 @@ class Checkpoint
 private:
   SDL_Rect box;
 
+<<<<<<< HEAD
 public:
   Checkpoint(int, int);
   SDL_Rect get_box();
@@ -1468,7 +1534,105 @@ void Score::show()
 //  Class: Menu
 //============================================================================
 
-Menu::Menu(int x, int y, std::string text)
+
+//========================= START ==============================================
+
+Start::Start(int x, int y, std::string text)
+{
+  //Initialize
+  button.x = x;
+  button.y = y;
+  message_ = text;
+  start = true;
+
+ //Set dimension
+  button.w = BUTTON_WIDTH;
+  button.h = BUTTON_HEIGHT;
+
+}
+
+void Start::show() const
+{
+  apply_surface(0,0,startup,screen, &clipsStartscr[0]); 
+  std::cout << "Hey Big Boy/Girl!!!" <<std::endl;
+  //apply_surface(0,0,startup,screen);
+
+ //Show the startbuttons
+  
+  //  SDL_FillRect( screen, &button, SDL_MapRGB( screen->format, 0xEF, 0xEF, 0xEF) );
+   for (int i=0; i<=8; i++)
+    { 
+
+    apply_surface( (MAP_WIDTH+i*INFOPANEL_WIDTH), 0, startup, screen, &clipsInfopanel[0] );
+  
+    }
+   text = TTF_RenderText_Solid( headerFont, message_.c_str() , headerColor );
+   apply_surface(660, 30,text, screen); 
+
+}
+
+
+void Start::show_infopanel() const
+{
+ //Show the startbuttons
+  
+  //  SDL_FillRect( screen, &button, SDL_MapRGB( screen->format, 0xEF, 0xEF, 0xEF) );
+   for (int i=0; i<=8; i++)
+    { 
+
+    apply_surface( (MAP_WIDTH+i*INFOPANEL_WIDTH), 0, startup, screen, &clipsInfopanel[0] );
+  
+    }
+
+   text = TTF_RenderText_Solid( headerFont, message_.c_str() , headerColor );
+   apply_surface(660, 30,text, screen); 
+}
+
+
+
+
+
+
+bool Start::is_start()
+{
+  return start;
+}
+
+
+void Start::change_start()
+{
+  if(start == true)
+    start = false;
+  else
+    start =true;
+}
+
+//====================== BUTTON ==========================================================
+
+
+Button::Button(int x, int y, std::string text)
+{
+  //Initialize
+  button.x = x; 
+  button.y = y;
+  message_ = text;
+
+ //Set dimension
+  button.w = BUTTON_WIDTH;
+  button.h = BUTTON_HEIGHT;
+  
+}
+  
+void Button::show() const
+{
+  text = TTF_RenderText_Solid( infoFont, message_.c_str() , headerColor );
+  apply_surface(button.x, button.y,text, screen);  
+}
+
+
+
+
+/*Menu::Menu(int x, int y, std::string text)
 {
   //Initialize offset
   button.x = x;
@@ -1526,6 +1690,11 @@ void Menu::showstart()
   std::cout << "Hey Big Boy/Girl!!!" <<std::endl;
   //apply_surface(0,0,startup,screen);
 }
+*/
+
+
+
+
 //============================================================================
 //  Class: Highscore
 //============================================================================
@@ -1742,7 +1911,9 @@ int main( int argc, char* args[] )
     bool quit = false;
 
     //Menu
-    Menu Startup(660,30);
+    Start Startup(0,0,"PACMAN");
+    //    Menu Startup(660,30);
+
 
     //The pacman
     Pacman myPacman;
@@ -1826,12 +1997,17 @@ int main( int argc, char* args[] )
 
   //The buttons
 
-    Menu theButton(660,30);
+    /* Button theButton(700,100,"1. Chicken Tandoori 75kr ");
+    Button theButton2(700, 150,"2. Tikka Massaala 70kr ");
+    Button theButton3(700, 200,"3. Curry Chicken 70kr");
+    */
 
-    Menu theButton1(660,100,"Press \"S\" to start ");
-    Menu theButton2(660, 150,"Press \"P\" to pause ");
-    Menu theButton3(660, 200,"Press \"Q\" to quit");
-    Menu theButton4(660,250,"Press \"H\" to show highscore");
+      //Menu theButton(660,30);
+
+      Button theButton1(660,100,"Press \"S\" to start ");
+      Button theButton2(660, 150,"Press \"P\" to pause ");
+      Button theButton3(660, 200,"Press \"Q\" to quit");
+      Button theButton4(660,250,"Press \"H\" to show highscore");
     
 
   //Initialize
@@ -1904,18 +2080,26 @@ int main( int argc, char* args[] )
 
 	//=================== Startup =========================
 
-	if(Startup.get_start()==true)
+	if(Startup.is_start())
 	  {	
 	    bool proceed = false;
-	    Startup.showstart();
+	    Startup.show();
 	    //Show penguin
 	    //  apply_surface( MAP_WIDTH, 0, startup, screen );
-	    Startup.show();
-	    Startup.show_button();
-	    theButton1.show_button();
-	    theButton2.show_button();
-	    theButton3.show_button();
-	    theButton4.show_button();
+
+	    theButton1.show();
+	    theButton2.show();
+	    theButton3.show();
+	    theButton4.show();
+	 
+
+	    //   Startup.show();
+	    //Startup.show_button();
+	    //theButton1.show_button();
+	    //theButton2.show_button();
+	    //theButton3.show_button();
+	    //theButton4.show_button();
+
 	    //Update the screen
 	     if( SDL_Flip( screen ) == -1 )
 	       {
@@ -2171,17 +2355,28 @@ int main( int argc, char* args[] )
 
 
 
+	//show infopanel
+	Startup.show_infopanel();
+
 	//show the buttons
 
-	theButton.show();
-	theButton1.show_button();
-	theButton2.show_button();
-	theButton3.show_button();
+	//theButton.show();
+       
 
-	theButton4.show_button();
+	theButton1.show();
+	theButton2.show();
+	theButton3.show();
+	theButton4.show();
+
+	  //theButton1.show_button();
+	  //	theButton2.show_button();
+	  //theButton3.show_button();
+
+	  //theButton4.show_button();
 	
 	//show the lives on the screen
 	myPacman.showlife();
+
 
 
 
