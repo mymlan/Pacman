@@ -579,6 +579,7 @@ bool load_files()
 
 
 
+
 //============================================================================
 //  Memory release
 //============================================================================
@@ -1490,15 +1491,14 @@ int main( int argc, char* args[] )
 	     while(!proceed)
 	       {
 
-
+		 //========================== Xed out ======================
 		 //If the user has Xed out the window
 		 if( event.type == SDL_QUIT )
 		   {
 		     //Quit the program
 		     quit = true; proceed = true;
 		   }
-
-
+		 //=========================================================
 
 		 while(SDL_PollEvent( &event))
 		   {
@@ -1506,7 +1506,7 @@ int main( int argc, char* args[] )
 		       {
 			 switch(event.key.keysym.sym)
 			   {
-			   case SDLK_s: proceed=true; break;
+			   case SDLK_s: proceed=true; std::cout<<" Spela!!!" <<std::endl;  break;
 			   case SDLK_q: quit=true; proceed=true; break;
 			   }
 			 Startup.change_start();
@@ -1543,14 +1543,24 @@ int main( int argc, char* args[] )
 		    //Pause the game
 		    while(!cont)
 		      {
+			
 			while(SDL_PollEvent( &event))
 			  {
+			    //========================== Xed out ======================
+			    //If the user has Xed out the window
+			    if( event.type == SDL_QUIT )
+			      {
+				//Quit the program
+				quit = true; cont = true;
+			      }
+			    //=========================================================
+			    
 			    //Unpause the game 
 			    if(event.type == SDL_KEYDOWN)
 			      {
 				switch(event.key.keysym.sym)
 				  {
-				  case SDLK_p: cont = true; break;
+				  case SDLK_p: cont = true; std::cout << "Spela!!"<< std::endl; break;
 				  case SDLK_q: cont = true ; quit = true; break;
 				  }
 				
