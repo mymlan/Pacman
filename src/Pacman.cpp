@@ -90,6 +90,7 @@ SDL_Color infoColor = {};
 
 
 
+
 //============================================================================
 //  Classes
 //============================================================================
@@ -313,26 +314,6 @@ public:
 //###############################################################################################
 
 //========================================== MENU ==============================================
-/*
-class Menu
-{
-private:
-  // The button
-  SDL_Rect button;
-  bool start;
-  std::string message_;
-
-public:
-  //Initialize variable
-  Menu(int x, int  y, std::string text = "");
-  void showstart();
-  void show();
-  bool get_start();
-  void change_start();
-  void show_button();
-
-};
-*/
 
 class Menu
 {
@@ -470,6 +451,44 @@ public:
 */
 
 
+//============================================================================
+// Sprite 
+//============================================================================
+
+class Sprite
+{
+public:
+  SDL_Surface *load_image( std::string filename );
+  void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect* clip = NULL );
+  void set_clips();
+  bool check_collision( SDL_Rect A, SDL_Rect B );
+  bool init();
+  bool load_files();
+
+  //Draw
+  void showlife(int lives);
+  void show_pacman(int x, int y, int status, int frame);
+  void show_ghost(int x, int y, SDL_Surface*);
+  void show_score(const char* score);
+  
+
+  void show_start_background();
+  void show_infopanel(const char* header);
+  void show_button(int x, int y, const char* header);
+  void show_highscore(int x, int y);
+
+  void show_food(int x, int y, bool eaten);
+  void show_special_food(int x,int y, bool eaten);
+
+  //Update screen
+  int update_screen();
+
+  void clean_up();
+
+};
+
+
+
 
 
 
@@ -480,7 +499,7 @@ public:
 
 
 
-SDL_Surface *load_image( std::string filename )
+SDL_Surface * Sprite::load_image( std::string filename )
 {
     //The image that's loaded
     SDL_Surface* loadedImage = NULL;
@@ -512,7 +531,7 @@ SDL_Surface *load_image( std::string filename )
     return optimizedImage;
 }
 
-void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect* clip = NULL )
+void Sprite::apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect* clip )
 {
     //Holds offsets
     SDL_Rect offset;
@@ -526,7 +545,7 @@ void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination,
 
 }
 
-void set_clips()
+void Sprite::set_clips()
 {
     //Clip the sprites
     clipsRight[ 0 ].x = 0;
@@ -589,7 +608,7 @@ void set_clips()
 
 
 
-bool check_collision( SDL_Rect A, SDL_Rect B )
+bool Sprite::check_collision( SDL_Rect A, SDL_Rect B )
 {
     //The sides of the rectangles
     int leftA, leftB;
@@ -641,7 +660,7 @@ bool check_collision( SDL_Rect A, SDL_Rect B )
 //============================================================================
 
 
-bool init()
+bool Sprite::init()
 {
     //Initialize all SDL subsystems
     if( SDL_Init( SDL_INIT_EVERYTHING ) == -1 )
@@ -671,7 +690,7 @@ bool init()
     return true;
 }
 
-bool load_files()
+bool Sprite::load_files()
 {
     //Load the Pacman image
   pacman = load_image( "img/Pacman.bmp" ); //
@@ -704,7 +723,7 @@ bool load_files()
       {
         return false;
       }
-    
+  /*  
     //load the checkpoint image, only for testing. The checkpoints shall be invisible
     checkpoint = load_image( "img/checkpoint.bmp" );
     
@@ -713,7 +732,7 @@ bool load_files()
       {
         return false;
       }
-    
+  */ 
 
 
 
@@ -773,6 +792,117 @@ bool load_files()
     return true;
 }
 
+void Sprite::showlife(int lives)
+{
+if (lives==2)
+    {
+      apply_surface(910,440 ,pacman, screen, &clipsLeft[1] );
+       apply_surface(910+PACMAN_WIDTH,440 ,pacman, screen, &clipsLeft[1] );
+       apply_surface(910+2*PACMAN_WIDTH,440 ,pacman, screen, &clipsLeft[1] );
+    }   
+ else if (lives==1)
+    {
+
+      apply_surface(910+PACMAN_WIDTH,440 ,pacman, screen, &clipsLeft[1] );
+      apply_surface(910+2*PACMAN_WIDTH,440 ,pacman, screen, &clipsLeft[1] );
+    }
+    
+ else if( lives==0)
+   {
+     apply_surface(910+2*PACMAN_WIDTH,440 ,pacman, screen, &clipsLeft[1] );
+   }
+}
+
+void Sprite::show_pacman(int x, int y, int status, int frame)
+{
+ if( status == PACMAN_RIGHT )
+    {
+        apply_surface(x, y, pacman, screen, &clipsRight[ frame] );
+    }
+    else if( status == PACMAN_LEFT )
+    {
+        apply_surface( x, y, pacman, screen, &clipsLeft[ frame ] );
+    }
+    else if( status == PACMAN_UP)
+      {
+	apply_surface (x, y, pacman, screen, &clipsUp[ frame ]);
+      }
+
+ else if( status == PACMAN_DOWN)
+      {
+	apply_surface ( x, y, pacman , screen, &clipsDown[ frame ]);
+      }
+}
+
+
+void Sprite::show_ghost(int x, int y, SDL_Surface* ghost)
+{
+  apply_surface(x,y,ghost,screen);
+}
+
+
+void Sprite::show_score(const char* points)
+{
+  score = TTF_RenderText_Solid( scoreFont, points, textColor );
+  apply_surface(0,0,score, screen);
+}
+
+void Sprite::show_start_background()
+{
+ apply_surface(0,0,startup,screen, &clipsStartscr[0]); 
+ std::cout << "Hey Big Boy/Girl!!!" <<std::endl;
+}
+
+void Sprite::show_infopanel(const char* header)
+{
+  for (int i=0; i<=8; i++)
+    { 
+
+    apply_surface( (MAP_WIDTH+i*INFOPANEL_WIDTH), 0, startup, screen, &clipsInfopanel[0] );
+  
+    }
+
+  text = TTF_RenderText_Solid( headerFont, header, headerColor );
+   apply_surface(660, 30,text, screen); 
+}
+
+
+void Sprite::show_button(int x, int y, const char* header)
+{
+  text = TTF_RenderText_Solid( infoFont, header , headerColor );
+  apply_surface(x, y,text, screen);  
+}
+
+void Sprite::show_highscore(int x, int y)
+{
+  apply_surface(x,y,score,screen);
+}
+
+
+void Sprite::show_food(int x, int y, bool eaten)
+{
+  if (!eaten)
+    {
+      apply_surface(x,y,food, screen);
+    }
+}
+  
+
+void Sprite::show_special_food(int x,int y, bool eaten)
+{
+ if (!eaten)
+    {
+      apply_surface(x,y,special_food, screen);
+    }
+}
+
+ int Sprite::update_screen()
+ {
+   if( SDL_Flip( screen ) == -1 )
+     {
+       return 1;
+     }
+ }
 
 
 
@@ -781,7 +911,7 @@ bool load_files()
 //============================================================================
 
 
-void clean_up()
+void Sprite::clean_up()
 {
     //Free the surface
     SDL_FreeSurface( pacman );
@@ -849,8 +979,10 @@ int Pacman::life()
 
 
 void Pacman::showlife()
-{ 
-  if (lives==2)
+{
+  Sprite animation;
+  animation.showlife(lives); 
+  /* if (lives==2)
     {
       apply_surface(910,440 ,pacman, screen, &clipsLeft[1] );
        apply_surface(910+PACMAN_WIDTH,440 ,pacman, screen, &clipsLeft[1] );
@@ -867,6 +999,7 @@ void Pacman::showlife()
    {
      apply_surface(910+2*PACMAN_WIDTH,440 ,pacman, screen, &clipsLeft[1] );
    }
+  */
 }
 
 
@@ -888,18 +1021,21 @@ void Pacman::handle_input()
 
 void Pacman::move(std::vector<SDL_Rect> maze, SDL_Rect wall25)
 {
+  //Sprite
+  Sprite animation;
+
     //Move pacman left or right
     box.x += xVel;
     //If pacman went too far to the left or right or has collided with the walls
     for (std::vector<SDL_Rect>::iterator it = maze.begin() ; it != maze.end(); ++it)
       {
-	if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, *it ) ) )
+	if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( animation.check_collision( box, *it ) ) )
 	  {
 	    //Move back
 	    box.x -= xVel;
 	  }
       }   
-	if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall25 ) ) )
+	if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( animation.check_collision( box, wall25 ) ) )
 	  {
 	    //Move back
 	    box.x -= xVel;
@@ -911,7 +1047,7 @@ void Pacman::move(std::vector<SDL_Rect> maze, SDL_Rect wall25)
     //If pacman went too far up or down or has collided with the walls
     for (std::vector<SDL_Rect>::iterator it = maze.begin() ; it != maze.end(); ++it)
       {
-	if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, *it ) ) )
+	if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( animation.check_collision( box, *it ) ) )
 	  {
 	    //Move back
 	    box.y -= yVel;
@@ -924,6 +1060,8 @@ void Pacman::move(std::vector<SDL_Rect> maze, SDL_Rect wall25)
 
 void Pacman::show()
 {
+  Sprite animation;
+
   
     //If Pacman is moving left
     if( xVel < 0 )
@@ -969,6 +1107,8 @@ void Pacman::show()
     }
 
     //Show the pacman
+    animation.show_pacman(box.x, box.y, status, frame);
+/*
     if( status == PACMAN_RIGHT )
     {
         apply_surface(box.x, box.y, pacman, screen, &clipsRight[ frame] );
@@ -985,7 +1125,7 @@ void Pacman::show()
  else if( status == PACMAN_DOWN)
       {
 	apply_surface (box.x,box.y, pacman , screen, &clipsDown[ frame ]);
-      }
+	}*/
 }
 
 
@@ -1002,7 +1142,9 @@ bool Pacman::game_over()
 //Collision between
 bool Pacman::eat_eaten(Ghost& ghost_object,Score& myScore)
 {
-  if (check_collision(box, ghost_object.get_box()))
+  Sprite animation;
+
+  if (animation.check_collision(box, ghost_object.get_box()))
       {
 	if (ghost_object.is_scared())
 	  {
@@ -1024,10 +1166,11 @@ bool Pacman::eat_eaten(Ghost& ghost_object,Score& myScore)
 //Pacman eats food
 void Pacman::eat_food(std::vector<Food>& food_vector, Score& myScore) //Food& food_object
 {
+  Sprite animation;
   for (std::vector<Food>::iterator it = food_vector.begin() ; it != food_vector.end(); ++it)
     {
     
-      if ((check_collision(box, (*it).get_box())) and ((*it).eaten() == false))
+      if ((animation.check_collision(box, (*it).get_box())) and ((*it).eaten() == false))
 	{
 	  myScore.add_points(1);
 	  (*it).was_eaten();
@@ -1044,8 +1187,8 @@ void Pacman::eat_food(std::vector<Food>& food_vector, Score& myScore) //Food& fo
 //Pacman eats special_food
 bool Pacman::eat_special_food(Special_Food& special_food_object,Score& myScore)
 {
-
-  if (check_collision(box, special_food_object.get_box()) && !special_food_object.eaten())
+  Sprite animation;
+  if (animation.check_collision(box, special_food_object.get_box()) && !special_food_object.eaten())
       {	
 	special_food_object.was_eaten();
 	return true;
@@ -1166,7 +1309,7 @@ void Ghost::reverse_direction()
 
 void Ghost::move(std::vector<SDL_Rect> maze) //checks collision with walls
 {
- 
+  Sprite animation;
   //Set velocity and direction
   switch(first_way_to_pacman_)
     {
@@ -1184,7 +1327,7 @@ void Ghost::move(std::vector<SDL_Rect> maze) //checks collision with walls
   //If the ghost went too far to the left or right or has collided with the walls
   for (std::vector<SDL_Rect>::iterator it = maze.begin() ; it != maze.end(); ++it) //try all the walls
     {
-      if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, *it ) ) )
+      if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( animation.check_collision( box, *it ) ) )
 	{
 	  //Move back
 	  box.x -= xVel;
@@ -1199,7 +1342,7 @@ void Ghost::move(std::vector<SDL_Rect> maze) //checks collision with walls
   //If the square went too far up or down or has collided with the walls
   for (std::vector<SDL_Rect>::iterator it = maze.begin() ; it != maze.end(); ++it)
     {
-      if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, *it ) ) )
+      if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( animation.check_collision( box, *it ) ) )
 	{
 	  //Move back
 	  box.y -= yVel;
@@ -1211,10 +1354,12 @@ void Ghost::move(std::vector<SDL_Rect> maze) //checks collision with walls
 
 bool Ghost1::is_checkpoint(std::vector<SDL_Rect> checkmaze, Pacman paccy) //looks for a checkpoint
 {
+  Sprite animation;
+
   //check for checkpoint collission
   for(std::vector<SDL_Rect>::iterator it = checkmaze.begin() ; it != checkmaze.end(); ++it) //try all the checkpoints
     {
-      if( check_collision( box, *it ) )
+      if( animation.check_collision( box, *it ) )
 	{
 	  return true;
 	}
@@ -1226,10 +1371,11 @@ bool Ghost1::is_checkpoint(std::vector<SDL_Rect> checkmaze, Pacman paccy) //look
 
 bool Ghost2::is_checkpoint(std::vector<SDL_Rect> checkmaze) //looks for a checkpoint
 {
+  Sprite animation;
   //check for checkpoint collission
   for(std::vector<SDL_Rect>::iterator it = checkmaze.begin() ; it != checkmaze.end(); ++it) //try all the checkpoints
     {
-      if(check_collision( box, *it ) )
+      if(animation.check_collision( box, *it ) )
 	{
 	  return true;
 	}
@@ -1240,10 +1386,11 @@ bool Ghost2::is_checkpoint(std::vector<SDL_Rect> checkmaze) //looks for a checkp
 
 bool Ghost3::is_checkpoint(std::vector<SDL_Rect> checkmaze, Pacman paccy) //looks for a checkpoint
 {
+  Sprite animation;
   //check for checkpoint collission
   for(std::vector<SDL_Rect>::iterator it = checkmaze.begin() ; it != checkmaze.end(); ++it) //try all the checkpoints
     {
-      if( check_collision( box, *it ))
+      if( animation.check_collision( box, *it ))
 	{
 	  return true;
 	}
@@ -1403,23 +1550,33 @@ void Ghost3::seek(Pacman paccy)
 }
 
 
+
+
 void Ghost1::show()
 {
   //Show the ghost
-  apply_surface( box.x, box.y, ghost, screen );
-  
+  //apply_surface( box.x, box.y, ghost, screen );
+  Sprite animation;
+  animation.show_ghost(box.x, box.y, ghost);
 }
 
 void Ghost2::show()
 {
   //show the ghost2
-  apply_surface( box.x, box.y, ghost2, screen );
+  //apply_surface( box.x, box.y, ghost2, screen );
+  Sprite animation;
+  animation.show_ghost(box.x, box.y, ghost2);
+
+
 }
+
 
 void Ghost3::show()
 {
   //show the ghost2
-  apply_surface( box.x, box.y, ghost3, screen );
+  //apply_surface( box.x, box.y, ghost3, screen );
+  Sprite animation;
+  animation.show_ghost(box.x, box.y, ghost3);
 }
 
 //Returns SDL-object of ghost
@@ -1600,10 +1757,14 @@ int Score::return_score()
 }
 
 void Score::show()
-{
+{/*
   score = TTF_RenderText_Solid( scoreFont, get_score().c_str(), textColor );
   apply_surface(0,0,score, screen);
+ */
+  Sprite animation;
+  animation.show_score(get_score().c_str());
 }
+
 
 //============================================================================
 //  Class: Menu
@@ -1626,14 +1787,17 @@ Start::Start(int x, int y, std::string text)
 
 }
 
+
 void Start::show() const
 {
-  apply_surface(0,0,startup,screen, &clipsStartscr[0]); 
+  Sprite animation;
+  animation.show_start_background();
+  /* apply_surface(0,0,startup,screen, &clipsStartscr[0]); 
   std::cout << "Hey Big Boy/Girl!!!" <<std::endl;
   //apply_surface(0,0,startup,screen);
-
+  */
  //Show the startbuttons
-  
+  /*
   //  SDL_FillRect( screen, &button, SDL_MapRGB( screen->format, 0xEF, 0xEF, 0xEF) );
    for (int i=0; i<=8; i++)
     { 
@@ -1643,13 +1807,15 @@ void Start::show() const
     }
    text = TTF_RenderText_Solid( headerFont, message_.c_str() , headerColor );
    apply_surface(660, 30,text, screen); 
-
+  */
 }
 
 
 void Start::show_infopanel() const
 {
- //Show the startbuttons
+  Sprite animation;
+  animation.show_infopanel(message_.c_str());
+  /*//Show the startbuttons
   
   //  SDL_FillRect( screen, &button, SDL_MapRGB( screen->format, 0xEF, 0xEF, 0xEF) );
    for (int i=0; i<=8; i++)
@@ -1661,7 +1827,7 @@ void Start::show_infopanel() const
 
    text = TTF_RenderText_Solid( headerFont, message_.c_str() , headerColor );
    apply_surface(660, 30,text, screen); 
-}
+  */}
 
 
 
@@ -1700,72 +1866,12 @@ Button::Button(int x, int y, std::string text)
   
 void Button::show() const
 {
-  text = TTF_RenderText_Solid( infoFont, message_.c_str() , headerColor );
+  Sprite animation;
+  animation.show_button(button.x, button.y, message_.c_str());
+  /*text = TTF_RenderText_Solid( infoFont, message_.c_str() , headerColor );
   apply_surface(button.x, button.y,text, screen);  
+  */
 }
-
-
-
-
-/*Menu::Menu(int x, int y, std::string text)
-{
-  //Initialize offset
-  button.x = x;
-  button.y = y;
-  start=true;
-  message_ = text;
-
-
-  //Set dimension
-  button.w = BUTTON_WIDTH;
-  button.h = BUTTON_HEIGHT;
-
-}
-bool Menu::get_start()
-{
-  return start;
-}
-
-void Menu::change_start()
-{ 
- start=false;
-}
-
-void Menu::show()
-{
-  //Show the startbuttons
-  
-  //  SDL_FillRect( screen, &button, SDL_MapRGB( screen->format, 0xEF, 0xEF, 0xEF) );
-   for (int i=0; i<=8; i++)
-    { 
-
-    apply_surface( (MAP_WIDTH+i*INFOPANEL_WIDTH), 0, startup, screen, &clipsInfopanel[0] );
-  
-  
-    }
-  
-
-
-
-   text = TTF_RenderText_Solid( headerFont, "PACMAN" , headerColor );
-   apply_surface(button.x, button.y,text, screen);
-}
-	void Menu::show_button()
-{
-  text = TTF_RenderText_Solid( infoFont, message_.c_str() , headerColor );
-  apply_surface(button.x, button.y,text, screen);
-
-}
-
-
-void Menu::showstart()
-{
-
-  apply_surface(0,0,startup,screen, &clipsStartscr[0]); 
-  std::cout << "Hey Big Boy/Girl!!!" <<std::endl;
-  //apply_surface(0,0,startup,screen);
-}
-*/
 
 
 
@@ -1857,8 +1963,11 @@ int Highscore::get_highscore()
 void Highscore::show()
 {
   //highscore = TTF_RenderText_Solid( font, get_highscore().c_str(), textColor );
-  apply_surface(0,0,score,screen);
+  //apply_surface(0,0,score,screen);
+  Sprite animation;
+  animation.show_highscore(0,0);
 }
+
 
 //============================================================================
 //  FOOD
@@ -1891,11 +2000,16 @@ bool Food::eaten()
 
 void Food::show()
 {
-  if (!eaten())
+  /*if (!eaten())
     {
       apply_surface(box.x,box.y,food, screen);
-    }
+      }*/
+  Sprite animation;
+  animation.show_food(box.x, box.y, eaten());
 }
+
+
+
 
 //Returns SDL-object of ghost
 SDL_Rect Food::get_box()
@@ -1939,11 +2053,15 @@ bool Special_Food::eaten()
 
 void Special_Food::show()
 {
-  if (!eaten())
+  /*if (!eaten())
     {
       apply_surface(box.x,box.y,special_food, screen);
-    }
+      }*/
+  Sprite animation;
+  animation.show_special_food(box.x,box.y,eaten());
 }
+
+
 
 //Returns SDL-object of ghost
 SDL_Rect Special_Food::get_box()
@@ -1985,9 +2103,13 @@ int main( int argc, char* args[] )
     //Quit flag
     bool quit = false;
 
+    //Sprite
+    Sprite animation;
+
     //Menu
     Start Startup(0,0,"PACMAN");
     //    Menu Startup(660,30);
+
 
 
     //The pacman
@@ -2086,13 +2208,13 @@ int main( int argc, char* args[] )
     
 
   //Initialize
-  if( init() == false )
+  if( animation.init() == false )
     {
       return 1;
     }
     
   //Load the files
-  if( load_files() == false )
+  if( animation.load_files() == false )
     {
       std::cout << "trubbel att ladda filerna" << std::endl;
       return 1;
@@ -2146,7 +2268,7 @@ int main( int argc, char* args[] )
   
 
     // Clip the sprite sheet
-    set_clips();
+    animation.set_clips();
  
 
     //While the user hasn't quit
@@ -2157,29 +2279,25 @@ int main( int argc, char* args[] )
 
 	if(Startup.is_start())
 	  {	
+	    //Set proceed-flag to false
 	    bool proceed = false;
-	    Startup.show();
-	    //Show penguin
-	    //  apply_surface( MAP_WIDTH, 0, startup, screen );
 
+	    Startup.show();
+	    
+	    Startup.show_infopanel();
 	    theButton1.show();
 	    theButton2.show();
 	    theButton3.show();
 	    theButton4.show();
 	 
-
-	    //   Startup.show();
-	    //Startup.show_button();
-	    //theButton1.show_button();
-	    //theButton2.show_button();
-	    //theButton3.show_button();
-	    //theButton4.show_button();
-
 	    //Update the screen
-	     if( SDL_Flip( screen ) == -1 )
+	    animation.update_screen();
+	    /* if( SDL_Flip( screen ) == -1 )
 	       {
 		 return 1;
 	       }
+	    */
+	    
 	     
 	     while(!proceed)
 	       {
@@ -2379,7 +2497,6 @@ int main( int argc, char* args[] )
 
 	  }*/
 
-
 	//Is a Pacman eating special_food
 	if (myPacman.eat_special_food(mySpecial_Food, myScore))
 	  {
@@ -2390,7 +2507,6 @@ int main( int argc, char* args[] )
 	    //
 	  }
 	
-
         //Fill the screen white
         SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0xFF, 0xFF, 0xFF ) );
 
@@ -2423,53 +2539,32 @@ int main( int argc, char* args[] )
 	myGhost2.show();
 	myGhost3.show();
 
-
-
-
 	//Show special_food on the screen
 	mySpecial_Food.show();
-
-	
-
-
-
 
 	//show infopanel
 	Startup.show_infopanel();
 
 	//show the buttons
-
-	//theButton.show();
-       
-
 	theButton1.show();
 	theButton2.show();
 	theButton3.show();
 	theButton4.show();
 
-	  //theButton1.show_button();
-	  //	theButton2.show_button();
-	  //theButton3.show_button();
-
-	  //theButton4.show_button();
-	
 	//show the lives on the screen
 	myPacman.showlife();
 
-
-
-
 	//Show score on the side of the screen
 	myScore.show();
-
-	
 	
         //Update the screen
+	animation.update_screen();
+	/*
         if( SDL_Flip( screen ) == -1 )
 	  {
             return 1;
 	  }
-	
+	*/
         //Cap the frame rate
         if( fps.get_ticks() < 1000 / FRAMES_PER_SECOND )
 	  {
@@ -2478,7 +2573,7 @@ int main( int argc, char* args[] )
 	}
     
     //Clean up
-    clean_up();
+    animation.clean_up();
 
     return 0;
 }
