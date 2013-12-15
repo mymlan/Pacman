@@ -18,7 +18,6 @@
 #include <iterator>
 #include <algorithm>
 
-
 //void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect* clip = NULL );
 
 //Screen attributes
@@ -117,6 +116,9 @@ private:
 
   //food left
   int food_left;
+  
+  //true if pacman has eaten special_food
+  bool special_food_eaten;
 
 public:
   //Initializes the variables
@@ -136,7 +138,9 @@ public:
   void eat_food(std::vector<class Food>&, class Score&); //bool eat_food(class Food&, class Score&);
 
   //Pacman eats special_food - ghosts flees
-  bool eat_special_food(class Special_Food&, class Score&);
+  void eat_special_food(std::vector<class Special_Food>&, class Score&);
+  //  bool eat_special_food(std::vector<class Special_Food>&, class Score&);
+ 
 
   //Takes key presses and adjusts the square's velocity
   void handle_input();
@@ -152,6 +156,12 @@ public:
 
   //returns true if there is no food left
   bool no_food_left();
+
+  //returns true if pacman has eaten special_food
+  bool spec_food_eaten();
+
+  //sets special_food_eaten till falskt
+  void change_mood();
 
   
 
@@ -773,7 +783,7 @@ bool Sprite::load_files()
 
 
     //Load Special_Food
-    special_food = load_image( "img/special_food-picture.bmp" );
+    special_food = load_image( "img/special_food.bmp" );
     if (special_food ==NULL)
       {
 	return false;
@@ -949,13 +959,14 @@ Pacman::Pacman()
     y= 440;
 
     //Initialize lives of Pacman
-    lives = 0;
+    lives = 3;
 
  //Initialize animation variables
     frame = 0;
     status = PACMAN_LEFT;
 
-    food_left = 40;
+    food_left = 44;
+    special_food_eaten = false;
 }
 
 
@@ -1170,31 +1181,107 @@ void Pacman::eat_food(std::vector<Food>& food_vector, Score& myScore) //Food& fo
   for (std::vector<Food>::iterator it = food_vector.begin() ; it != food_vector.end(); ++it)
     {
     
-      if ((animation.check_collision(box, (*it).get_box())) and ((*it).eaten() == false))
+      if ((animation.check_collision(box, (*it).get_box())) && !(*it).eaten())
 	{
 	  myScore.add_points(1);
 	  (*it).was_eaten();
 	  food_left = food_left - 1;
 	 
-	}
-      
-    }
-    
+	}   
+    }   
 }
 
 
 
 //Pacman eats special_food
-bool Pacman::eat_special_food(Special_Food& special_food_object,Score& myScore)
+void Pacman::eat_special_food(std::vector<Special_Food>& special_food_vector ,Score& myScore)
 {
   Sprite animation;
-  if (animation.check_collision(box, special_food_object.get_box()) && !special_food_object.eaten())
-      {	
-	special_food_object.was_eaten();
-	return true;
-      }
-  return false;
+  for (std::vector<Special_Food>::iterator it = special_food_vector.begin() ; it != special_food_vector.end(); ++it)
+    {
+      if (animation.check_collision(box, (*it).get_box()) && !(*it).eaten())
+	{
+	  myScore.add_points(10);
+	  (*it).was_eaten();
+	  food_left = food_left - 1;
+	  special_food_eaten = true;
+	  
+	}
+    }
 }
+
+/*utkommenterat är funktionen eat_special_food där spökenas mood ändras i denna funktionen. fick inte timer att fungera här heller.
+ *Behåller denna utkommentarade eftersom det kanske är trevligt att sköta ändringen av spökenas mood här då det sparar några raden i main-loopen samt 
+ * två av funktionerna i pacman då inte kommer behövas.
+ */
+/*
+void Pacman::eat_special_food(std::vector<Special_Food>& special_food_vector ,Score& myScore, Ghost& ghost1, Ghost& ghost2, Ghost& ghost3, Timer timer)
+{
+  Sprite animation;
+  for (std::vector<Special_Food>::iterator it = special_food_vector.begin() ; it != special_food_vector.end(); ++it)
+    {
+      if (animation.check_collision(box, (*it).get_box()) && !(*it).eaten())
+	{
+	  myScore.add_points(10);
+	  (*it).was_eaten();
+	  food_left = food_left - 1;
+	  	  
+
+	  ghost1.change_mood();
+	  ghost2.change_mood();
+	  ghost3.change_mood();
+
+      	  if(ghost1.is_scared())
+	    {
+	      std::cout << "spöken är rädda" << std::endl;
+	    }
+	  else
+	    {
+	      std::cout << "spöken är inte  rädda" << std::endl;
+	    }
+	  timer.start();
+	  while(timer.get_ticks() < 2000)
+	    {
+	      std::cout << "timer < 10"<< std::endl; 
+	    }
+	  timer.stop();
+	  //Timer, som fortsätter i koden efter en liten stund utan att pausa hela spelet, sleep och delay fungerar dåligt då de pausar allt..
+	  std::cout << "här vill vi ha en timer.."<< std::endl; 
+
+	  ghost1.change_mood();
+	  ghost2.change_mood();
+	  ghost3.change_mood();
+
+	  if(ghost1.is_scared())
+	    {
+	      std::cout << "spöken är rädda" << std::endl;
+	    }
+	  else
+	    {
+	      std::cout << "spöken är inte rädda" << std::endl;
+	      }
+	  
+	}
+    }
+    }*/
+/*
+bool Pacman::eat_special_food(std::vector<Special_Food>& special_food_vector ,Score& myScore) //Special_Food& special_food_object
+{
+  Sprite animation;
+  for (std::vector<Special_Food>::iterator it = special_food_vector.begin() ; it != special_food_vector.end(); ++it)
+    {
+      if (animation.check_collision(box, (*it).get_box()) && !(*it).eaten())
+	{
+	  std::cout << "hej" << std::endl;
+	  (*it).was_eaten();
+	  return true;
+	}
+      else
+	{
+	  return false;
+	}
+    }
+    }*/
 
 
 
@@ -1217,6 +1304,16 @@ bool Pacman::no_food_left()
     {
       return false;
     }
+}
+
+bool Pacman::spec_food_eaten()
+{
+  return special_food_eaten;
+}
+
+void Pacman::change_mood()
+{
+  special_food_eaten = false;
 }
 
 
@@ -1257,6 +1354,8 @@ Ghost2::Ghost2()
   //Initialize the seek and destroy directions. first way to pacman is the most desirable way to go.
   first_way_to_pacman_ = 1;
 
+  //Initialize the angry or scared mode
+  scared_ = false;
   //Initialize crashed
   crashed_ = false;
 
@@ -2063,7 +2162,7 @@ void Special_Food::show()
 
 
 
-//Returns SDL-object of ghost
+//Returns SDL-object of special_food
 SDL_Rect Special_Food::get_box()
 {
   return box;
@@ -2179,17 +2278,25 @@ int main( int argc, char* args[] )
     Food myFood40(210,250);
     Food myFood41(210,450);
 
-    //create vectorwith all food in, called food_vector
+    //create vector with all food in, called food_vector
     std::vector<Food> food_vector = {myFood1,myFood2,myFood3,myFood4,myFood5,myFood6,myFood7,myFood8,myFood9,myFood10,myFood11,myFood12,myFood13,myFood14,myFood15,myFood16,myFood17,myFood18,myFood19,myFood20,myFood21,myFood22,myFood23,myFood24,myFood25,myFood26,myFood27,myFood28,myFood29,myFood30,myFood31,myFood32,myFood33,myFood34,myFood35,myFood36,myFood37,myFood38,myFood39,myFood40};
 
    
 
-    //Special_food
-    Special_Food mySpecial_Food(370,0);
+    //Initialize Special_food
+    Special_Food mySpecial_Food(10,10);
+    Special_Food mySpecial_Food2(10,450);
+    Special_Food mySpecial_Food3(610 ,10);
+    Special_Food mySpecial_Food4(570,410);
 
+    //create vector with all special_food in, called special_food_vector
+    std::vector<Special_Food> special_food_vector = {mySpecial_Food,mySpecial_Food2,mySpecial_Food3,mySpecial_Food4};
 
     //The frame rate regulator
     Timer fps;
+
+    //Timer special_food
+    Timer  special_food_timer;
 
 
   //The buttons
@@ -2421,6 +2528,7 @@ int main( int argc, char* args[] )
 	myGhost3.do_if_checkpoint(checkmaze, myPacman);
 
 
+
 	//Is a ghost eating Pacman or are Pacman eating a ghost
 
 
@@ -2488,25 +2596,30 @@ int main( int argc, char* args[] )
 
 	//Is a Pacman eating food
 	myPacman.eat_food(food_vector, myScore);
-
-	//myPacman.eat_food(food_vector, myScore);
-      /* {
-	  // if (alla food-pluttar uppätna - spel slut){
-	  //  quit=true;
-	  
-
-	  }*/
+	
 
 	//Is a Pacman eating special_food
-	if (myPacman.eat_special_food(mySpecial_Food, myScore))
+	myPacman.eat_special_food(special_food_vector, myScore);
+ 
+	//
+	if (myPacman.spec_food_eaten())
 	  {
+	    
 	    myGhost1.change_mood();
 	    myGhost2.change_mood();
 	    myGhost3.change_mood();
-	    // timer räkna ner
-	    //
-	  }
+       
+	    std::cout <<" timer räkna ner"<< std::endl;
+ 
+	    myPacman.change_mood();
+	    myGhost1.change_mood();
+	    myGhost2.change_mood();
+	    myGhost3.change_mood();
+	    
+	    }
+
 	
+
         //Fill the screen white
         SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0xFF, 0xFF, 0xFF ) );
 
@@ -2528,6 +2641,12 @@ int main( int argc, char* args[] )
 	    (*it).show();
 	  }
 
+	//Show special_food on the screen
+	for (std::vector<Special_Food>::iterator it = special_food_vector.begin() ; it != special_food_vector.end(); ++it)
+	  {
+	    (*it).show();
+	  }
+
 	//Show the checkpoints - just for testing
 	for (std::vector<SDL_Rect>::iterator it = checkmaze.begin() ; it != checkmaze.end(); ++it)
 	  {
@@ -2535,12 +2654,13 @@ int main( int argc, char* args[] )
 	  }
 
 	//Show ghost on the screen
-	myGhost1.show();
-	myGhost2.show();
-	myGhost3.show();
+	myGhost1.show(); //är grön
+	myGhost2.show(); //är gul
+	myGhost3.show(); //är röd
 
-	//Show special_food on the screen
-	mySpecial_Food.show();
+
+	//show the lives on the screen
+	myPacman.showlife();
 
 	//show infopanel
 	Startup.show_infopanel();
@@ -2551,8 +2671,7 @@ int main( int argc, char* args[] )
 	theButton3.show();
 	theButton4.show();
 
-	//show the lives on the screen
-	myPacman.showlife();
+
 
 	//Show score on the side of the screen
 	myScore.show();
