@@ -108,21 +108,108 @@ int main( int argc, char* args[] )
     Food myFood38(210,10);
     Food myFood39(210,90);
     Food myFood40(210,250);
-   
+    Food myFood41(210,450);
+
+    Food myFood42(250,10);
+    Food myFood43(250,90);
+    Food myFood44(250,250);
+    Food myFood45(250,290);
+    Food myFood46(250,330);
+    Food myFood47(250,370);
+    Food myFood48(250,410);
+    Food myFood49(250,450);
+
+    Food myFood50(290,10);
+    Food myFood51(290,90);
+    Food myFood52(290,250);
+    Food myFood53(290,330);
+    Food myFood54(290,450);
+
+    Food myFood55(330,10);
+    Food myFood56(330,250);
+    Food myFood57(330,330);
+    Food myFood58(330,450);
+
+    Food myFood59(370,10);
+    Food myFood60(370,50);
+    Food myFood61(370,90);
+    Food myFood62(370,130);
+    Food myFood63(370,170);
+    Food myFood64(370,210);
+    Food myFood65(370,250);
+    Food myFood66(370,450);
+
+    Food myFood67(410,10);
+    Food myFood68(410,90);
+    Food myFood69(410,170);
+    Food myFood70(410,250);
+    Food myFood71(410,290);
+    Food myFood72(410,330);
+    Food myFood73(410,370);
+    Food myFood74(410,410);
+    Food myFood75(410,450);
+
+    Food myFood76(450,10);
+    Food myFood77(450,90);
+    Food myFood78(450,170);
+    Food myFood79(450,450);
+
+    Food myFood80(490,10);
+    Food myFood81(490,90);
+    Food myFood82(490,170);
+    Food myFood83(490,250);
+    Food myFood84(490,290);
+    Food myFood85(490,330);
+    Food myFood86(490,370);
+    Food myFood87(490,410);
+    Food myFood88(490,450);
+
+    Food myFood89(530,10);
+    Food myFood90(530,90);
+    Food myFood91(530,170);
+    Food myFood92(530,290);
+    Food myFood93(530,450);
+
+    Food myFood94(570,10);
+    Food myFood95(570,90);
+    Food myFood96(570,170);
+    Food myFood97(570,250);
+    Food myFood98(570,290);
+    Food myFood99(570,330);
+    Food myFood100(570,450);
+
+    Food myFood101(610,10);
+    Food myFood102(610,50);
+    Food myFood103(610,90);
+    Food myFood104(610,130);
+    Food myFood105(610,170);
+    Food myFood106(610,210);
+    Food myFood107(610,250);
+    Food myFood108(610,330);
+    Food myFood109(610,370);
+    Food myFood110(610,410);
+    
 
     //create vectorwith all food in, called food_vector
     std::vector<Food> food_vector = 
       {myFood1,myFood2,myFood3,myFood4,myFood5,myFood6,myFood7,myFood8,myFood9,myFood10,
-       myFood11,myFood12,myFood13,myFood14,myFood15,myFood16,myFood17,myFood18,myFood19,
-       myFood20,myFood21,myFood22,myFood23,myFood24,myFood25,myFood26,myFood27,myFood28,
-       myFood29,myFood30,myFood31,myFood32,myFood33,myFood34,myFood35,myFood36,myFood37,myFood38,myFood39,myFood40};
+       myFood11,myFood12,myFood13,myFood14,myFood15,myFood16,myFood17,myFood18,myFood19,myFood20,
+       myFood21,myFood22,myFood23,myFood24,myFood25,myFood26,myFood27,myFood28,myFood29,myFood30,
+       myFood31,myFood32,myFood33,myFood34,myFood35,myFood36,myFood37,myFood38,myFood39,myFood40,
+       myFood41,myFood42,myFood43,myFood44,myFood45,myFood46,myFood47,myFood48,myFood49,myFood50,
+       myFood51,myFood52,myFood53,myFood54,myFood55,myFood56,myFood57,myFood58,myFood59,myFood60,
+       myFood61,myFood62,myFood63,myFood64,myFood65,myFood66,myFood67,myFood68,myFood69,myFood70,
+       myFood71,myFood72,myFood73,myFood74,myFood75,myFood76,myFood77,myFood78,myFood79,myFood80,
+       myFood81,myFood82,myFood83,myFood84,myFood85,myFood86,myFood87,myFood88,myFood89,myFood90,
+       myFood91,myFood92,myFood93,myFood94,myFood95,myFood96,myFood97,myFood98,myFood99,myFood100,
+       myFood101,myFood102,myFood103,myFood104,myFood105,myFood106,myFood107,myFood108,myFood109,myFood110};
 
    
 
     //Special_food
     Special_Food mySpecial_Food1(10,10);
     Special_Food mySpecial_Food2(10,450);
-    Special_Food mySpecial_Food3(610 ,410);
+    Special_Food mySpecial_Food3(610 ,10);
     Special_Food mySpecial_Food4(570,410);
 
     Special_Food mySpecial_Food(370,0);
