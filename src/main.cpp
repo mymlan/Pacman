@@ -183,12 +183,12 @@ int main( int argc, char* args[] )
   SDL_Rect checkpoint1 = {15,260,5,5};
   
 
-  /* more chekpoints
+  // more chekpoints
      SDL_Rect checkpoint = {};
-     SDL_Rect checkpoint = {};
-     SDL_Rect checkpoint = {};
-     SDL_Rect checkpoint = {};
-  */
+     //SDL_Rect checkpoint = {};
+     // SDL_Rect checkpoint = {};
+     //   SDL_Rect checkpoint = {};
+  
  
   
   //Create a vector with all the checkpoints
