@@ -129,7 +129,13 @@ int main( int argc, char* args[] )
 
     //The frame rate regulator
     Timer fps;
-    
+
+    //The checkpoint timers, helps the ghosts so they dont get distracted by the checkpoints
+    Timer checktimer1;
+    Timer checktimer2;
+    Timer checktimer3;
+
+
     Button theButton1(660,100,"Press \"S\" to start ");
     Button theButton2(660, 150,"Press \"P\" to pause ");
     Button theButton3(660, 200,"Press \"Q\" to quit");
@@ -183,14 +189,18 @@ int main( int argc, char* args[] )
   SDL_Rect checkpoint1 = {15,260,5,5};
   SDL_Rect checkpoint2 = {175,15,5,5};
   SDL_Rect checkpoint3 = {375,15,5,5};
-  SDL_Rect checkpoint4 = {375,80,5,5};
-  SDL_Rect checkpoint5 = {240,260,5,5};
+  SDL_Rect checkpoint4 = {375,100,5,5};
+  SDL_Rect checkpoint5 = {260,260,5,5};
+  SDL_Rect checkpoint6 = {260,500,5,5};
+  //SDL_Rect checkpoint7 = {
+  //   SDL_Rect checkpoint8 = {
+  // SDL_Rect checkpoint9 = {
+  //SDL_Rect checkpoint10 = {
   
- 
-  
+
   //Create a vector with all the checkpoints
 
-  std::vector<SDL_Rect> checkmaze = {checkpoint1,checkpoint2,checkpoint3,checkpoint4,checkpoint5};
+  std::vector<SDL_Rect> checkmaze = {checkpoint1,checkpoint2,checkpoint3,checkpoint4,checkpoint5,checkpoint6};
 
  
     // Clip the sprite sheet
@@ -333,9 +343,18 @@ int main( int argc, char* args[] )
 	myGhost2.move(maze);
 	myGhost3.move(maze);
 
-	myGhost1.do_if_checkpoint(checkmaze, myPacman);
-	myGhost2.do_if_checkpoint(checkmaze);
-	myGhost3.do_if_checkpoint(checkmaze, myPacman);
+
+	if(checktimer1.get_ticks() > 40) //was it long enough since we found a checkpoint?
+	  {myGhost1.do_if_checkpoint(checkmaze, myPacman);}
+	checktimer1.start(); //start the timer so that ghost only will look at a checkpoint once
+	
+	if(checktimer2.get_ticks() > 30)
+	  {myGhost2.do_if_checkpoint(checkmaze);}
+	checktimer2.start();
+
+	if(checktimer3.get_ticks() > 30)
+	  {myGhost3.do_if_checkpoint(checkmaze,myPacman);}
+	checktimer3.start();
 
 
 	//Is a ghost eating Pacman or are Pacman eating a ghost
