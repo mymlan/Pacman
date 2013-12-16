@@ -63,7 +63,7 @@ SDL_Surface *food = NULL;
 SDL_Surface *special_food = NULL;
 SDL_Surface *text = NULL;
 SDL_Surface *highscore = NULL;
-SDL_Surface *checkpoint = NULL;
+
 
 //The event structure
 SDL_Event event;
