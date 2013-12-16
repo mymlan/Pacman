@@ -1107,7 +1107,7 @@ void Pacman::show()
         //Move to the next frame in the animation
         frame++;
     }
-    //If Foo is moving right
+    //If Pacman is moving right
     else if( xVel > 0 )
     {
         //Set the animation to right
@@ -1128,7 +1128,7 @@ void Pacman::show()
 	status = PACMAN_DOWN;
 	frame ++;
       }
-    //If Foo standing
+    //If pacman standing
     else
     {
         //Restart the animation
