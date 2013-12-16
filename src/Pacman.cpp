@@ -1505,10 +1505,29 @@ bool Ghost3::is_checkpoint(std::vector<SDL_Rect> checkmaze, Pacman paccy) //look
 void Ghost1::do_if_checkpoint( std::vector<SDL_Rect> checkmaze, Pacman paccy ) 
 {
   
+  //move back a small step to check if ghost is right on top, not just when the ghost is at a corner of a checkpoint
+  // box.x =- xVel;
+  // box.y =- yVel;
+
+
   if(is_checkpoint(checkmaze, paccy))
     {
+
+      //move to actual position
+      //box.x += xVel;
+      // box.y += yVel;
+
+      //reset first direction so we get a fresh seek
+      first_way_to_pacman_ = 0;
       seek(paccy);
     }
+  else
+    {
+      //move to actual position
+      //  box.x += xVel;
+      //  box.y += yVel;
+    }
+
 }
 
 
@@ -1537,11 +1556,11 @@ void Ghost3::do_if_checkpoint( std::vector<SDL_Rect> checkmaze, Pacman paccy )
 //Sets the moving direction towards pacman
 void Ghost1::seek(Pacman paccy)
 {
-  if(first_way_to_pacman_ == 0 && second_way_to_pacman_ == 0) //om spöket fastnat, slumpa riktning
+  if(first_way_to_pacman_ == 0 && second_way_to_pacman_ == 0 && crashed_ == true) //om spöket fastnat, slumpa riktning
     {first_way_to_pacman_ = rand()% 4 + 1;}
 
   else if
-    (first_way_to_pacman_ == 0)
+    (first_way_to_pacman_ == 0 && second_way_to_pacman_ == 0)
     {
       //pacman_x and pacman_y are the coordinates of pacman
       int pacman_x{paccy.reveal_position_x()};
@@ -1561,9 +1580,10 @@ void Ghost1::seek(Pacman paccy)
 	  else
 	    {second_way_to_pacman_ = 3;} //else, go up
 	}
-     
+      
       else
-	{
+	{ 
+	  
 	  if (pacman_y > box.y) //biggest distance is in y direction, so walk in y direction first
 	    {first_way_to_pacman_ = 4;}
 	  else
@@ -1574,26 +1594,26 @@ void Ghost1::seek(Pacman paccy)
 	  else 
 	    {second_way_to_pacman_ = 1;} //go left
 	}
-
-
-      if (scared_ == true) //if the ghost is scared, reverse the moving direction
-	{
-	  reverse_direction();
-	}
-  
+      
     }
- 
+  if (scared_ == true) //if the ghost is scared, reverse the moving direction
+    {
+      reverse_direction();
+    }
+  
+    
+  std::cout<<"first_way_to_pacman_ :"<<first_way_to_pacman_<<std::endl;
+  std::cout<<"second_way_to_pacman_ :"<<second_way_to_pacman_<<std::endl;
 }
 
 //sets the moving direction towards pacman at random
 void Ghost2::seek()
 {
-  if (first_way_to_pacman_ == 0)
+  if (second_way_to_pacman_ == 0)
     {
       first_way_to_pacman_ = rand()% 4 + 1;
-      second_way_to_pacman_ = first_way_to_pacman_;
+      second_way_to_pacman_ = rand() % 4 + 1;
     }
- 
 }
 
 
@@ -1602,51 +1622,52 @@ void Ghost3::seek(Pacman paccy)
 {
   if(first_way_to_pacman_ == 0 && second_way_to_pacman_ == 0) //om spöket fastnat, slumpa riktning
     {first_way_to_pacman_ = rand()% 4 + 1;}
-  {
-    if(first_way_to_pacman_ == 0)
-      {
-	//pacman_x and pacman_y are the coordinates of pacman
-	int pacman_x{paccy.reveal_position_x()};
-	int pacman_y{paccy.reveal_position_y()};
   
+  else if (first_way_to_pacman_ == 0)
+    {
+      //pacman_x and pacman_y are the coordinates of pacman
+      int pacman_x{paccy.reveal_position_x()};
+      int pacman_y{paccy.reveal_position_y()};
+      
   
-	//tries to minimize the distance in the shortest direction first. If pacman is one step to the right and far away at the bottom, the ghost will first go down and then take one step left.
-	if( abs(pacman_x - box.x) > abs(pacman_y - box.y) ) //if bigger difference in x than in y, then walk towards pacman i x direction
-	  {
-	    if( pacman_x > box.x ) //if pacman is to the right, go right
-	      {second_way_to_pacman_ = 2;}
-	    else 
-	      {second_way_to_pacman_ = 1;} //else, go left
+      //tries to minimize the distance in the shortest direction first. If pacman is one step to the right and far away at the bottom, the ghost will first go down and then take one step left.
+      if( abs(pacman_x - box.x) > abs(pacman_y - box.y) ) //if bigger difference in x than in y, then walk towards pacman i x direction
+	{
+	  if( pacman_x > box.x ) //if pacman is to the right, go right
+	    {second_way_to_pacman_ = 2;}
+	  else 
+	    {second_way_to_pacman_ = 1;} //else, go left
       
-	    if ( pacman_y > box.y ) //if pacman is below the ghost, go downwards
-	      {first_way_to_pacman_ = 4;}
-	    else
-	      {first_way_to_pacman_ = 3;} //else, go up
-	  }
+	  if ( pacman_y > box.y ) //if pacman is below the ghost, go downwards
+	    {first_way_to_pacman_ = 4;}
+	  else
+	    {first_way_to_pacman_ = 3;} //else, go up
+	}
      
-	else
-	  {
-	    if (pacman_y > box.y) //biggest distance is in y direction, so walk in y direction first
-	      {second_way_to_pacman_ = 4;}
-	    else
-	      {second_way_to_pacman_ = 3;}
+      else
+	{
+	  if (pacman_y > box.y) //biggest distance is in y direction, so walk in y direction first
+	    {second_way_to_pacman_ = 4;}
+	  else
+	    {second_way_to_pacman_ = 3;}
       
-	    if (pacman_x > box.x)
-	      {first_way_to_pacman_ = 2;} //go right
-	    else 
-	      {first_way_to_pacman_ = 1;} //go left
-	  }
+	  if (pacman_x > box.x)
+	    {first_way_to_pacman_ = 2;} //go right
+	  else 
+	    {first_way_to_pacman_ = 1;} //go left
+	}
      
-
-	if (scared_ == true) //if the ghost is scared, reverse the moving direction
-	  {
-	    reverse_direction(); 
-	  }
+    }
+  if (scared_ == true) //if the ghost is scared, reverse the moving direction
+    {
+      reverse_direction(); 
+    }
       
-      }
-  }
+    
  
 }
+ 
+
 
 
 
@@ -2358,19 +2379,16 @@ int main( int argc, char* args[] )
 
   //Initialize checkpoints
   SDL_Rect checkpoint1 = {15,260,5,5};
-  
-
-  /* more chekpoints
-     SDL_Rect checkpoint = {};
-     SDL_Rect checkpoint = {};
-     SDL_Rect checkpoint = {};
-     SDL_Rect checkpoint = {};
-  */
+  SDL_Rect checkpoint2 = {175,15,5,5};
+  SDL_Rect checkpoint3 = {375,15,5,5};
+  SDL_Rect checkpoint4 = {375,100,5,5};
+  //SDL_Rect checkpoint = {};
+ 
  
   
   //Create a vector with all the checkpoints
 
-  std::vector<SDL_Rect> checkmaze = {checkpoint1};
+  std::vector<SDL_Rect> checkmaze = {checkpoint1,checkpoint2,checkpoint3,checkpoint4};
 
   
 
