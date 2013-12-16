@@ -30,8 +30,8 @@
 class Ghost
 {
 protected:
-  //if ghost crashes into a wall it will change direction, otherwise will keep going.
-  bool crashed_;
+  //keeps track of previous direction, helps the ghosts from getting stuck.
+   int crashed_;
 
 //The collission box of the ghost
   SDL_Rect box;

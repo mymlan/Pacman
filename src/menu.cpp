@@ -140,3 +140,37 @@ void Button::show() const
 
 
 
+//====================== HIGHSCORE_SCREEN ===================================================
+
+Highscore_screen::Highscore_screen(int x, int y, std::string text)
+{
+  //Initialize
+  button.x=x;
+  button.y=y;
+  message_ = text;
+  pause_ = true;
+
+  //Set dimension
+  button.w = BUTTON_WIDTH;
+  button.h = BUTTON_HEIGHT;
+
+} 
+
+void Highscore_screen::show() const
+{
+  Sprite animation;
+  animation.show_button(button.x, button.y, message_.c_str());
+}
+
+bool Highscore_screen::is_paused() const
+{
+  return pause_;
+}
+
+void Highscore_screen::change_pause()
+{
+  if (pause_ == true)
+    pause_ = false;
+  else
+    pause_ = true;
+}

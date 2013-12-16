@@ -39,7 +39,6 @@ public:
 };
 
 
-
 class Start : public Menu
 {
 public:
@@ -66,6 +65,21 @@ public:
 
   void show() const;
 };
+
+
+class Highscore_screen : public Menu
+{
+ private:
+  bool pause_;
+  
+ public:
+  ~Highscore_screen() = default;
+  Highscore_screen(int x, int y, std::string text);
+  void show() const;
+  bool is_paused() const;
+  void change_pause();
+};
+
 
 
 #endif

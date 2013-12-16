@@ -105,7 +105,11 @@ public:
   void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect* clip = NULL );
   void set_clips();
   bool check_collision( SDL_Rect A, SDL_Rect B );
+  
+  //Initialize and setup screen
   bool init();
+  bool init(SDL_Surface* screen);  //New function
+
   bool load_files();
 
   //Draw

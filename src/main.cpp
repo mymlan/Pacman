@@ -115,7 +115,11 @@ int main( int argc, char* args[] )
     Food myFood41(210,450);
 
     //create vectorwith all food in, called food_vector
-    std::vector<Food> food_vector = {myFood1,myFood2,myFood3,myFood4,myFood5,myFood6,myFood7,myFood8,myFood9,myFood10,myFood11,myFood12,myFood13,myFood14,myFood15,myFood16,myFood17,myFood18,myFood19,myFood20,myFood21,myFood22,myFood23,myFood24,myFood25,myFood26,myFood27,myFood28,myFood29,myFood30,myFood31,myFood32,myFood33,myFood34,myFood35,myFood36,myFood37,myFood38,myFood39,myFood40};
+    std::vector<Food> food_vector = 
+      {myFood1,myFood2,myFood3,myFood4,myFood5,myFood6,myFood7,myFood8,myFood9,myFood10,
+       myFood11,myFood12,myFood13,myFood14,myFood15,myFood16,myFood17,myFood18,myFood19,
+       myFood20,myFood21,myFood22,myFood23,myFood24,myFood25,myFood26,myFood27,myFood28,
+       myFood29,myFood30,myFood31,myFood32,myFood33,myFood34,myFood35,myFood36,myFood37,myFood38,myFood39,myFood40};
 
    
 
@@ -281,7 +285,8 @@ int main( int argc, char* args[] )
 				quit = true; cont = true;
 			      }
 			    //=========================================================
-			    
+			    SDL_Surface *new_screen = NULL; // Experiment
+
 			    //Unpause the game 
 			    if(event.type == SDL_KEYDOWN)
 			      {
@@ -289,6 +294,11 @@ int main( int argc, char* args[] )
 				  {
 				  case SDLK_p: cont = true; std::cout << "Spela!!"<< std::endl; break;
 				  case SDLK_q: cont = true ; quit = true; std::cout << "Game quit" << std::endl; break;
+				  case SDLK_h: animation.init(new_screen); 
+				    Highscore_screen Highscore(400,10, "HIGHSCORE");
+				    Highscore.show();
+				    animation.update_screen();
+				    break; //test
 				  }
 				
 			      }
