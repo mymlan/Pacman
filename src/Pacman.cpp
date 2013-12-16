@@ -1,9 +1,9 @@
 //============================================================================
 // Name        : Pacman.cpp
-// Author      : Mymlan
+// Author      : Benjamin, Ingrid, Jonatan, Lina, Mikaela & Minh
 // Version     : 
 // Copyright   : 
-// Description : Hello World in C++, Ansi-style
+// Description : Pacman 
 //============================================================================
 
 //The headers
@@ -19,18 +19,16 @@
 #include <algorithm>
 
 
-//void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect* clip = NULL );
-
 //Screen attributes
 const int SCREEN_WIDTH = 1000; //640;
 const int SCREEN_HEIGHT = 480;
 const int SCREEN_BPP = 32;
 
+//Map attributes
 const int MAP_WIDTH = 640;
 
-
 //The frame rate
-int FRAMES_PER_SECOND = 20;
+const int FRAMES_PER_SECOND = 20;
 
 //The attributes of the Pacman
 const int PACMAN_WIDTH = 30;
@@ -336,6 +334,8 @@ public:
   bool is_start();
   void change_start();
 
+  void handle_input(bool &proceed, bool &quit);
+
   Start(int x, int y, std::string text);
   ~Start() = default;
 
@@ -478,10 +478,18 @@ public:
   void show_highscore(int x, int y);
 
   void show_food(int x, int y, bool eaten);
+  void show_all_food(std::vector<Food> food_vector);
   void show_special_food(int x,int y, bool eaten);
+  void show_walls(std::vector<SDL_Rect> maze);
+  void show_one_wall(SDL_Rect wall); 
+  void fill_screen_white();
+
+
 
   //Update screen
   int update_screen();
+
+
 
   void clean_up();
 
@@ -887,6 +895,14 @@ void Sprite::show_food(int x, int y, bool eaten)
     }
 }
   
+void Sprite::show_all_food(std::vector<Food> food_vector)
+{
+  for (std::vector<Food>::iterator it = food_vector.begin() ; it != food_vector.end(); ++it)
+    {
+      (*it).show();
+    }
+}
+	
 
 void Sprite::show_special_food(int x,int y, bool eaten)
 {
@@ -894,6 +910,19 @@ void Sprite::show_special_food(int x,int y, bool eaten)
     {
       apply_surface(x,y,special_food, screen);
     }
+}
+
+void Sprite::show_walls(std::vector<SDL_Rect> maze)
+{
+  for (std::vector<SDL_Rect>::iterator it = maze.begin() ; it != maze.end(); ++it)
+    {
+      SDL_FillRect( screen, &(*it), SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF) );
+    }
+}
+
+void Sprite::show_one_wall(SDL_Rect wall)
+{
+  SDL_FillRect( screen, &wall, SDL_MapRGB( screen->format, 0xAF, 0x00, 0x00) );
 }
 
  int Sprite::update_screen()
@@ -905,6 +934,11 @@ void Sprite::show_special_food(int x,int y, bool eaten)
  }
 
 
+void Sprite::fill_screen_white()
+{
+  SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0xFF, 0xFF, 0xFF ) );
+}
+	
 
 //============================================================================
 //  Memory release
@@ -919,6 +953,7 @@ void Sprite::clean_up()
     SDL_FreeSurface( ghost2 );   //prova ta bort vid problem med ghost
     SDL_FreeSurface( score );
     SDL_FreeSurface( startup);
+    SDL_FreeSurface( menu);
               
     //Quit SDL
     SDL_Quit();
@@ -1830,7 +1865,19 @@ void Start::show_infopanel() const
   */}
 
 
-
+void Start::handle_input(bool &proceed, bool &quit)
+  
+{
+  if(event.type == SDL_KEYDOWN)
+    {
+      switch(event.key.keysym.sym)
+	{
+		  case SDLK_s: proceed=true; std::cout<<" Spela!!!" <<std::endl;  break;
+	case SDLK_q: quit=true; proceed=true; std::cout << "Game quit" << std::endl ; break;
+	}
+      change_start();
+    }
+}
 
 
 
@@ -2103,14 +2150,11 @@ int main( int argc, char* args[] )
     //Quit flag
     bool quit = false;
 
-    //Sprite
+    //Initialize Sprite
     Sprite animation;
 
-    //Menu
+    //Initialize Menu
     Start Startup(0,0,"PACMAN");
-    //    Menu Startup(660,30);
-
-
 
     //The pacman
     Pacman myPacman;
@@ -2190,21 +2234,11 @@ int main( int argc, char* args[] )
 
     //The frame rate regulator
     Timer fps;
-
-
-  //The buttons
-
-    /* Button theButton(700,100,"1. Chicken Tandoori 75kr ");
-    Button theButton2(700, 150,"2. Tikka Massaala 70kr ");
-    Button theButton3(700, 200,"3. Curry Chicken 70kr");
-    */
-
-      //Menu theButton(660,30);
-
-      Button theButton1(660,100,"Press \"S\" to start ");
-      Button theButton2(660, 150,"Press \"P\" to pause ");
-      Button theButton3(660, 200,"Press \"Q\" to quit");
-      Button theButton4(660,250,"Press \"H\" to show highscore");
+    
+    Button theButton1(660,100,"Press \"S\" to start ");
+    Button theButton2(660, 150,"Press \"P\" to pause ");
+    Button theButton3(660, 200,"Press \"Q\" to quit");
+    Button theButton4(660,250,"Press \"H\" to show highscore");
     
 
   //Initialize
@@ -2219,6 +2253,7 @@ int main( int argc, char* args[] )
       std::cout << "trubbel att ladda filerna" << std::endl;
       return 1;
     }
+  
   //Initialize walls
   SDL_Rect wall1 = {40,40,40,200}; //dessa två har samma parametrar som checkpoint1 och checkpoint2
   SDL_Rect wall2 = {80,40,80,40}; //
@@ -2265,8 +2300,7 @@ int main( int argc, char* args[] )
 
   std::vector<SDL_Rect> checkmaze = {checkpoint1};
 
-  
-
+ 
     // Clip the sprite sheet
     animation.set_clips();
  
@@ -2282,6 +2316,7 @@ int main( int argc, char* args[] )
 	    //Set proceed-flag to false
 	    bool proceed = false;
 
+	    //Start screen
 	    Startup.show();
 	    
 	    Startup.show_infopanel();
@@ -2292,47 +2327,31 @@ int main( int argc, char* args[] )
 	 
 	    //Update the screen
 	    animation.update_screen();
-	    /* if( SDL_Flip( screen ) == -1 )
-	       {
-		 return 1;
-	       }
-	    */
 	    
-	     
-	     while(!proceed)
-	       {
-
-		 //========================== Xed out ======================
-		 //If the user has Xed out the window
-		 if( event.type == SDL_QUIT )
-		   {
-		     std::cout << "Game quit" << std::endl;
-		     //Quit the program
-		     quit = true; proceed = true;
-		   }
-		 //========================================================###
-
-		 while(SDL_PollEvent( &event))
-		   {
-		     if(event.type == SDL_KEYDOWN)
-		       {
-			 switch(event.key.keysym.sym)
-			   {
-			   case SDLK_s: proceed=true; std::cout<<" Spela!!!" <<std::endl;  break;
-			   case SDLK_q: quit=true; proceed=true; std::cout << "Game quit" << std::endl ; break;
-			   }
-			 Startup.change_start();
-		       }
-		   }
-	       }
+	    while(!proceed)
+	      {
+		
+		//========================== Xed out ======================
+		//If the user has Xed out the window
+		if( event.type == SDL_QUIT )
+		  {
+		    std::cout << "Game quit" << std::endl;
+		    //Quit the program
+		    quit = true; proceed = true;
+		  }
+		//========================================================###
+		
+		//If a key is pressed
+		while(SDL_PollEvent( &event))
+		  Startup.handle_input(proceed,quit);
+		
+	      }
 	  }
-	
+
 	//==================================================##
 
 	//Start the frame timer
 	fps.start();
-
-
 
 	//While there's events to handle
 	while( SDL_PollEvent( &event ) )
@@ -2507,26 +2526,34 @@ int main( int argc, char* args[] )
 	    //
 	  }
 	
-        //Fill the screen white
-        SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0xFF, 0xFF, 0xFF ) );
 
+        //Fill the screen white
+        //SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0xFF, 0xFF, 0xFF ) );
+       	animation.fill_screen_white();
+	
         //Show the walls
-	for (std::vector<SDL_Rect>::iterator it = maze.begin() ; it != maze.end(); ++it)
-	  {
-	    SDL_FillRect( screen, &(*it), SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF) );
-	  }
+	animation.show_walls(maze);
+	
+	/*	for (std::vector<SDL_Rect>::iterator it = maze.begin() ; it != maze.end(); ++it)
+		{
+		SDL_FillRect( screen, &(*it), SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF) );
+		}*/
+
 
 	//Show wall 25 the wall that separates the ghosts nest from playfield
-	SDL_FillRect( screen, &wall25, SDL_MapRGB( screen->format, 0xAF, 0x00, 0x00) );
+	animation.show_one_wall(wall25); //The Wonderwall
+	//SDL_FillRect( screen, &wall25, SDL_MapRGB( screen->format, 0xAF, 0x00, 0x00) );
 
         //Show pacman on the screen
         myPacman.show();
 	
 	//Show food on the screen
-	for (std::vector<Food>::iterator it = food_vector.begin() ; it != food_vector.end(); ++it)
+	animation.show_all_food(food_vector);
+	/*for (std::vector<Food>::iterator it = food_vector.begin() ; it != food_vector.end(); ++it)
 	  {
 	    (*it).show();
 	  }
+	*/
 
 	//Show the checkpoints - just for testing
 	for (std::vector<SDL_Rect>::iterator it = checkmaze.begin() ; it != checkmaze.end(); ++it)
