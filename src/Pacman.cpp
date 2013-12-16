@@ -2286,7 +2286,7 @@ int main( int argc, char* args[] )
     //Initialize Special_food
     Special_Food mySpecial_Food(10,10);
     Special_Food mySpecial_Food2(10,450);
-    Special_Food mySpecial_Food3(610 ,10);
+    Special_Food mySpecial_Food3(610 ,410);
     Special_Food mySpecial_Food4(570,410);
 
     //create vector with all special_food in, called special_food_vector
@@ -2294,10 +2294,10 @@ int main( int argc, char* args[] )
 
     //The frame rate regulator
     Timer fps;
-
-    //Timer special_food
-    Timer  special_food_timer;
-
+    
+    //Timer for the special_food
+    Timer special_food_timer;
+    
 
   //The buttons
 
@@ -2551,10 +2551,10 @@ int main( int argc, char* args[] )
 	  {
 	    if (myPacman.game_over())
 	      {
-
+		quit=true;
 		if (myHighscore.is_new_highscore(myScore))
 		  {
-		    quit=true;
+		    
 		    myHighscore.save_new_highscore(myScore);	
 		  }
 	      }
@@ -2564,10 +2564,10 @@ int main( int argc, char* args[] )
 	  {
 	    if (myPacman.game_over())
 	      {
-
+		quit=true;
 		if (myHighscore.is_new_highscore(myScore))
 		  {
-		    quit=true;
+		   
 		    myHighscore.save_new_highscore(myScore);	
 		  }
 	      }
@@ -2577,10 +2577,10 @@ int main( int argc, char* args[] )
 	  {
 	    if (myPacman.game_over())
 	      {
-
+		quit=true;
 		if (myHighscore.is_new_highscore(myScore))
 		  {
-		    quit=true;
+		    
 		    myHighscore.save_new_highscore(myScore);	
 		  }
 	      }
@@ -2600,23 +2600,41 @@ int main( int argc, char* args[] )
 
 	//Is a Pacman eating special_food
 	myPacman.eat_special_food(special_food_vector, myScore);
- 
-	//
+
+	
+
+	//when Pacman eats special_food, ghosts change mood to being chased. 
+	//Starting special_food_timer to keep track of how long pacman can eat ghosts
 	if (myPacman.spec_food_eaten())
 	  {
-	    
-	    myGhost1.change_mood();
-	    myGhost2.change_mood();
-	    myGhost3.change_mood();
-       
-	    std::cout <<" timer räkna ner"<< std::endl;
- 
-	    myPacman.change_mood();
-	    myGhost1.change_mood();
-	    myGhost2.change_mood();
-	    myGhost3.change_mood();
-	    
-	    }
+	    if(special_food_timer.is_started())
+	      {
+		special_food_timer.start();
+		myPacman.change_mood();
+	      }
+	    else
+	      {
+		myGhost1.change_mood();
+		myGhost2.change_mood();
+		myGhost3.change_mood();
+		std::cout << myGhost1.is_scared() << std::endl;
+		special_food_timer.start();
+
+		myPacman.change_mood(); //pacman does no longer eat special_food
+	      }
+	  }
+	// check if pacman no longer should be able to eat ghost
+	if(special_food_timer.is_started())
+	  {
+	    if( special_food_timer.get_ticks() > 5000)
+	      {
+		myGhost1.change_mood();
+		myGhost2.change_mood();
+		myGhost3.change_mood();
+		std::cout << myGhost1.is_scared() << std::endl;
+		special_food_timer.stop();
+	      }
+	  }
 
 	
 
