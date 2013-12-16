@@ -372,14 +372,24 @@ public:
 class Score
 {
 private:
-  int points;
+  int points=0;
+  std::string name="";
 public:
   Score();
+  //Score(const Score& other) : points(other.points), name(other.name) {}
+  Score& operator=(const Score& other) {
+    this->points = other.points;
+    this->name = other.name;
+    return *this;
+  }
   void reset_score();
   void add_points(int);
   std::string get_score(); // return score as string
+  void set_score(int);
+  void set_name(std::string);
   void show();
   int return_score(); // returns score as int
+  std::string return_name();
 };
 
 //###############################################################################################
@@ -390,17 +400,13 @@ public:
 class Highscore
 {
 private:
-  int highscore;
-  std::string name;
+  std::vector<Score> highscoretable;
 public:
-  std::vector<int> highscoretable;
-  Highscore(int, std::string);
+  // Highscore();
   // void load();
   // void close();
   bool is_new_highscore(Score&);
   void save_new_highscore(Score&);
-  std::string get_highscore_name();
-  int get_highscore();
   void show();
   void load_list();
 };
@@ -1850,6 +1856,7 @@ bool Timer::is_paused()
 Score::Score()
 {
   points=0;
+  name="";
 }
 
 void Score::reset_score()
@@ -1874,6 +1881,18 @@ std::string Score::get_score()
 int Score::return_score()
 {
   return points;
+}
+std::string Score::return_name()
+{
+  return name;
+}
+void Score::set_score(int new_points)
+{
+  points=new_points;
+}
+void Score::set_name(std::string new_name)
+{
+  name=new_name;
 }
 
 void Score::show()
@@ -1999,19 +2018,16 @@ void Button::show() const
 //============================================================================
 //  Class: Highscore
 //============================================================================
-Highscore::Highscore(int myScore, std::string myName)
-{
-  highscore=myScore;
-  name=myName;
-
-}
+//Highscore::Highscore(){}
 
 bool Highscore::is_new_highscore(Score& myScore) // ev. ta in namn också
 {
   load_list();
   int size=highscoretable.size();
-  if ((size<10) || (myScore.return_score() > highscoretable[size-1])){
-    return true;}
+  if ((size<10) || (myScore.return_score() > highscoretable[size-1].return_score()))
+    {
+      return true;
+      }
   return false;
   /*std::ifstream InputFile ("highscore.txt");
   std::vector<Highscore> highscoretable;
@@ -2042,42 +2058,41 @@ void Highscore::save_new_highscore(Score& new_highscore)
   //Save highscore list to file
   std::ofstream outputFile ("src/highscore.txt", std::ios::binary);
   //Highscore highscore_entry{new_score, "Ingrid"};
-  highscoretable.push_back(new_highscore.return_score());
-  std::stable_sort (highscoretable.begin(), highscoretable.end());
-  std::reverse(highscoretable.begin(),highscoretable.end());
-  if (highscoretable.size() > 10)
+  new_highscore.set_name("ingrid");
+   highscoretable.push_back(new_highscore);
+   // std::stable_sort (highscoretable.begin(), highscoretable.end());
+   std::reverse(highscoretable.begin(),highscoretable.end());
+   if (highscoretable.size() == 11)
     {
       highscoretable.pop_back();
     }
   for ( int i = 0 ; i < highscoretable.size() ; i++)
     { 
-      outputFile << highscoretable[i] << std::endl;
-      //  outputFile << highscoretable[i].get_highscore_name << std::endl;
+      outputFile << highscoretable[i].return_score() << std::endl;
+      outputFile << highscoretable[i].return_name() << std::endl;
     }
-  outputFile.close();
+    outputFile.close();
 }
 
 void Highscore::load_list()
 {
   std::ifstream inputfile ("src/highscore.txt");
-  int entry;
-  highscoretable.erase(highscoretable.begin(),highscoretable.end());
-  while (inputfile >> entry)
+  Score entry;
+  highscoretable.clear();
+  int points{0};
+  std::string name;
+    while (inputfile >> points)
     { 
-      highscoretable.push_back(entry);
+      entry.set_score(points);
+      inputfile >> name;
+      entry.set_name(name);
+      //highscoretable[0] = entry;
+      highscoretable.push_back(entry); // fel :(
+      //highscoretable.insert(highscoretable.begin(), entry);
+      //highscoretable.push_back(Score()); // fel :(
+      }
+    inputfile.close();
     }
-  inputfile.close();
-}
-
-std::string Highscore::get_highscore_name()
-{
-  return name;
-}
-
-int Highscore::get_highscore()
-{
-  return highscore;
-}
 
 
 void Highscore::show()
@@ -2248,7 +2263,7 @@ int main( int argc, char* args[] )
     Score myScore;
 
     //Highscore
-    Highscore myHighscore(0,"Ingrid");
+    Highscore myHighscore;
 
 
     //Initialize Food
@@ -2585,8 +2600,11 @@ int main( int argc, char* args[] )
 
 		if (myHighscore.is_new_highscore(myScore))
 		  {
-		    quit=true;
-		    myHighscore.save_new_highscore(myScore);	
+		    //Ask player name;
+		    //std::string player_name;
+		    //myScore.set_name(player_name);
+		    myHighscore.save_new_highscore(myScore);
+		    quit=true;	
 		  }
 	      }
 	  }
