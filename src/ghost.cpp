@@ -268,8 +268,7 @@ void Ghost3::do_if_checkpoint( std::vector<SDL_Rect> checkmaze, Pacman paccy )
 //Sets the moving direction towards pacman
 void Ghost1::seek(Pacman paccy)
 {  
-  if
-    (first_way_to_pacman_ == 0 && second_way_to_pacman_ == 0) //if we have tried both directions, get a new one
+  if (first_way_to_pacman_ == 0 && second_way_to_pacman_ == 0) //if we have tried both directions, get a new one
     {
       //pacman_x and pacman_y are the coordinates of pacman
       int pacman_x{paccy.reveal_position_x()};
@@ -306,8 +305,6 @@ void Ghost1::seek(Pacman paccy)
 	{
 	  //randomize a direcion
 	  first_way_to_pacman_ = rand()% 4 + 1;
-    
-	  std::cout<<"vi slumpar"<<std::endl;
 	}  
       
       
@@ -335,57 +332,60 @@ void Ghost2::seek()
 void Ghost3::seek(Pacman paccy) 
 {
 
-  if(first_way_to_pacman_ == 0 && second_way_to_pacman_ == 0 && crashed_ == true) //om spöket fastnat, slumpa riktning
-    {first_way_to_pacman_ = rand()% 4 + 1;}
-  {
-    if(first_way_to_pacman_ == 0 && second_way_to_pacman_ == 0) //if we have tried both directions, get a new one
-      {
-	//get a fresh start
-	crashed_ = false;
-	
-	//pacman_x and pacman_y are the coordinates of pacman
-	int pacman_x{paccy.reveal_position_x()};
-	int pacman_y{paccy.reveal_position_y()};
-  
-  
-	//tries to minimize the distance in the shortest direction first. If pacman is one step to the right and far away at the bottom, the ghost will first go down and then take one step left.
-	if( abs(pacman_x - box.x) > abs(pacman_y - box.y) ) //if bigger difference in x than in y, then walk towards pacman i x direction
-	  {
-	    if( pacman_x > box.x ) //if pacman is to the right, go right
-	      {second_way_to_pacman_ = 2;}
-	    else 
-	      {second_way_to_pacman_ = 1;} //else, go left
-      
-	    if ( pacman_y > box.y ) //if pacman is below the ghost, go downwards
-	      {first_way_to_pacman_ = 4;}
-	    else
-	      {first_way_to_pacman_ = 3;} //else, go up
-	  }
-     
-	else
-	  {
-	    if (pacman_y > box.y) //biggest distance is in y direction, so walk in y direction first
-	      {second_way_to_pacman_ = 4;}
-	    else
-	      {second_way_to_pacman_ = 3;}
-      
-	    if (pacman_x > box.x)
-	      {first_way_to_pacman_ = 2;} //go right
-	    else 
-	      {first_way_to_pacman_ = 1;} //go left
-	  }
-     
+  std::cout<<"1a  :"<<first_way_to_pacman_<<std::endl;
+  std::cout<<"2a:   "<<second_way_to_pacman_<<std::endl;
+  std::cout<<"crashed_"<<crashed_<<std::endl;
 
-	if (scared_ == true) //if the ghost is scared, reverse the moving direction
-	  {
-	    reverse_direction(); 
-	  }
+  if (first_way_to_pacman_ == 0 && second_way_to_pacman_ == 0) //if we have tried both directions, get a new one
+    {
+      //pacman_x and pacman_y are the coordinates of pacman
+      int pacman_x{paccy.reveal_position_x()};
+      int pacman_y{paccy.reveal_position_y()};
       
-      }
-  }
+  
+      //tries to minimize the distance in the shortest direction first. If pacman is one step to the right and far away at the bottom, the ghost will first go down and then take one step left.
+      if( abs(pacman_x - box.x) > abs(pacman_y - box.y) ) //if bigger difference in x than in y, then walk towards pacman i x direction
+	{
+	  if( pacman_x > box.x ) //if pacman is to the right, go right
+	    {second_way_to_pacman_ = 2;}
+	  else 
+	    {second_way_to_pacman_ = 1;} //else, go left
+      
+	  if ( pacman_y > box.y ) //if pacman is below the ghost, go downwards
+	    {first_way_to_pacman_ = 4;}
+	  else
+	    {first_way_to_pacman_ = 3;} //else, go up
+	}
+     
+      else
+	{
+	  if (pacman_y > box.y) //biggest distance is in y direction, so walk in y direction first
+	    {second_way_to_pacman_ = 4;}
+	  else
+	    {second_way_to_pacman_ = 3;}
+      
+	  if (pacman_x > box.x)
+	    {first_way_to_pacman_ = 2;} //go right
+	  else 
+	    {first_way_to_pacman_ = 1;} //go left
+	}
+      
+      if (10*first_way_to_pacman_ + second_way_to_pacman_ == crashed_) //same result for two seeks in a row means we are stuck
+	{
+	  //randomize a direcion
+	  first_way_to_pacman_ = rand()% 4 + 1;
+	  
+	  std::cout<<"vi slumpar"<<std::endl;
+	}  
  
+      if (scared_ == true) //if the ghost is scared, reverse the moving direction
+	{
+	  reverse_direction(); 
+	}
+ 
+      crashed_ = 10*first_way_to_pacman_ + second_way_to_pacman_;
+    }
 }
-
 
 
 
