@@ -174,7 +174,7 @@ public:
 class Ghost
 {
 protected:
-  //if ghost crashes into a wall it will change direction, otherwise will keep going.
+  //Helps the ghost randomize a way to pacman if the ghost is stuck
   bool crashed_;
 
 //The collission box of the ghost
@@ -186,6 +186,7 @@ protected:
   //Angry or scare ghost. false is  angry, true is scared
   bool scared_;
 
+  
 
   //1 is left, 2 is right, 3 is up, and 4 is down. 0 will be the starting value, meaning the ghost hasn't found out where pacman is
   int first_way_to_pacman_;
@@ -1436,8 +1437,14 @@ void Ghost::move(std::vector<SDL_Rect> maze) //checks collision with walls
 	{
 	  //Move back
 	  box.x -= xVel;
+
+	  //If both directions are undefined already, set crashed to true
+	  if (first_way_to_pacman_ == 0 && second_way_to_pacman_ == 0)
+	    {crashed_ = true;}
+
 	  first_way_to_pacman_ = second_way_to_pacman_; 
 	  second_way_to_pacman_ = 0;
+	  
 	}
     }
    
@@ -1453,8 +1460,12 @@ void Ghost::move(std::vector<SDL_Rect> maze) //checks collision with walls
 	  box.y -= yVel;
 	  first_way_to_pacman_ = second_way_to_pacman_; 
 	  second_way_to_pacman_ = 0;
+	  if (first_way_to_pacman_ == 0 && second_way_to_pacman_ == 0)
+	    {crashed_ = true;}
+	  
 	}
     }
+
 }
 
 bool Ghost1::is_checkpoint(std::vector<SDL_Rect> checkmaze, Pacman paccy) //looks for a checkpoint
@@ -1563,11 +1574,14 @@ void Ghost3::do_if_checkpoint( std::vector<SDL_Rect> checkmaze, Pacman paccy )
 void Ghost1::seek(Pacman paccy)
 {
   if(first_way_to_pacman_ == 0 && second_way_to_pacman_ == 0 && crashed_ == true) //om spöket fastnat, slumpa riktning
-    {first_way_to_pacman_ = rand()% 4 + 1;}
+    {first_way_to_pacman_ = rand()% 4 + 1;
+      std::cout<<"riktning slumpas"<<std::endl;}
 
   else if
     (first_way_to_pacman_ == 0 && second_way_to_pacman_ == 0)
     {
+ 
+    std::cout<<"båda vägar är noll"<<std::endl;
       //pacman_x and pacman_y are the coordinates of pacman
       int pacman_x{paccy.reveal_position_x()};
       int pacman_y{paccy.reveal_position_y()};
@@ -1607,9 +1621,9 @@ void Ghost1::seek(Pacman paccy)
       reverse_direction();
     }
   
-    
-  std::cout<<"first_way_to_pacman_ :"<<first_way_to_pacman_<<std::endl;
-  std::cout<<"second_way_to_pacman_ :"<<second_way_to_pacman_<<std::endl;
+  //en färsk start utan krach efter en sökning
+  crashed_ = false;
+ 
 }
 
 //sets the moving direction towards pacman at random
