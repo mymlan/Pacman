@@ -181,19 +181,16 @@ int main( int argc, char* args[] )
 
   //Initialize checkpoints
   SDL_Rect checkpoint1 = {15,260,5,5};
-  
-
-  // more chekpoints
-     SDL_Rect checkpoint = {};
-     //SDL_Rect checkpoint = {};
-     // SDL_Rect checkpoint = {};
-     //   SDL_Rect checkpoint = {};
+  SDL_Rect checkpoint2 = {175,15,5,5};
+  SDL_Rect checkpoint3 = {375,15,5,5};
+  SDL_Rect checkpoint4 = {375,80,5,5};
+  SDL_Rect checkpoint5 = {240,260,5,5};
   
  
   
   //Create a vector with all the checkpoints
 
-  std::vector<SDL_Rect> checkmaze = {checkpoint1};
+  std::vector<SDL_Rect> checkmaze = {checkpoint1,checkpoint2,checkpoint3,checkpoint4,checkpoint5};
 
  
     // Clip the sprite sheet
@@ -455,7 +452,10 @@ int main( int argc, char* args[] )
 	    (*it).show();
 	  }
 	*/
-
+	
+	//Show special_food on the screen
+	mySpecial_Food.show();
+	
 	//Show the checkpoints - just for testing
 	for (std::vector<SDL_Rect>::iterator it = checkmaze.begin() ; it != checkmaze.end(); ++it)
 	  {
@@ -467,8 +467,7 @@ int main( int argc, char* args[] )
 	myGhost2.show();
 	myGhost3.show();
 
-	//Show special_food on the screen
-	mySpecial_Food.show();
+	
 
 	//show infopanel
 	Startup.show_infopanel();
