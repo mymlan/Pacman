@@ -133,14 +133,6 @@ void Ghost::move(std::vector<SDL_Rect> maze) //checks collision with walls
 	  //Move back
 	  box.x -= xVel;
 
-	  
-	  //If we are stuck, set crashed_
-	  if(first_way_to_pacman_ == 0 && second_way_to_pacman_ == 0)
-	    {
-	      std::cout<<"CRASHED SÄTTS TILL TRUE!!!"<<std::endl;
-	      crashed_ = true;
-	    }
-
 	  //go to the second most favorable way to pacman
 	  first_way_to_pacman_ = second_way_to_pacman_; 
 	  second_way_to_pacman_ = 0;
@@ -332,10 +324,6 @@ void Ghost2::seek()
 void Ghost3::seek(Pacman paccy) 
 {
 
-  std::cout<<"1a  :"<<first_way_to_pacman_<<std::endl;
-  std::cout<<"2a:   "<<second_way_to_pacman_<<std::endl;
-  std::cout<<"crashed_"<<crashed_<<std::endl;
-
   if (first_way_to_pacman_ == 0 && second_way_to_pacman_ == 0) //if we have tried both directions, get a new one
     {
       //pacman_x and pacman_y are the coordinates of pacman
@@ -375,7 +363,7 @@ void Ghost3::seek(Pacman paccy)
 	  //randomize a direcion
 	  first_way_to_pacman_ = rand()% 4 + 1;
 	  
-	  std::cout<<"vi slumpar"<<std::endl;
+
 	}  
  
       if (scared_ == true) //if the ghost is scared, reverse the moving direction
