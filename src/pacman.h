@@ -47,8 +47,11 @@ private:
     //Its animation status
     int status;
 
-  //food left
-  int food_left;
+    //food left
+    int food_left;
+
+    //true if pacman has eaten special_food
+    bool pacman_has_eaten_special_food;
 
 public:
   //Initializes the variables
@@ -68,7 +71,7 @@ public:
   void eat_food(std::vector<class Food>&, class Score&); //bool eat_food(class Food&, class Score&);
 
   //Pacman eats special_food - ghosts flees
-  bool eat_special_food(class Special_Food&, class Score&);
+  void eat_special_food(std::vector<class Special_Food>&, class Score&);
 
   //Takes key presses and adjusts the square's velocity
   void handle_input();
@@ -85,7 +88,9 @@ public:
   //returns true if there is no food left
   bool no_food_left();
 
+  void pacman_change_mood();
   
+  bool has_pacman_eaten_special_food();
 
 };
 

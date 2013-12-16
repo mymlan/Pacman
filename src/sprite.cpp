@@ -324,12 +324,6 @@ bool Sprite::init(SDL_Surface* screen)
 }
 
 
-
-
-
-
-
-
 bool Sprite::load_files()
 {
     //Load the Pacman image
@@ -413,7 +407,7 @@ bool Sprite::load_files()
 
 
     //Load Special_Food
-    special_food = load_image( "img/special_food-picture.bmp" );
+    special_food = load_image( "img/special_food.bmp" );
     if (special_food ==NULL)
       {
 	return false;
@@ -517,7 +511,7 @@ void Sprite::show_highscore(int x, int y)
 {
   apply_surface(x,y,score,screen);
 }
-
+//***************************************************
 
 void Sprite::show_food(int x, int y, bool eaten)
 {
@@ -536,6 +530,14 @@ void Sprite::show_all_food(std::vector<Food> food_vector)
 }
 	
 
+void Sprite::show_all_special_food(std::vector<Special_Food> special_food_vector)
+{
+  for (std::vector<Special_Food>::iterator it = special_food_vector.begin() ; it != special_food_vector.end(); ++it)
+    {
+      (*it).show();
+    }
+}
+
 void Sprite::show_special_food(int x,int y, bool eaten)
 {
  if (!eaten)
@@ -543,7 +545,7 @@ void Sprite::show_special_food(int x,int y, bool eaten)
       apply_surface(x,y,special_food, screen);
     }
 }
-
+//************************************************************************
 void Sprite::show_walls(std::vector<SDL_Rect> maze)
 {
   for (std::vector<SDL_Rect>::iterator it = maze.begin() ; it != maze.end(); ++it)

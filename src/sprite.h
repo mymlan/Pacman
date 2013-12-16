@@ -126,6 +126,7 @@ public:
 
   void show_food(int x, int y, bool eaten);
   void show_all_food(std::vector<class Food> food_vector);
+  void show_all_special_food(std::vector<class Special_Food>);
   void show_special_food(int x,int y, bool eaten);
   void show_walls(std::vector<SDL_Rect> maze);
   void show_one_wall(SDL_Rect wall); 

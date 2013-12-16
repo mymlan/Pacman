@@ -27,13 +27,9 @@
 #include "timer.h"
 #include "menu.h"
 
-
-
 //============================================================================
 //  MAIN
 //============================================================================
-
-
 
 int main( int argc, char* args[] )
 {
@@ -112,7 +108,7 @@ int main( int argc, char* args[] )
     Food myFood38(210,10);
     Food myFood39(210,90);
     Food myFood40(210,250);
-    Food myFood41(210,450);
+   
 
     //create vectorwith all food in, called food_vector
     std::vector<Food> food_vector = 
@@ -124,17 +120,28 @@ int main( int argc, char* args[] )
    
 
     //Special_food
-    Special_Food mySpecial_Food(370,0);
+    Special_Food mySpecial_Food1(10,10);
+    Special_Food mySpecial_Food2(10,450);
+    Special_Food mySpecial_Food3(610 ,410);
+    Special_Food mySpecial_Food4(570,410);
 
+    Special_Food mySpecial_Food(370,0);
+    std::vector<Special_Food> special_food_vector = {mySpecial_Food1,mySpecial_Food2,mySpecial_Food3,mySpecial_Food4};
 
     //The frame rate regulator
     Timer fps;
+
 
     //The checkpoint timers, helps the ghosts so they dont get distracted by the checkpoints
     Timer checktimer1;
     Timer checktimer2;
     Timer checktimer3;
 
+
+
+    // Timer for controlling when pacman eats ghosts
+    Timer special_food_timer;
+    
 
     Button theButton1(660,100,"Press \"S\" to start ");
     Button theButton2(660, 150,"Press \"P\" to pause ");
@@ -433,16 +440,32 @@ int main( int argc, char* args[] )
 
 	  }*/
 
-	//Is a Pacman eating special_food
-	if (myPacman.eat_special_food(mySpecial_Food, myScore))
+	//Is Pacman eating special_food
+	myPacman.eat_special_food(special_food_vector, myScore);
+
+	// Makes ghosts run
+	if (myPacman.has_pacman_eaten_special_food())
+	  {
+	    if(!special_food_timer.is_started())
+	      {
+		myGhost1.change_mood();
+		myGhost2.change_mood();
+		myGhost3.change_mood();
+	      }
+		special_food_timer.start();
+		myPacman.pacman_change_mood();
+	    }
+
+	// Sets ghosts back to chasing Pacman
+	if(special_food_timer.get_ticks() < 5000)
 	  {
 	    myGhost1.change_mood();
 	    myGhost2.change_mood();
 	    myGhost3.change_mood();
-	    // timer räkna ner
-	    //
+	    special_food_timer.stop();
 	  }
 	
+
 
         //Fill the screen white
         //SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0xFF, 0xFF, 0xFF ) );
@@ -466,15 +489,11 @@ int main( int argc, char* args[] )
 	
 	//Show food on the screen
 	animation.show_all_food(food_vector);
-	/*for (std::vector<Food>::iterator it = food_vector.begin() ; it != food_vector.end(); ++it)
-	  {
-	    (*it).show();
-	  }
-	*/
-	
+
 	//Show special_food on the screen
-	mySpecial_Food.show();
-	
+	animation.show_all_special_food(special_food_vector);
+
+
 	//Show the checkpoints - just for testing
 	for (std::vector<SDL_Rect>::iterator it = checkmaze.begin() ; it != checkmaze.end(); ++it)
 	  {
@@ -485,8 +504,6 @@ int main( int argc, char* args[] )
 	myGhost1.show();
 	myGhost2.show();
 	myGhost3.show();
-
-	
 
 	//show infopanel
 	Startup.show_infopanel();

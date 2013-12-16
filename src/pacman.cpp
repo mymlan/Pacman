@@ -50,6 +50,7 @@ Pacman::Pacman()
     status = PACMAN_LEFT;
 
     food_left = 40;
+    pacman_has_eaten_special_food = false;
 }
 
 
@@ -264,7 +265,7 @@ void Pacman::eat_food(std::vector<Food>& food_vector, Score& myScore) //Food& fo
   for (std::vector<Food>::iterator it = food_vector.begin() ; it != food_vector.end(); ++it)
     {
     
-      if ((animation.check_collision(box, (*it).get_box())) and ((*it).eaten() == false))
+      if ((animation.check_collision(box, (*it).get_box())) and !(*it).eaten())
 	{
 	  myScore.add_points(1);
 	  (*it).was_eaten();
@@ -279,17 +280,20 @@ void Pacman::eat_food(std::vector<Food>& food_vector, Score& myScore) //Food& fo
 
 
 //Pacman eats special_food
-bool Pacman::eat_special_food(Special_Food& special_food_object,Score& myScore)
+void Pacman::eat_special_food(std::vector<class Special_Food>& special_food_vector,Score& myScore)
 {
   Sprite animation;
-  if (animation.check_collision(box, special_food_object.get_box()) && !special_food_object.eaten())
-      {	
-	special_food_object.was_eaten();
-	return true;
-      }
-  return false;
+ for (std::vector<Special_Food>::iterator it = special_food_vector.begin() ; it != special_food_vector.end(); ++it)
+    {
+      if ((animation.check_collision(box, (*it).get_box())) and !(*it).eaten())
+	{
+	  myScore.add_points(10);
+	  (*it).was_eaten();
+	  food_left = food_left - 1;
+	  pacman_has_eaten_special_food = true;
+	} 
+    }  
 }
-
 
 
 //Returns Pacman to starting position
@@ -313,5 +317,13 @@ bool Pacman::no_food_left()
     }
 }
 
+void Pacman::pacman_change_mood()
+{
+  pacman_has_eaten_special_food = false;
+}
 
 
+bool Pacman::has_pacman_eaten_special_food()
+{
+  return pacman_has_eaten_special_food;
+}
