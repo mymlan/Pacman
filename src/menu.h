@@ -78,7 +78,21 @@ class Highscore_screen : public Menu
   void show() const;
   bool is_paused() const;
   void change_pause();
+
 };
+
+class End_game : public Menu
+{
+ public:
+  ~End_game() = default;
+  End_game();
+  void show() const;
+
+
+
+};
+
+
 
 
 

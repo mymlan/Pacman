@@ -108,7 +108,7 @@ public:
   
   //Initialize and setup screen
   bool init();
-  bool init(SDL_Surface* screen);  //New function
+  bool init(SDL_Surface* screen, std::string caption);  //New function
 
   bool load_files();
 

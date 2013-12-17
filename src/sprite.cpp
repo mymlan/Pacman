@@ -291,7 +291,7 @@ bool Sprite::init()
     return true;
 }
 
-bool Sprite::init(SDL_Surface* screen)
+bool Sprite::init(SDL_Surface* screen, std::string caption)
 {
 //Initialize all SDL subsystems
     if( SDL_Init( SDL_INIT_EVERYTHING ) == -1 )
@@ -310,7 +310,7 @@ bool Sprite::init(SDL_Surface* screen)
     }
 
     //Set the window caption
-    SDL_WM_SetCaption( "Nytt fönster", NULL );
+    SDL_WM_SetCaption( caption.c_str(), NULL );
     
       //Initialize SDL_ttf
     if(TTF_Init() == -1)

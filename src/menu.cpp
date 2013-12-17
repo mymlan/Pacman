@@ -90,7 +90,7 @@ void Start::handle_input(bool &proceed, bool &quit)
     {
       switch(event.key.keysym.sym)
 	{
-		  case SDLK_s: proceed=true; std::cout<<" Spela!!!" <<std::endl;  break;
+	case SDLK_s: proceed=true; std::cout<<" Spela!!!" <<std::endl;  break;
 	case SDLK_q: quit=true; proceed=true; std::cout << "Game quit" << std::endl ; break;
 	}
       change_start();
@@ -173,4 +173,29 @@ void Highscore_screen::change_pause()
     pause_ = false;
   else
     pause_ = true;
+}
+
+
+
+//====================== END_GAME ===================================================
+
+
+End_game::End_game()
+{
+
+  //Initialize
+  button.x=400;
+  button.y=10;
+  message_="Game Over Big Girl!";
+
+  //Set dimension
+  button.w = BUTTON_WIDTH;
+  button.h = BUTTON_HEIGHT;
+}
+
+void End_game::show() const
+{
+  Sprite draw;
+  draw.show_button(button.x, button.y, message_.c_str());
+  
 }

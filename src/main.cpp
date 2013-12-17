@@ -383,7 +383,7 @@ int main( int argc, char* args[] )
 			    if( event.type == SDL_QUIT )
 			      {
 				//Quit the program
-				quit = true; cont = true;
+				quit = true; cont = true; std::cout<<"Game quit!"<<std::endl; 
 			      }
 			    //=========================================================
 			    SDL_Surface *new_screen = NULL; // Experiment
@@ -393,12 +393,13 @@ int main( int argc, char* args[] )
 			      {
 				switch(event.key.keysym.sym)
 				  {
-				  case SDLK_p: cont = true; std::cout << "Spela!!"<< std::endl; break;
-				  case SDLK_q: cont = true ; quit = true; std::cout << "Game quit" << std::endl; break;
-				  case SDLK_h: animation.init(new_screen); 
+				  case SDLK_p: cont = true; std::cout << "Play!"<< std::endl; break;
+				  case SDLK_q: cont = true ; quit = true; std::cout << "Game quit" << std::endl; return 0; break;
+				  case SDLK_h: animation.init(new_screen, "Highscore");
 				    Highscore_screen Highscore(400,10, "HIGHSCORE");
 				    Highscore.show();
 				    animation.update_screen();
+				    std::cout<< "Highscore. Game paused."<<std::endl;
 				    break; //test
 				  }
 				
@@ -502,6 +503,7 @@ int main( int argc, char* args[] )
 
 		if (myHighscore.is_new_highscore(myScore))
 		  {
+
 		    quit=true;
 		    myHighscore.save_new_highscore(myScore);	
 		  }
@@ -511,7 +513,22 @@ int main( int argc, char* args[] )
 	//Om alla Food objekt är uppätna avslutas spelet. Ska troligtvis ske något annat
 	if(myPacman.no_food_left())
 	  {
-	    quit=true;
+	    bool cont=false;
+	    End_game game_over;
+	    SDL_Surface *new_screen = NULL; // Experiment
+	    animation.init(new_screen,"Game Over!!!");
+	    game_over.show();
+	    animation.update_screen();
+	    while(!cont){
+	      while(SDL_PollEvent( &event))
+		{
+		  switch(event.key.keysym.sym)
+		    {
+		    case SDLK_q: quit=true; cont=true; return 0;  break;
+		    }
+		}
+	    }
+	    //quit=true;
 	  }
 
 
