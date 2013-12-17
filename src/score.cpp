@@ -29,6 +29,7 @@
 Score::Score()
 {
   points=0;
+  name="";
 }
 
 void Score::reset_score()
@@ -53,6 +54,18 @@ std::string Score::get_score()
 int Score::return_score()
 {
   return points;
+}
+std::string Score::return_name()
+{
+  return name;
+}
+void Score::set_score(int new_points)
+{
+  points=new_points;
+}
+void Score::set_name(std::string new_name)
+{
+  name=new_name;
 }
 
 void Score::show()

@@ -30,24 +30,12 @@
 class Highscore
 {
 private:
-  int highscore;
-  std::string name;
+  std::vector<Score> highscoretable;
 public:
-  std::vector<int> highscoretable;
-  Highscore(int, std::string);
-  // void load();
-  // void close();
   bool is_new_highscore(Score&);
   void save_new_highscore(Score&);
-  std::string get_highscore_name();
-  int get_highscore();
   void show();
   void load_list();
 };
-
-
-
-
-
 
 #endif

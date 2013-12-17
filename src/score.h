@@ -30,14 +30,24 @@
 class Score
 {
 private:
-  int points;
+  int points=0;
+  std::string name="";
 public:
   Score();
+  //Score(const Score& other) : points(other.points), name(other.name) {}
+  Score& operator=(const Score& other) {
+    this->points = other.points;
+    this->name = other.name;
+    return *this;
+  }
   void reset_score();
   void add_points(int);
   std::string get_score(); // return score as string
+  void set_score(int);
+  void set_name(std::string);
   void show();
   int return_score(); // returns score as int
+  std::string return_name();
 };
 
 #endif

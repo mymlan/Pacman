@@ -59,7 +59,7 @@ int main( int argc, char* args[] )
     Score myScore;
 
     //Highscore
-    Highscore myHighscore(0,"Ingrid");
+    Highscore myHighscore;
 
 
     //Initialize Food
@@ -397,7 +397,9 @@ int main( int argc, char* args[] )
 				  case SDLK_q: cont = true ; quit = true; std::cout << "Game quit" << std::endl; return 0; break;
 				  case SDLK_h: animation.init(new_screen, "Highscore");
 				    Highscore_screen Highscore(400,10, "HIGHSCORE");
+				    
 				    Highscore.show();
+				    myHighscore.show();
 				    animation.update_screen();
 				    std::cout<< "Highscore. Game paused."<<std::endl;
 				    break; //test
