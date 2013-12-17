@@ -2008,25 +2008,6 @@ bool Highscore::is_new_highscore(Score& myScore) // ev. ta in namn också
       return true;
       }
   return false;
-  /*std::ifstream InputFile ("highscore.txt");
-  std::vector<Highscore> highscoretable;
-  // int lowest_highscore{0};
-  // std::string highscore;
-  int new_score = myScore.return_score();
-  if (InputFile.is_open())
-    {
-      for (int i{0}; i<1; i++) // 10
-	{
-	  InputFile >> highscore;
-	}
-      lowest_highscore=std::stoi(highscore);
-      InputFile.close();
-    }   
-  if (new_score > lowest_highscore)
-    {
-      return true;
-      }*/
-    // return false;
 }
 
 void Highscore::save_new_highscore(Score& new_highscore)
@@ -2060,18 +2041,15 @@ void Highscore::load_list()
   highscoretable.clear();
   int points{0};
   std::string name;
-    while (inputfile >> points)
-    { 
-      entry.set_score(points);
-      inputfile >> name;
-      entry.set_name(name);
-      //highscoretable[0] = entry;
-      highscoretable.push_back(entry); // fel :(
-      //highscoretable.insert(highscoretable.begin(), entry);
-      //highscoretable.push_back(Score()); // fel :(
-      }
-    inputfile.close();
-    }
+  while (inputfile >> points)
+      { 
+	entry.set_score(points);
+	inputfile >> name;
+	entry.set_name(name);
+	highscoretable.push_back(entry)
+	}
+  inputfile.close();
+}
 
 
 void Highscore::show()
