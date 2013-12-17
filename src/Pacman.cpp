@@ -2046,8 +2046,8 @@ void Highscore::load_list()
 	entry.set_score(points);
 	inputfile >> name;
 	entry.set_name(name);
-	highscoretable.push_back(entry)
-	}
+	highscoretable.push_back(entry);
+      }
   inputfile.close();
 }
 
