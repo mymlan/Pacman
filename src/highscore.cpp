@@ -18,7 +18,7 @@
 #include <iterator>
 #include <algorithm>
 #include "highscore.h"
-
+#include "menu.h"
 
 
 //============================================================================
@@ -81,8 +81,29 @@ void Highscore::load_list()
 
 void Highscore::show()
 {
-  //highscore = TTF_RenderText_Solid( font, get_highscore().c_str(), textColor );
-  //apply_surface(0,0,score,screen);
   Sprite animation;
   animation.show_highscore(0,0);
+  load_list();
+  int size=highscoretable.size();
+  int entry_points{0};
+  int position;
+
+  for (int i{0}; i<size; i++){
+    entry_points = highscoretable[i].return_score();
+    
+    std::stringstream ss;
+    position=i+1;
+    ss << position << ". ";
+    std::string position_str = ss.str();
+    
+    ss.str("");
+    ss << entry_points;
+    std::string points_str = ss.str();
+    
+    std::string entry;
+    entry.append(position_str).append(highscoretable[i].return_name()).append(" ").append(points_str);
+    
+    Highscore_screen myHighscorelist(350,100+50*i, entry);
+    myHighscorelist.show();
+  }
 }

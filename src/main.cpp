@@ -397,7 +397,9 @@ int main( int argc, char* args[] )
 				  case SDLK_q: cont = true ; quit = true; std::cout << "Game quit" << std::endl; break;
 				  case SDLK_h: animation.init(new_screen); 
 				    Highscore_screen Highscore(400,10, "HIGHSCORE");
+				    
 				    Highscore.show();
+				    myHighscore.show();
 				    animation.update_screen();
 				    break; //test
 				  }
