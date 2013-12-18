@@ -552,8 +552,15 @@ int main( int argc, char* args[] )
 
         //Fill the screen white
         //SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0xFF, 0xFF, 0xFF ) );
-       	animation.fill_screen_white();
-	
+	if(myGhost1.is_scared())
+	  {
+	    animation.fill_screen_color();
+	  }
+	else
+	  {
+	    animation.fill_screen_white();
+	  } 
+
         //Show the walls
 	animation.show_walls(maze);
 	
