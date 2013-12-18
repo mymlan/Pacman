@@ -481,57 +481,12 @@ int main( int argc, char* args[] )
 
 
 	//Is a ghost eating Pacman or are Pacman eating a ghost
-
-
-	/*
-	if (myPacman.eat_eaten(myGhost, myScore))
+	if (myPacman.eat_eaten(myGhost1, myScore) || myPacman.eat_eaten(myGhost2, myScore) || myPacman.eat_eaten(myGhost3, myScore))
 	  {
 	    if (myPacman.game_over())
 	      {
-	    	if (myHighscore.is_new_highscore(myScore))
-		  {
-		    std::cout << "Nytt rekord" << std::endl;
-		    myHighscore.save_new_highscore(myScore);
-		    quit=true;	
-		  }
-	      }
-	  }
-
-	*/
-	if (myPacman.eat_eaten(myGhost1, myScore))
-	  {
-	    if (myPacman.game_over())
-	      {
-
 		if (myHighscore.is_new_highscore(myScore))
 		  {
-		    quit=true;
-		    myHighscore.save_new_highscore(myScore);	
-		  }
-	      }
-	  }
-
-	if (myPacman.eat_eaten(myGhost2, myScore))
-	  {
-	    if (myPacman.game_over())
-	      {
-
-		if (myHighscore.is_new_highscore(myScore))
-		  {
-		    quit=true;
-		    myHighscore.save_new_highscore(myScore);	
-		  }
-	      }
-	  }
-
-	if (myPacman.eat_eaten(myGhost3, myScore))
-	  {
-	    if (myPacman.game_over())
-	      {
-
-		if (myHighscore.is_new_highscore(myScore))
-		  {
-
 		    quit=true;
 		    myHighscore.save_new_highscore(myScore);	
 		  }
@@ -564,13 +519,6 @@ int main( int argc, char* args[] )
 	//Is a Pacman eating food
 	myPacman.eat_food(food_vector, myScore);
 
-	//myPacman.eat_food(food_vector, myScore);
-      /* {
-	  // if (alla food-pluttar uppätna - spel slut){
-	  //  quit=true;
-	  
-
-	  }*/
 
 	//Is Pacman eating special_food
 	myPacman.eat_special_food(special_food_vector, myScore);
