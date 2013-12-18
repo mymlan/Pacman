@@ -132,6 +132,7 @@ public:
   void show_walls(std::vector<SDL_Rect> maze);
   void show_one_wall(SDL_Rect wall); 
   void fill_screen_white();
+  void fill_screen_color();
 
 
 

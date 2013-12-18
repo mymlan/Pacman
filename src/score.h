@@ -48,6 +48,10 @@ public:
   void show();
   int return_score(); // returns score as int
   std::string return_name();
+  // static bool sortingfunction( Score, Score) ;
+   bool operator< (const Score &other) const {
+     return other.points < points;
+   }
 };
 
 #endif

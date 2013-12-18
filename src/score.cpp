@@ -76,3 +76,7 @@ void Score::show()
   Sprite animation;
   animation.show_score(get_score().c_str());
 }
+/*
+static bool Score::sortingfunction (Score i, Score j)  {
+  return (i.return_score()<j.return_score());
+  }*/

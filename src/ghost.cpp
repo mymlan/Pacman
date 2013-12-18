@@ -97,15 +97,22 @@ Ghost3::Ghost3()
 
 void Ghost::reverse_direction()
 {
-  if (first_way_to_pacman_ == 1 || 3)
-    {first_way_to_pacman_ += 1;}
-  else
-    {first_way_to_pacman_ -= 1;}
-  
-  if (second_way_to_pacman_ == 1 || 3)
-    {second_way_to_pacman_ += 1;}
-  else
-    {second_way_to_pacman_ -= 1;}
+  if (first_way_to_pacman_ != 0)
+    {
+      if (first_way_to_pacman_ == 1 || first_way_to_pacman_ == 3)
+	{first_way_to_pacman_ += 1;}
+      else
+	{first_way_to_pacman_ -= 1;}
+    }
+  if (second_way_to_pacman_ != 0)
+    {
+      if (second_way_to_pacman_ == 1 ||second_way_to_pacman_ == 3)
+	{second_way_to_pacman_ += 1;}
+      else
+	{second_way_to_pacman_ -= 1;}
+    }
+
+  crashed_ = 0;
 }
 
 void Ghost::move(std::vector<SDL_Rect> maze) //checks collision with walls
@@ -165,13 +172,15 @@ void Ghost::move(std::vector<SDL_Rect> maze) //checks collision with walls
     }
 }
 
+
+//behöver denna funktion verkligen ta in en pacmanklass???
 bool Ghost1::is_checkpoint(std::vector<SDL_Rect> checkmaze, Pacman paccy) //looks for a checkpoint
 {
   Sprite animation;
 
   //check if ghost is right on top of checkpoint, and not just at the checkpoints corner
-  box.x -= 2*xVel;
-  box.y -= 2*yVel;
+  box.x -= xVel;
+  box.y -= yVel;
   
   //check for checkpoint collission
   for(std::vector<SDL_Rect>::iterator it = checkmaze.begin() ; it != checkmaze.end(); ++it) //try all the checkpoints
@@ -179,31 +188,42 @@ bool Ghost1::is_checkpoint(std::vector<SDL_Rect> checkmaze, Pacman paccy) //look
       if( animation.check_collision( box, *it ) )
 	{
 	  //restore actual position
-	  box.x += 2*xVel;
-	  box.y += 2*yVel;
+	  box.x += xVel;
+	  box.y += yVel;
 
 	  return true;
 	}
     }
  
   //restore actual position
-  box.x += 2*xVel;
-  box.y += 2*yVel;
+  box.x += xVel;
+  box.y += yVel;
   return false;
 }
 
 bool Ghost2::is_checkpoint(std::vector<SDL_Rect> checkmaze) //looks for a checkpoint
 {
   Sprite animation;
+
+  //check if ghost is right on top of checkpoint, and not just at the checkpoints corner
+  box.x -= xVel;
+  box.y -= yVel;
+
   //check for checkpoint collission
   for(std::vector<SDL_Rect>::iterator it = checkmaze.begin() ; it != checkmaze.end(); ++it) //try all the checkpoints
     {
       if(animation.check_collision( box, *it ) )
 	{
+	  //restore actual position
+	  box.x += xVel;
+	  box.y += yVel;
+
 	  return true;
 	}
     }
-  
+    //restore actual position
+  box.x += xVel;
+  box.y += yVel;
   return false;
 }
 
@@ -212,26 +232,24 @@ bool Ghost3::is_checkpoint(std::vector<SDL_Rect> checkmaze, Pacman paccy) //look
   Sprite animation;
 
  //check if ghost is right on top of checkpoint, and not just at the checkpoints corner
-  box.x -= 2*xVel;
-  box.y -= 2*yVel;
+  box.x -= xVel;
+  box.y -= yVel;
 
   //check for checkpoint collission
   for(std::vector<SDL_Rect>::iterator it = checkmaze.begin() ; it != checkmaze.end(); ++it) //try all the checkpoints
     {
       if( animation.check_collision( box, *it ))
 	{
-	  
 	  //restore actual position
-	  box.x += 2*xVel;
-	  box.y += 2*yVel;
+	  box.x += xVel;
+	  box.y += yVel;
 	  
 	  return true;
 	}
-      
     }
   //restore actual position
-  box.x += 2*xVel;
-  box.y += 2*yVel;
+  box.x += xVel;
+  box.y += yVel;
   return false;
   
 }
@@ -245,7 +263,7 @@ void Ghost1::do_if_checkpoint( std::vector<SDL_Rect> checkmaze, Pacman paccy )
       //make a fresh seek if ghost reaches a checkpoint
       first_way_to_pacman_ = 0;
       second_way_to_pacman_ = 0;
-
+      crashed_ = 0;
       seek(paccy); 
     }
 }
@@ -256,6 +274,9 @@ void Ghost2::do_if_checkpoint( std::vector<SDL_Rect> checkmaze )
 {
   if(is_checkpoint(checkmaze))
     {
+      //make a fresh seek if ghost reaches a checkpoint
+      first_way_to_pacman_ = 0;
+      second_way_to_pacman_ = 0;
       seek();
     }
 }
@@ -272,6 +293,7 @@ void Ghost3::do_if_checkpoint( std::vector<SDL_Rect> checkmaze, Pacman paccy )
       //make a fresh seek if ghost reaches a checkpoint
       first_way_to_pacman_ = 0;
       second_way_to_pacman_ = 0;
+      crashed_ = 0;
 
 
       seek(paccy);
@@ -281,8 +303,14 @@ void Ghost3::do_if_checkpoint( std::vector<SDL_Rect> checkmaze, Pacman paccy )
 
 //Sets the moving direction towards pacman
 void Ghost1::seek(Pacman paccy)
-{  
- 
+{ 
+  /*
+  std::cout<<"scared_ : "<<scared_<<std::endl;
+  std::cout<<"before seek"<<std::endl;
+  std::cout<<"first: "<<first_way_to_pacman_<<std::endl;
+  std::cout<<"second: "<<second_way_to_pacman_<<std::endl;
+
+*/
   if (first_way_to_pacman_ == 0 && second_way_to_pacman_ == 0) //if we have tried both directions, get a new one
     {
       //pacman_x and pacman_y are the coordinates of pacman
@@ -316,9 +344,16 @@ void Ghost1::seek(Pacman paccy)
 	    {second_way_to_pacman_ = 1;} //go left
 	}
 
+      /*
+      std::cout<<"precis efter sokning : "<<std::endl;
+      std::cout<<"first: "<<first_way_to_pacman_<<std::endl;
+      std::cout<<"second: "<<second_way_to_pacman_<<std::endl;
+      */
+
       if (10*first_way_to_pacman_ + second_way_to_pacman_ == crashed_) //same result for two seeks in a row means we are stuck
 	{
 	  //randomize a direcion
+	  std::cout<<"slumpar"<<std::endl;
 	  first_way_to_pacman_ = rand()% 4 + 1;
 	}  
       
@@ -329,6 +364,11 @@ void Ghost1::seek(Pacman paccy)
 	}
       crashed_ = 10*first_way_to_pacman_ + second_way_to_pacman_;
     }
+  /*
+  std::cout<<"efter seek: "<<std::endl;
+  std::cout<<"first: "<<first_way_to_pacman_<<std::endl;
+  std::cout<<"second: "<<second_way_to_pacman_<<"\n"<<std::endl;
+*/
 }
   
 //sets the moving direction towards pacman at random
@@ -337,7 +377,7 @@ void Ghost2::seek()
   if (first_way_to_pacman_ == 0)
     {
       first_way_to_pacman_ = rand()% 4 + 1;
-      second_way_to_pacman_ = first_way_to_pacman_;
+      second_way_to_pacman_ = rand()% 4 + 1;
     }
  
 }
@@ -421,7 +461,7 @@ void Ghost2::show()
 
 void Ghost3::show()
 {
-  //show the ghost2
+  //show the ghost3
   //apply_surface( box.x, box.y, ghost3, screen );
   Sprite animation;
   animation.show_ghost(box.x, box.y, ghost3);

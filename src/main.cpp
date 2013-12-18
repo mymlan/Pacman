@@ -294,7 +294,24 @@ int main( int argc, char* args[] )
   SDL_Rect checkpoint4 = {375,100,5,5};
   SDL_Rect checkpoint5 = {260,260,5,5};
   SDL_Rect checkpoint6 = {260,500,5,5};
-  //SDL_Rect checkpoint7 = {
+  SDL_Rect checkpoint7 ={175,100,5,5};
+  SDL_Rect checkpoint8={175,260,5,5};
+  SDL_Rect checkpoint9={375,260,5,5};
+  SDL_Rect checkpoint10={375,175,5,5};
+  SDL_Rect checkpoint11={175,460,5,5};
+  SDL_Rect checkpoint12={260,460,5,5};
+  SDL_Rect checkpoint13={415,460,5,5};
+  SDL_Rect checkpoint14={500,460,5,5};
+  SDL_Rect checkpoint15={500,300,5,5};
+  SDL_Rect checkpoint16={570,300,5,5};
+  SDL_Rect checkpoint17={620,175,5,5};
+  SDL_Rect checkpoint18={620,100,5,5};
+  SDL_Rect checkpoint19={620,15,5,5};
+  SDL_Rect checkpoint20={175,175,5,5};
+  SDL_Rect checkpoint21={100,260,5,5};
+  SDL_Rect checkpoint22={100,460,5,5};
+
+//SDL_Rect checkpoint7 = {
   //   SDL_Rect checkpoint8 = {
   // SDL_Rect checkpoint9 = {
   //SDL_Rect checkpoint10 = {
@@ -302,7 +319,7 @@ int main( int argc, char* args[] )
 
   //Create a vector with all the checkpoints
 
-  std::vector<SDL_Rect> checkmaze = {checkpoint1,checkpoint2,checkpoint3,checkpoint4,checkpoint5,checkpoint6};
+  std::vector<SDL_Rect> checkmaze = {checkpoint1,checkpoint2,checkpoint3,checkpoint4,checkpoint5,checkpoint6,checkpoint7,checkpoint8,checkpoint9,checkpoint10,checkpoint11,checkpoint12,checkpoint13,checkpoint14,checkpoint15,checkpoint16,checkpoint17,checkpoint18,checkpoint19,checkpoint20,checkpoint21,checkpoint22};
 
  
     // Clip the sprite sheet
@@ -448,72 +465,53 @@ int main( int argc, char* args[] )
 	myGhost2.move(maze);
 	myGhost3.move(maze);
 
-
-	if(checktimer1.get_ticks() > 40) //was it long enough since we found a checkpoint?
-	  {myGhost1.do_if_checkpoint(checkmaze, myPacman);}
-	checktimer1.start(); //start the timer so that ghost only will look at a checkpoint once
 	
-	if(checktimer2.get_ticks() > 30)
-	  {myGhost2.do_if_checkpoint(checkmaze);}
-	checktimer2.start();
+	if(!checktimer1.is_started()) //If the timer is off, turn it on
+	  {checktimer1.start();}
+	
 
-	if(checktimer3.get_ticks() > 30)
-	  {myGhost3.do_if_checkpoint(checkmaze,myPacman);}
-	checktimer3.start();
+
+	if(checktimer1.get_ticks() > 300) //was it long enough since we found a checkpoint?
+	  {
+	    myGhost1.do_if_checkpoint(checkmaze, myPacman);
+	    if(myGhost1.is_checkpoint(checkmaze, myPacman))
+	      {checktimer1.start();} //restart the timer so that ghost only will look at a checkpoint once
+	  }
+	
+
+
+	if(!checktimer2.is_started()) //If the timer is off, turn it on
+	  {checktimer2.start();}
+
+	if(checktimer2.get_ticks() > 300) //was it long enough since we found a checkpoint?
+	  {
+	    myGhost2.do_if_checkpoint(checkmaze);
+	    if(myGhost2.is_checkpoint(checkmaze))
+	      {checktimer2.start();} //restart the timer so that ghost only will look at a checkpoint once
+	  }
+
+
+	if(!checktimer3.is_started()) //If the timer is off, turn it on
+	  {checktimer3.start();}
+	
+	
+	if(checktimer3.get_ticks() > 1000) //was it long enough since we found a checkpoint?
+	  {
+	    myGhost3.do_if_checkpoint(checkmaze, myPacman);
+	    if(myGhost3.is_checkpoint(checkmaze, myPacman))
+	      {checktimer3.start();} //restart the timer so that ghost only will look at a checkpoint once
+	  }
+
+
 
 
 	//Is a ghost eating Pacman or are Pacman eating a ghost
-
-
-	/*
-	if (myPacman.eat_eaten(myGhost, myScore))
+	if (myPacman.eat_eaten(myGhost1, myScore) || myPacman.eat_eaten(myGhost2, myScore) || myPacman.eat_eaten(myGhost3, myScore))
 	  {
 	    if (myPacman.game_over())
 	      {
-	    	if (myHighscore.is_new_highscore(myScore))
-		  {
-		    std::cout << "Nytt rekord" << std::endl;
-		    myHighscore.save_new_highscore(myScore);
-		    quit=true;	
-		  }
-	      }
-	  }
-
-	*/
-	if (myPacman.eat_eaten(myGhost1, myScore))
-	  {
-	    if (myPacman.game_over())
-	      {
-
 		if (myHighscore.is_new_highscore(myScore))
 		  {
-		    quit=true;
-		    myHighscore.save_new_highscore(myScore);	
-		  }
-	      }
-	  }
-
-	if (myPacman.eat_eaten(myGhost2, myScore))
-	  {
-	    if (myPacman.game_over())
-	      {
-
-		if (myHighscore.is_new_highscore(myScore))
-		  {
-		    quit=true;
-		    myHighscore.save_new_highscore(myScore);	
-		  }
-	      }
-	  }
-
-	if (myPacman.eat_eaten(myGhost3, myScore))
-	  {
-	    if (myPacman.game_over())
-	      {
-
-		if (myHighscore.is_new_highscore(myScore))
-		  {
-
 		    quit=true;
 		    myHighscore.save_new_highscore(myScore);	
 		  }
@@ -598,13 +596,6 @@ int main( int argc, char* args[] )
 	//Is a Pacman eating food
 	myPacman.eat_food(food_vector, myScore);
 
-	//myPacman.eat_food(food_vector, myScore);
-      /* {
-	  // if (alla food-pluttar uppätna - spel slut){
-	  //  quit=true;
-	  
-
-	  }*/
 
 	//Is Pacman eating special_food
 	myPacman.eat_special_food(special_food_vector, myScore);
@@ -622,6 +613,9 @@ int main( int argc, char* args[] )
 		myPacman.pacman_change_mood();
 	    }
 
+
+	//denna kod orsakar att spokena vaxlar mellan att vara arga och radda varje uppdatering!
+	/*
 	// Sets ghosts back to chasing Pacman
 	if(special_food_timer.get_ticks() < 5000)
 	  {
@@ -630,13 +624,20 @@ int main( int argc, char* args[] )
 	    myGhost3.change_mood();
 	    special_food_timer.stop();
 	  }
-	
+*/	
 
 
         //Fill the screen white
         //SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0xFF, 0xFF, 0xFF ) );
-       	animation.fill_screen_white();
-	
+	if(myGhost1.is_scared())
+	  {
+	    animation.fill_screen_color();
+	  }
+	else
+	  {
+	    animation.fill_screen_white();
+	  } 
+
         //Show the walls
 	animation.show_walls(maze);
 	
