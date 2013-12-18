@@ -111,6 +111,8 @@ void Ghost::reverse_direction()
       else
 	{second_way_to_pacman_ -= 1;}
     }
+
+  crashed_ = 0;
 }
 
 void Ghost::move(std::vector<SDL_Rect> maze) //checks collision with walls
@@ -500,6 +502,6 @@ void Ghost::change_mood()
     {
       scared_=true;
     }
-  
+  reverse_direction();
 }
 
