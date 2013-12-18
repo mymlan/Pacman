@@ -444,7 +444,7 @@ int main( int argc, char* args[] )
 	if(!checktimer1.is_started()) //If the timer is off, turn it on
 	  {checktimer1.start();}
 	
-	std::cout<<"checktimer1 get ticks visar: "<<checktimer1.get_ticks()<<std::endl;
+
 
 	if(checktimer1.get_ticks() > 300) //was it long enough since we found a checkpoint?
 	  {
