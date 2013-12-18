@@ -445,23 +445,39 @@ int main( int argc, char* args[] )
 	  {checktimer1.start();}
 	
 
-	if(checktimer1.get_ticks() > 100) //was it long enough since we found a checkpoint?
-	  {myGhost1.do_if_checkpoint(checkmaze, myPacman);
-	    checktimer1.start();} //restart the timer so that ghost only will look at a checkpoint once
+
+	if(checktimer1.get_ticks() > 300) //was it long enough since we found a checkpoint?
+	  {
+	    myGhost1.do_if_checkpoint(checkmaze, myPacman);
+	    if(myGhost1.is_checkpoint(checkmaze, myPacman))
+	      {checktimer1.start();} //restart the timer so that ghost only will look at a checkpoint once
+	  }
 	
-	if(!checktimer2.is_started())
+
+
+	if(!checktimer2.is_started()) //If the timer is off, turn it on
 	  {checktimer2.start();}
 
-	if(checktimer2.get_ticks() > 100)
-	  {myGhost2.do_if_checkpoint(checkmaze);
-	    checktimer2.start();}
+	if(checktimer2.get_ticks() > 300) //was it long enough since we found a checkpoint?
+	  {
+	    myGhost2.do_if_checkpoint(checkmaze);
+	    if(myGhost2.is_checkpoint(checkmaze))
+	      {checktimer2.start();} //restart the timer so that ghost only will look at a checkpoint once
+	  }
 
-	if(!checktimer3.is_started())
+
+	if(!checktimer3.is_started()) //If the timer is off, turn it on
 	  {checktimer3.start();}
+	
+	
+	if(checktimer3.get_ticks() > 300) //was it long enough since we found a checkpoint?
+	  {
+	    myGhost3.do_if_checkpoint(checkmaze, myPacman);
+	    if(myGhost3.is_checkpoint(checkmaze, myPacman))
+	      {checktimer3.start();} //restart the timer so that ghost only will look at a checkpoint once
+	  }
 
-	if(checktimer3.get_ticks() > 100)
-	  {myGhost3.do_if_checkpoint(checkmaze,myPacman);
-	    checktimer3.start();}
+
 
 
 	//Is a ghost eating Pacman or are Pacman eating a ghost
