@@ -383,7 +383,7 @@ int main( int argc, char* args[] )
 			    if( event.type == SDL_QUIT )
 			      {
 				//Quit the program
-				quit = true; cont = true;
+				quit = true; cont = true; std::cout<<"Game quit!"<<std::endl; 
 			      }
 			    //=========================================================
 			    SDL_Surface *new_screen = NULL; // Experiment
@@ -393,14 +393,15 @@ int main( int argc, char* args[] )
 			      {
 				switch(event.key.keysym.sym)
 				  {
-				  case SDLK_p: cont = true; std::cout << "Spela!!"<< std::endl; break;
-				  case SDLK_q: cont = true ; quit = true; std::cout << "Game quit" << std::endl; break;
-				  case SDLK_h: animation.init(new_screen); 
+				  case SDLK_p: cont = true; std::cout << "Play!"<< std::endl; break;
+				  case SDLK_q: cont = true ; quit = true; std::cout << "Game quit" << std::endl; return 0; break;
+				  case SDLK_h: animation.init(new_screen, "Highscore");
 				    Highscore_screen Highscore(400,10, "HIGHSCORE");
 				    
 				    Highscore.show();
 				    myHighscore.show();
 				    animation.update_screen();
+				    std::cout<< "Highscore. Game paused."<<std::endl;
 				    break; //test
 				  }
 				
@@ -439,18 +440,28 @@ int main( int argc, char* args[] )
 	myGhost2.move(maze);
 	myGhost3.move(maze);
 
-
-	if(checktimer1.get_ticks() > 40) //was it long enough since we found a checkpoint?
-	  {myGhost1.do_if_checkpoint(checkmaze, myPacman);}
-	checktimer1.start(); //start the timer so that ghost only will look at a checkpoint once
 	
-	if(checktimer2.get_ticks() > 30)
-	  {myGhost2.do_if_checkpoint(checkmaze);}
-	checktimer2.start();
+	if(!checktimer1.is_started()) //If the timer is off, turn it on
+	  {checktimer1.start();}
+	
 
-	if(checktimer3.get_ticks() > 30)
-	  {myGhost3.do_if_checkpoint(checkmaze,myPacman);}
-	checktimer3.start();
+	if(checktimer1.get_ticks() > 100) //was it long enough since we found a checkpoint?
+	  {myGhost1.do_if_checkpoint(checkmaze, myPacman);
+	    checktimer1.start();} //restart the timer so that ghost only will look at a checkpoint once
+	
+	if(!checktimer2.is_started())
+	  {checktimer2.start();}
+
+	if(checktimer2.get_ticks() > 100)
+	  {myGhost2.do_if_checkpoint(checkmaze);
+	    checktimer2.start();}
+
+	if(!checktimer3.is_started())
+	  {checktimer3.start();}
+
+	if(checktimer3.get_ticks() > 100)
+	  {myGhost3.do_if_checkpoint(checkmaze,myPacman);
+	    checktimer3.start();}
 
 
 	//Is a ghost eating Pacman or are Pacman eating a ghost
@@ -504,6 +515,7 @@ int main( int argc, char* args[] )
 
 		if (myHighscore.is_new_highscore(myScore))
 		  {
+
 		    quit=true;
 		    myHighscore.save_new_highscore(myScore);	
 		  }
@@ -513,7 +525,22 @@ int main( int argc, char* args[] )
 	//Om alla Food objekt är uppätna avslutas spelet. Ska troligtvis ske något annat
 	if(myPacman.no_food_left())
 	  {
-	    quit=true;
+	    bool cont=false;
+	    End_game game_over;
+	    SDL_Surface *new_screen = NULL; // Experiment
+	    animation.init(new_screen,"Game Over!!!");
+	    game_over.show();
+	    animation.update_screen();
+	    while(!cont){
+	      while(SDL_PollEvent( &event))
+		{
+		  switch(event.key.keysym.sym)
+		    {
+		    case SDLK_q: quit=true; cont=true; return 0;  break;
+		    }
+		}
+	    }
+	    //quit=true;
 	  }
 
 
@@ -545,6 +572,9 @@ int main( int argc, char* args[] )
 		myPacman.pacman_change_mood();
 	    }
 
+
+	//denna kod orsakar att spokena vaxlar mellan att vara arga och radda varje uppdatering!
+	/*
 	// Sets ghosts back to chasing Pacman
 	if(special_food_timer.get_ticks() < 5000)
 	  {
@@ -553,7 +583,7 @@ int main( int argc, char* args[] )
 	    myGhost3.change_mood();
 	    special_food_timer.stop();
 	  }
-	
+*/	
 
 
         //Fill the screen white

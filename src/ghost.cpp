@@ -97,15 +97,20 @@ Ghost3::Ghost3()
 
 void Ghost::reverse_direction()
 {
-  if (first_way_to_pacman_ == 1 || 3)
-    {first_way_to_pacman_ += 1;}
-  else
-    {first_way_to_pacman_ -= 1;}
-  
-  if (second_way_to_pacman_ == 1 || 3)
-    {second_way_to_pacman_ += 1;}
-  else
-    {second_way_to_pacman_ -= 1;}
+  if (first_way_to_pacman_ != 0)
+    {
+      if (first_way_to_pacman_ == 1 || first_way_to_pacman_ == 3)
+	{first_way_to_pacman_ += 1;}
+      else
+	{first_way_to_pacman_ -= 1;}
+    }
+  if (second_way_to_pacman_ != 0)
+    {
+      if (second_way_to_pacman_ == 1 ||second_way_to_pacman_ == 3)
+	{second_way_to_pacman_ += 1;}
+      else
+	{second_way_to_pacman_ -= 1;}
+    }
 }
 
 void Ghost::move(std::vector<SDL_Rect> maze) //checks collision with walls
@@ -170,8 +175,8 @@ bool Ghost1::is_checkpoint(std::vector<SDL_Rect> checkmaze, Pacman paccy) //look
   Sprite animation;
 
   //check if ghost is right on top of checkpoint, and not just at the checkpoints corner
-  box.x -= 2*xVel;
-  box.y -= 2*yVel;
+  box.x -= 2/3*xVel;
+  box.y -= 2/3*yVel;
   
   //check for checkpoint collission
   for(std::vector<SDL_Rect>::iterator it = checkmaze.begin() ; it != checkmaze.end(); ++it) //try all the checkpoints
@@ -179,16 +184,16 @@ bool Ghost1::is_checkpoint(std::vector<SDL_Rect> checkmaze, Pacman paccy) //look
       if( animation.check_collision( box, *it ) )
 	{
 	  //restore actual position
-	  box.x += 2*xVel;
-	  box.y += 2*yVel;
+	  box.x += 2/3*xVel;
+	  box.y += 2/3*yVel;
 
 	  return true;
 	}
     }
  
   //restore actual position
-  box.x += 2*xVel;
-  box.y += 2*yVel;
+  box.x += 2/3*xVel;
+  box.y += 2/3*yVel;
   return false;
 }
 
@@ -281,8 +286,11 @@ void Ghost3::do_if_checkpoint( std::vector<SDL_Rect> checkmaze, Pacman paccy )
 
 //Sets the moving direction towards pacman
 void Ghost1::seek(Pacman paccy)
-{  
- 
+{ 
+  std::cout<<"scared_ : "<<scared_<<std::endl;
+  std::cout<<"before seek"<<std::endl;
+  std::cout<<"first: "<<first_way_to_pacman_<<std::endl;
+  std::cout<<"second: "<<second_way_to_pacman_<<std::endl;
   if (first_way_to_pacman_ == 0 && second_way_to_pacman_ == 0) //if we have tried both directions, get a new one
     {
       //pacman_x and pacman_y are the coordinates of pacman
@@ -315,10 +323,13 @@ void Ghost1::seek(Pacman paccy)
 	  else 
 	    {second_way_to_pacman_ = 1;} //go left
 	}
-
+std::cout<<"precis efter sokning : "<<std::endl;
+  std::cout<<"first: "<<first_way_to_pacman_<<std::endl;
+  std::cout<<"second: "<<second_way_to_pacman_<<std::endl;
       if (10*first_way_to_pacman_ + second_way_to_pacman_ == crashed_) //same result for two seeks in a row means we are stuck
 	{
 	  //randomize a direcion
+	  std::cout<<"slumpar"<<std::endl;
 	  first_way_to_pacman_ = rand()% 4 + 1;
 	}  
       
@@ -329,6 +340,10 @@ void Ghost1::seek(Pacman paccy)
 	}
       crashed_ = 10*first_way_to_pacman_ + second_way_to_pacman_;
     }
+
+  std::cout<<"efter seek: "<<std::endl;
+  std::cout<<"first: "<<first_way_to_pacman_<<std::endl;
+  std::cout<<"second: "<<second_way_to_pacman_<<"\n"<<std::endl;
 }
   
 //sets the moving direction towards pacman at random
@@ -474,6 +489,6 @@ void Ghost::change_mood()
     {
       scared_=true;
     }
-  reverse_direction();
+  
 }
 
