@@ -470,7 +470,7 @@ int main( int argc, char* args[] )
 	  {checktimer3.start();}
 	
 	
-	if(checktimer3.get_ticks() > 300) //was it long enough since we found a checkpoint?
+	if(checktimer3.get_ticks() > 1000) //was it long enough since we found a checkpoint?
 	  {
 	    myGhost3.do_if_checkpoint(checkmaze, myPacman);
 	    if(myGhost3.is_checkpoint(checkmaze, myPacman))
