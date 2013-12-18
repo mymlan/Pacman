@@ -615,16 +615,16 @@ int main( int argc, char* args[] )
 
 
 	//denna kod orsakar att spokena vaxlar mellan att vara arga och radda varje uppdatering!
-	/*
+	
 	// Sets ghosts back to chasing Pacman
-	if(special_food_timer.get_ticks() < 5000)
+	if(special_food_timer.get_ticks() > 5000)
 	  {
 	    myGhost1.change_mood();
 	    myGhost2.change_mood();
 	    myGhost3.change_mood();
 	    special_food_timer.stop();
 	  }
-*/	
+	
 
 
         //Fill the screen white
