@@ -26,6 +26,7 @@
 #include "highscore.h"
 #include "timer.h"
 #include "menu.h"
+#include "string_input.h"
 
 //============================================================================
 //  MAIN
@@ -33,6 +34,7 @@
 
 int main( int argc, char* args[] )
 {
+  SDL_EnableUNICODE( SDL_ENABLE );
 
     //Quit flag
     bool quit = false;
@@ -60,6 +62,10 @@ int main( int argc, char* args[] )
 
     //Highscore
     Highscore myHighscore;
+
+
+    //StringInput
+    StringInput PlayerName;
 
 
     //Initialize Food
@@ -189,7 +195,7 @@ int main( int argc, char* args[] )
     Food myFood109(610,370);
     Food myFood110(610,410);
     
-
+    /*
     //create vectorwith all food in, called food_vector
     std::vector<Food> food_vector = 
       {myFood1,myFood2,myFood3,myFood4,myFood5,myFood6,myFood7,myFood8,myFood9,myFood10,
@@ -203,7 +209,9 @@ int main( int argc, char* args[] )
        myFood81,myFood82,myFood83,myFood84,myFood85,myFood86,myFood87,myFood88,myFood89,myFood90,
        myFood91,myFood92,myFood93,myFood94,myFood95,myFood96,myFood97,myFood98,myFood99,myFood100,
        myFood101,myFood102,myFood103,myFood104,myFood105,myFood106,myFood107,myFood108,myFood109,myFood110};
-
+    */
+    std::vector<Food> food_vector = {myFood50};
+    
    
 
     //Special_food
@@ -518,20 +526,72 @@ int main( int argc, char* args[] )
 	    bool cont=false;
 	    End_game game_over;
 	    SDL_Surface *new_screen = NULL; // Experiment
-	    animation.init(new_screen,"Game Over!!!");
+	    animation.init(new_screen,"Enter Name");
 	    game_over.show();
 	    animation.update_screen();
-	    while(!cont){
-	      while(SDL_PollEvent( &event))
-		{
-		  switch(event.key.keysym.sym)
-		    {
-		    case SDLK_q: quit=true; cont=true; return 0;  break;
-		    }
-		}
-	    }
+	    
+	    //Keep track if whether or not the user has entered their name
+	    
+	    
+	    
+	      
+		
+	    bool nameEntered = false;
+	    	while(!nameEntered)
+		  {
+		    while(SDL_PollEvent( &event))
+		      {
+	
+		    //If the user hasn't entered their name yet
+		    if( nameEntered == false )
+		      {
+			
+			  //Get user input
+			  PlayerName.handle_input();
+			  //std::cout<< "knapptryck"<< std::endl;
+			  
+			  //If the enter key was pressed
+			  if( ( event.type == SDL_KEYDOWN ) && ( event.key.keysym.sym == SDLK_RETURN ) )
+			    {
+			      //Change the flag
+			      nameEntered = true;
+			      //cont =true;///////
+			      std::cout<< PlayerName.get_str()<< std::endl;
+			      std::cout<< "Enter"<< std::endl;
+				   //måste cleana oxå
+			      //return 0;
+			      
+			      
+			      //Change the message
+			      // message = TTF_RenderText_Solid( font, "Rank: 1st", textColor );
+			    }
+			
+
+
+			PlayerName.show_centered();
+			animation.update_screen();
+			
+			// std::cout<< PlayerName.get_str() << std::endl;
+			//std::cout<< "Fyfan" << std::endl;
+		      }
+		  }
+		
+		
+		/* switch(event.key.keysym.sym)
+		   {
+		   case SDLK_q: quit=true; cont=true; return 0;  break;
+		   }
+		*/
+	      }
+
+	      PlayerName.show_centered();
+	       animation.update_screen();
+	  
+
+	       //}
 	    //quit=true;
-	  }
+	      }
+	  
 
 
 

@@ -86,6 +86,7 @@ SDL_Rect clipsInfopanel[ 1 ];
 TTF_Font *scoreFont = NULL;
 TTF_Font *headerFont= NULL;
 TTF_Font *infoFont=NULL;
+TTF_Font *inputFont=NULL;
 
 //The color of the font
 SDL_Color textColor = {0,0,0,0};
@@ -406,6 +407,19 @@ bool Sprite::load_files()
 
 
 
+    //Open the font
+    inputFont = TTF_OpenFont( "img/lazy.ttf", 42 );
+    
+    
+    //If there was an error in loading the font
+    if( inputFont == NULL )
+      {
+	return false;
+      }
+
+
+
+
     //Load Special_Food
     special_food = load_image( "img/special_food.bmp" );
     if (special_food ==NULL)
@@ -588,7 +602,14 @@ void Sprite::clean_up()
     SDL_FreeSurface( score );
     SDL_FreeSurface( startup);
     SDL_FreeSurface( menu);
-              
+
+    //Close the font that was used
+    TTF_CloseFont( inputFont );
+             
+    
+    //Quit SDL_ttf
+    TTF_Quit();
+
     //Quit SDL
     SDL_Quit();
 }

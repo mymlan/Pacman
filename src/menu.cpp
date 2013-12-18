@@ -186,7 +186,7 @@ End_game::End_game()
   //Initialize
   button.x=400;
   button.y=10;
-  message_="Game Over Big Girl!";
+  message_="You win! Enter highscore!";
 
   //Set dimension
   button.w = BUTTON_WIDTH;

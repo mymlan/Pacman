@@ -83,6 +83,7 @@ extern SDL_Rect clipsInfopanel[ 1 ];
 extern TTF_Font *scoreFont ;
 extern TTF_Font *headerFont;
 extern TTF_Font *infoFont;
+extern TTF_Font *inputFont;
 
 //The color of the font
 extern SDL_Color textColor ;
