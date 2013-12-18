@@ -204,15 +204,26 @@ bool Ghost1::is_checkpoint(std::vector<SDL_Rect> checkmaze, Pacman paccy) //look
 bool Ghost2::is_checkpoint(std::vector<SDL_Rect> checkmaze) //looks for a checkpoint
 {
   Sprite animation;
+
+  //check if ghost is right on top of checkpoint, and not just at the checkpoints corner
+  box.x -= xVel;
+  box.y -= yVel;
+
   //check for checkpoint collission
   for(std::vector<SDL_Rect>::iterator it = checkmaze.begin() ; it != checkmaze.end(); ++it) //try all the checkpoints
     {
       if(animation.check_collision( box, *it ) )
 	{
+	  //restore actual position
+	  box.x += xVel;
+	  box.y += yVel;
+
 	  return true;
 	}
     }
-  
+    //restore actual position
+  box.x += xVel;
+  box.y += yVel;
   return false;
 }
 
@@ -221,26 +232,24 @@ bool Ghost3::is_checkpoint(std::vector<SDL_Rect> checkmaze, Pacman paccy) //look
   Sprite animation;
 
  //check if ghost is right on top of checkpoint, and not just at the checkpoints corner
-  box.x -= 2*xVel;
-  box.y -= 2*yVel;
+  box.x -= xVel;
+  box.y -= yVel;
 
   //check for checkpoint collission
   for(std::vector<SDL_Rect>::iterator it = checkmaze.begin() ; it != checkmaze.end(); ++it) //try all the checkpoints
     {
       if( animation.check_collision( box, *it ))
 	{
-	  
 	  //restore actual position
-	  box.x += 2*xVel;
-	  box.y += 2*yVel;
+	  box.x += xVel;
+	  box.y += yVel;
 	  
 	  return true;
 	}
-      
     }
   //restore actual position
-  box.x += 2*xVel;
-  box.y += 2*yVel;
+  box.x += xVel;
+  box.y += yVel;
   return false;
   
 }
@@ -265,6 +274,9 @@ void Ghost2::do_if_checkpoint( std::vector<SDL_Rect> checkmaze )
 {
   if(is_checkpoint(checkmaze))
     {
+      //make a fresh seek if ghost reaches a checkpoint
+      first_way_to_pacman_ = 0;
+      second_way_to_pacman_ = 0;
       seek();
     }
 }
@@ -365,7 +377,7 @@ void Ghost2::seek()
   if (first_way_to_pacman_ == 0)
     {
       first_way_to_pacman_ = rand()% 4 + 1;
-      second_way_to_pacman_ = first_way_to_pacman_;
+      second_way_to_pacman_ = rand()% 4 + 1;
     }
  
 }

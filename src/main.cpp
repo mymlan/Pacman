@@ -286,7 +286,24 @@ int main( int argc, char* args[] )
   SDL_Rect checkpoint4 = {375,100,5,5};
   SDL_Rect checkpoint5 = {260,260,5,5};
   SDL_Rect checkpoint6 = {260,500,5,5};
-  //SDL_Rect checkpoint7 = {
+  SDL_Rect checkpoint7 ={175,100,5,5};
+  SDL_Rect checkpoint8={175,260,5,5};
+  SDL_Rect checkpoint9={375,260,5,5};
+  SDL_Rect checkpoint10={375,175,5,5};
+  SDL_Rect checkpoint11={175,460,5,5};
+  SDL_Rect checkpoint12={260,460,5,5};
+  SDL_Rect checkpoint13={415,460,5,5};
+  SDL_Rect checkpoint14={500,460,5,5};
+  SDL_Rect checkpoint15={500,300,5,5};
+  SDL_Rect checkpoint16={570,300,5,5};
+  SDL_Rect checkpoint17={620,175,5,5};
+  SDL_Rect checkpoint18={620,100,5,5};
+  SDL_Rect checkpoint19={620,15,5,5};
+  SDL_Rect checkpoint20={175,175,5,5};
+  SDL_Rect checkpoint21={100,260,5,5};
+  SDL_Rect checkpoint22={100,460,5,5};
+
+//SDL_Rect checkpoint7 = {
   //   SDL_Rect checkpoint8 = {
   // SDL_Rect checkpoint9 = {
   //SDL_Rect checkpoint10 = {
@@ -294,7 +311,7 @@ int main( int argc, char* args[] )
 
   //Create a vector with all the checkpoints
 
-  std::vector<SDL_Rect> checkmaze = {checkpoint1,checkpoint2,checkpoint3,checkpoint4,checkpoint5,checkpoint6};
+  std::vector<SDL_Rect> checkmaze = {checkpoint1,checkpoint2,checkpoint3,checkpoint4,checkpoint5,checkpoint6,checkpoint7,checkpoint8,checkpoint9,checkpoint10,checkpoint11,checkpoint12,checkpoint13,checkpoint14,checkpoint15,checkpoint16,checkpoint17,checkpoint18,checkpoint19,checkpoint20,checkpoint21,checkpoint22};
 
  
     // Clip the sprite sheet
@@ -470,7 +487,7 @@ int main( int argc, char* args[] )
 	  {checktimer3.start();}
 	
 	
-	if(checktimer3.get_ticks() > 300) //was it long enough since we found a checkpoint?
+	if(checktimer3.get_ticks() > 1000) //was it long enough since we found a checkpoint?
 	  {
 	    myGhost3.do_if_checkpoint(checkmaze, myPacman);
 	    if(myGhost3.is_checkpoint(checkmaze, myPacman))
