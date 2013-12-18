@@ -294,6 +294,14 @@ int main( int argc, char* args[] )
   SDL_Rect checkpoint12={260,460,5,5};
   SDL_Rect checkpoint13={415,460,5,5};
   SDL_Rect checkpoint14={500,460,5,5};
+  SDL_Rect checkpoint15={500,300,5,5};
+  SDL_Rect checkpoint16={570,300,5,5};
+  SDL_Rect checkpoint17={620,175,5,5};
+  SDL_Rect checkpoint18={620,100,5,5};
+  SDL_Rect checkpoint19={620,15,5,5};
+  SDL_Rect checkpoint20={175,175,5,5};
+  SDL_Rect checkpoint21={100,260,5,5};
+  SDL_Rect checkpoint22={100,460,5,5};
 
 //SDL_Rect checkpoint7 = {
   //   SDL_Rect checkpoint8 = {
@@ -303,7 +311,7 @@ int main( int argc, char* args[] )
 
   //Create a vector with all the checkpoints
 
-  std::vector<SDL_Rect> checkmaze = {checkpoint1,checkpoint2,checkpoint3,checkpoint4,checkpoint5,checkpoint6,checkpoint7,checkpoint8,checkpoint9,checkpoint10,checkpoint11,checkpoint12,checkpoint13,checkpoint14};
+  std::vector<SDL_Rect> checkmaze = {checkpoint1,checkpoint2,checkpoint3,checkpoint4,checkpoint5,checkpoint6,checkpoint7,checkpoint8,checkpoint9,checkpoint10,checkpoint11,checkpoint12,checkpoint13,checkpoint14,checkpoint15,checkpoint16,checkpoint17,checkpoint18,checkpoint19,checkpoint20,checkpoint21,checkpoint22};
 
  
     // Clip the sprite sheet
