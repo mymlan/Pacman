@@ -19,6 +19,7 @@
 #include <algorithm>
 #include "highscore.h"
 #include "menu.h"
+#include "score.h"
 
 
 //============================================================================
@@ -46,10 +47,10 @@ void Highscore::save_new_highscore(Score& new_highscore)
   std::ofstream outputFile ("src/highscore.txt", std::ios::binary);
   //Highscore highscore_entry{new_score, "Ingrid"};
   new_highscore.set_name("ingrid");
-   highscoretable.push_back(new_highscore);
-   // std::stable_sort (highscoretable.begin(), highscoretable.end());
-   std::reverse(highscoretable.begin(),highscoretable.end());
-   if (highscoretable.size() == 11)
+  highscoretable.push_back(new_highscore);
+  std::sort (highscoretable.begin(), highscoretable.end());
+  // std::reverse(highscoretable.begin(),highscoretable.end());
+  if (highscoretable.size() == 6)
     {
       highscoretable.pop_back();
     }
@@ -58,8 +59,10 @@ void Highscore::save_new_highscore(Score& new_highscore)
       outputFile << highscoretable[i].return_score() << std::endl;
       outputFile << highscoretable[i].return_name() << std::endl;
     }
-    outputFile.close();
+  outputFile.close();
 }
+
+
 
 void Highscore::load_list()
 {
@@ -103,7 +106,7 @@ void Highscore::show()
     std::string entry;
     entry.append(position_str).append(highscoretable[i].return_name()).append(" ").append(points_str);
     
-    Highscore_screen myHighscorelist(350,100+50*i, entry);
+    Highscore_screen myHighscorelist(400,100+50*i, entry);
     myHighscorelist.show();
   }
 }
