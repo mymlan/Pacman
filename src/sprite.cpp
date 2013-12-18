@@ -572,7 +572,11 @@ void Sprite::fill_screen_white()
 {
   SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0xFF, 0xFF, 0xFF ) );
 }
-	
+
+void Sprite::fill_screen_color()
+{
+  SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0x3, 0x5, 0x80 ) );
+}	
 
 //============================================================================
 //  Memory release
