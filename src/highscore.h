@@ -36,7 +36,6 @@ public:
   void save_new_highscore(Score&);
   void show();
   void load_list();
-  
 };
 
 #endif
