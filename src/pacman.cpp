@@ -43,7 +43,7 @@ Pacman::Pacman()
     y= 440;
 
     //Initialize lives of Pacman
-    lives = 0;
+    lives = 2;
 
  //Initialize animation variables
     frame = 0;
