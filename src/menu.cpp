@@ -122,7 +122,7 @@ void Start::show_infopanel(SDL_Surface* screen) const
 }
 
 
-void Start::handle_input(bool &proceed, bool &quit)
+void Start::handle_input(bool &proceed, bool &quit, SDL_Event event)
   
 {
   if(event.type == SDL_KEYDOWN)
