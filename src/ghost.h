@@ -29,6 +29,7 @@
 //================================== GHOST ============================================================== 
 class Ghost : public Sprite
 {
+
 protected:
   //keeps track of previous direction, helps the ghosts from getting stuck.
    int crashed_;
@@ -40,8 +41,8 @@ protected:
   int xVel, yVel;
 
 //The attributes of the Pacman
-  const int PACMAN_WIDTH  {30};
-  const int PACMAN_HEIGHT {29};
+  const int GHOST_WIDTH  {30};
+  const int GHOST_HEIGHT {29};
 
   //Angry or scare ghost. false is  angry, true is scared
   bool scared_;
@@ -51,7 +52,7 @@ protected:
   int first_way_to_pacman_;
   int second_way_to_pacman_;
 public:
-  Ghost() = default;
+
   
   //Moves the ghost
   void move(std::vector<SDL_Rect>);
@@ -63,7 +64,7 @@ public:
   void reverse_direction();
  
   //Sets Ghost position to startposition
-  virtual void get_home() = 0;
+  virtual void Get_home() = 0;
   
   //Returns if ghost is scared/angry
   bool is_scared();

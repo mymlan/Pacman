@@ -41,12 +41,39 @@ Ghost1::Ghost1()
   crashed_ = 24;
 
   //Set the ghost's dimensions
-  box.w = PACMAN_WIDTH;    //we should change the global constants names PACMAN_WIDTH to CHARACTER_WIDTH
-  box.h = PACMAN_HEIGHT;
+  box.w = GHOST_WIDTH;    //we should change the global constants names PACMAN_WIDTH to CHARACTER_WIDTH
+  box.h = GHOST_HEIGHT;
 
   //Initialize the velocity
   xVel = 10;
   yVel = 0;
+
+  //The image that's loaded
+  SDL_Surface* loadedImage = NULL;
+
+  //The optimized surface that will be used
+  SDL_Surface* optimizedImage = NULL;
+
+  //Load the image
+  loadedImage = IMG_Load("img/ghost-picture.bmp");
+
+  //If the image loaded
+  if( loadedImage != NULL )
+    {
+      //Create an optimized surface
+      optimizedImage = SDL_DisplayFormat(  );
+
+      //Free the old surface
+      SDL_FreeSurface( loadedImage );
+
+      //If the surface was optimized
+      if( optimizedImage != NULL )
+        {
+	  //Color key surface
+	  SDL_SetColorKey( optimizedImage, SDL_SRCCOLORKEY, SDL_MapRGB( optimizedImage->format, 0, 0xFF, 0xFF ) );
+        }
+    }  
+  *ytpekare =  optimizedImage;
 }
 
 Ghost2::Ghost2()
@@ -68,6 +95,33 @@ Ghost2::Ghost2()
   //Initialize the velocity
   xVel = 10;
   yVel = 0;
+//The image that's loaded
+  SDL_Surface* loadedImage = NULL;
+
+  //The optimized surface that will be used
+  SDL_Surface* optimizedImage = NULL;
+
+  //Load the image
+  loadedImage = IMG_Load("img/ghost-picture2.bmp");
+
+  //If the image loaded
+  if( loadedImage != NULL )
+    {
+      //Create an optimized surface
+      optimizedImage = SDL_DisplayFormat(  );
+
+      //Free the old surface
+      SDL_FreeSurface( loadedImage );
+
+      //If the surface was optimized
+      if( optimizedImage != NULL )
+        {
+	  //Color key surface
+	  SDL_SetColorKey( optimizedImage, SDL_SRCCOLORKEY, SDL_MapRGB( optimizedImage->format, 0, 0xFF, 0xFF ) );
+        }
+    }  
+  *ytpekare =  optimizedImage;
+
 }
 
 Ghost3::Ghost3()
@@ -93,6 +147,33 @@ Ghost3::Ghost3()
   //Initialize the velocity
   xVel = 0;
   yVel = 10;
+  //The image that's loaded
+  SDL_Surface* loadedImage = NULL;
+
+  //The optimized surface that will be used
+  SDL_Surface* optimizedImage = NULL;
+
+  //Load the image
+  loadedImage = IMG_Load("img/ghost-picture3.bmp");
+
+  //If the image loaded
+  if( loadedImage != NULL )
+    {
+      //Create an optimized surface
+      optimizedImage = SDL_DisplayFormat(  );
+
+      //Free the old surface
+      SDL_FreeSurface( loadedImage );
+
+      //If the surface was optimized
+      if( optimizedImage != NULL )
+        {
+	  //Color key surface
+	  SDL_SetColorKey( optimizedImage, SDL_SRCCOLORKEY, SDL_MapRGB( optimizedImage->format, 0, 0xFF, 0xFF ) );
+        }
+    }  
+  *ytpekare =  optimizedImage;
+
 }
 
 void Ghost::reverse_direction()

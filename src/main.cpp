@@ -85,13 +85,13 @@ extern const int MAP_WIDTH ;
   bool quit = false;
 
     //Initialize Sprite
-    Sprite animation;
+  Sprite animation;
 
     //Initialize Menu
     Start Startup(0,0,"PACMAN");
 
     //The pacman
-    Pacman myPacman;
+    Pacman myPacman();
 
     //The ghost
     Ghost1 myGhost1;
