@@ -35,6 +35,7 @@ Pacman::Pacman() // string filename
     //Set the Pacman's dimensions
     box.w = PACMAN_WIDTH;
     box.h = PACMAN_HEIGHT;
+    MAP_WIDTH=640;
 
     //Initialize the velocity
     xVel = 10;
