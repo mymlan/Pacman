@@ -35,10 +35,7 @@ Score::Score()
   //Load player scoreFont
   scoreFont = TTF_OpenFont("img/arial.ttf",28);
 
-  if (scoreFont ==NULL)
-    {
-      return false;
-    }
+  
 }
 
 void Score::reset_score()
