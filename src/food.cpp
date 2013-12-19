@@ -26,7 +26,7 @@
 //============================================================================
 
 
-Food::Food(int x_cord, int y_cord, std::string filename )
+Food::Food(int x_cord, int y_cord ) // string filename
 {
   bool eaten_=false;
  
@@ -45,7 +45,7 @@ Food::Food(int x_cord, int y_cord, std::string filename )
   SDL_Surface* optimizedImage = NULL;
 
   //Load the image
-  loadedImage = IMG_Load( filename.c_str() );
+  loadedImage = IMG_Load( "img/food2.bmp" ); //filename.c_str()
 
   //If the image loaded
   if( loadedImage != NULL )
@@ -102,7 +102,7 @@ void Food::show_all_food(std::vector<Food> food_vector)
 //============================================================================
 //  Class: Special_Food
 //============================================================================
-Special_Food::Special_Food(int x_cord, int y_cord, filename)
+Special_Food::Special_Food(int x_cord, int y_cord) // filename
 {
   bool eaten_=false;
 
@@ -121,7 +121,7 @@ Special_Food::Special_Food(int x_cord, int y_cord, filename)
   SDL_Surface* optimizedImage = NULL;
 
   //Load the image
-  loadedImage = IMG_Load( filename.c_str() );
+  loadedImage = IMG_Load( "img/special_food.bmp" );
 
   //If the image loaded
   if( loadedImage != NULL )

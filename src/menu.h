@@ -37,24 +37,26 @@ public:
  
  Menu(std::string filename): Sprite::Sprite(std::string filename){}
   virtual ~Menu();
-  
-  
-
 };
 
+
+//========================================== START ==============================================
 
 class Start : public Menu
 {
 public:
-  void show() const;
-  void show_infopanel() const;
-  bool is_start();
-  void change_start();
-
-  void handle_input(bool &proceed, bool &quit);
-
   Start(int x, int y, std::string text);
   ~Start();
+
+
+  void show() const;
+  void show_infopanel() const;
+  void handle_input(bool &proceed, bool &quit);
+
+
+  bool is_start();
+  void change_start();
+  
   void set_clips();
   
 private:
@@ -64,21 +66,26 @@ private:
   SDL_Rect clipsStartscr;
   SDL_Rect clipsInfopanel;
   
+  int MAP_WIDTH;
+  int INFOPANEL_WIDTH;
   
 };
 
-
+//========================================== BUTTON ==============================================
 class Button : public Menu
 {
 public:
   ~Button();
   Button(int x, int y, std::string text);
 
-  void show() const = delete;
+  void show() const ;
   void show(int x, int y, const char* header) const;
  private:
   SDL_Surface *textpekare;
 };
+
+
+//====================================== HIGHSCORE_SCREEN=============================================
 
 
 class Highscore_screen : public Menu
@@ -94,6 +101,10 @@ class Highscore_screen : public Menu
   bool is_paused() const;
   void change_pause();
 };
+
+
+//========================================== END_GAME =============================================
+
 
 class End_game : public Menu
 {

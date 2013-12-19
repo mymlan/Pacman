@@ -34,7 +34,7 @@ private:
   SDL_Rect box;
   bool eaten_;
 public:
-  Food(int,int, std::string filename );
+  Food(int,int); //filname
   bool eaten();
   void was_eaten();
   void show() = delete;
@@ -57,7 +57,7 @@ private:
   SDL_Rect box;
   bool eaten_;
 public:
-  Special_Food(int,int, std::string filename);
+  Special_Food(int,int); //filename
   bool eaten();
   void was_eaten();
   void show();

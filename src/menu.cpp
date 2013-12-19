@@ -26,6 +26,59 @@
 
 //========================= START ==============================================
 
+Start::Start(int x, int y, std::string text)
+{
+  //Initialize
+  button.x = x;
+  button.y = y;
+  
+  message_ = text;
+  start = true;
+
+  //Set dimension
+  button.w = BUTTON_WIDTH;
+  button.h = BUTTON_HEIGHT;
+
+  //Load  Font
+  Font = TTF_OpenFont("img/xtrusion.ttf",55);
+
+  if (Font ==NULL)
+    {
+      return false;
+    }
+  textpekare = NULL;
+  
+
+  //The image that's loaded
+  SDL_Surface* loadedImage = NULL;
+
+  //The optimized surface that will be used
+  SDL_Surface* optimizedImage = NULL;
+
+  //Load the image
+  loadedImage = IMG_Load( filename.c_str() );
+
+  //If the image loaded
+  if( loadedImage != NULL )
+    {
+      //Create an optimized surface
+      optimizedImage = SDL_DisplayFormat( loadedImage );
+
+      //Free the old surface
+      SDL_FreeSurface( loadedImage );
+
+      //If the surface was optimized
+      if( optimizedImage != NULL )
+        {
+	  //Color key surface
+	  SDL_SetColorKey( optimizedImage, SDL_SRCCOLORKEY, SDL_MapRGB( optimizedImage->format, 0, 0xFF, 0xFF ) );
+        }
+    }
+
+  
+  *ytpekare =  optimizedImage;
+
+}
 
 Start::~Start()
 {
@@ -45,30 +98,6 @@ Start::~Start()
   SDL_Quit();
 }
 
-Start::Start(int x, int y, std::string text)
-{
-  //Initialize
-  button.x = x;
-  button.y = y;
-  
-  message_ = text;
-  start = true;
-
- //Set dimension
-  button.w = BUTTON_WIDTH;
-  button.h = BUTTON_HEIGHT;
-
-  //Load  Font
-  Font = TTF_OpenFont("img/xtrusion.ttf",55);
-
-  if (Font ==NULL)
-    {
-      return false;
-    }
-  text = NULL;
-
-ytpekare=load
-}
 
 void Start::show() const
 {
@@ -86,6 +115,7 @@ void Start::show_infopanel() const
   textpekare = TTF_RenderText_Solid( Font, header, headerColor );
   apply_surface(660, 30,textpekare, screen); 
 }
+
 
 void Start::handle_input(bool &proceed, bool &quit)
   
@@ -173,8 +203,43 @@ Button::Button(int x, int y, std::string text)
       return false;
     }
 
+
+  //The image that's loaded
+  SDL_Surface* loadedImage = NULL;
+
+  //The optimized surface that will be used
+  SDL_Surface* optimizedImage = NULL;
+
+  //Load the image
+  loadedImage = IMG_Load( filename.c_str() );
+
+  //If the image loaded
+  if( loadedImage != NULL )
+    {
+      //Create an optimized surface
+      optimizedImage = SDL_DisplayFormat( loadedImage );
+
+      //Free the old surface
+      SDL_FreeSurface( loadedImage );
+
+      //If the surface was optimized
+      if( optimizedImage != NULL )
+        {
+	  //Color key surface
+	  SDL_SetColorKey( optimizedImage, SDL_SRCCOLORKEY, SDL_MapRGB( optimizedImage->format, 0, 0xFF, 0xFF ) );
+        }
+    }
+
+  
+  *ytpekare =  optimizedImage;
+
 }
   
+void Button::show() const
+{
+ 
+}
+
 void Button::show(int x, int y, const char* header) const
 {
   textpekare = TTF_RenderText_Solid( infoFont, header , headerColor );

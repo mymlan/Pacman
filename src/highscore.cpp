@@ -82,7 +82,7 @@ void Highscore::load_list()
 
 void Highscore::show()
 {
-  apply_surface(0,0,score,screen);
+  apply_surface(0,0,ytpekare,screen); // ytpekare = score tidigare
 
   load_list();
   int size=highscoretable.size();
