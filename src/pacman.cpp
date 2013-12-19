@@ -36,6 +36,8 @@ Pacman::Pacman() // string filename
     box.w = PACMAN_WIDTH;
     box.h = PACMAN_HEIGHT;
     MAP_WIDTH=640;
+    SCREEN_HEIGHT=480;
+    SCREEN_WIDTH=1000;
 
     //Initialize the velocity
     xVel = 10;
@@ -276,7 +278,7 @@ void Pacman::eat_food(std::vector<Food>& food_vector, Score& myScore) //Food& fo
   for (std::vector<Food>::iterator it = food_vector.begin() ; it != food_vector.end(); ++it)
     {
     
-      if ((check_collision(box, (*it).get_box())) and !(*it).eaten())
+      if ((check_collision(box, (*it).get_box())) and !(*it).eaten))
 	{
 	  myScore.add_points(1);
 	  (*it).was_eaten();
