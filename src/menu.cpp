@@ -106,19 +106,19 @@ Start::~Start()
 
 void Start::show(SDL_Surface* screen) const
 {
-  apply_surface(0,0,ytpekare,screen, &clipsStartscr[0]); 
+  apply_surface(0,0,ytpekare,screen,); 
 }
 
 
 void Start::show_infopanel(SDL_Surface* screen) const
 {
-  for (int i=0; i<=8; i++)
+  /* for (int i=0; i<=8; i++)
     { 
       apply_surface( (MAP_WIDTH+i*INFOPANEL_WIDTH), 0, ytpekare, screen, &clipsInfopanel[0] );
-    }
+      }*/
 
-  textpekare = TTF_RenderText_Solid( Font, surface, color ); //surface =screen
-  apply_surface(660, 30,textpekare, surface); // surface = screen 
+  textpekare = TTF_RenderText_Solid( Font, screen, color ); //surface =screen
+  apply_surface(660, 30,textpekare, screen); // surface = screen 
 }
 
 
@@ -152,7 +152,7 @@ void Start::change_start()
     start =true;
 }
 
-void Start::set_clips()
+/*void Start::set_clips()
 {
   clipsStartscr[ 0 ].x = 0;
   clipsStartscr[ 0 ].y = 0;
@@ -164,7 +164,7 @@ void Start::set_clips()
   clipsInfopanel[ 0 ].w = INFOPANEL_WIDTH;
   clipsInfopanel[ 0 ].h = INFOPANEL_HEIGHT;
 
-}
+  }*/
 
 
 
