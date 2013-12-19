@@ -28,7 +28,6 @@
 #include "menu.h"
 #include "string_input.h"
 
-
 //Set up the screen
 SDL_Surface *screen {NULL};
    
@@ -39,7 +38,7 @@ bool init()
       return false;
     }
 
-  screen = SDL_SetVideoMode( SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE );
+  screen = SDL_SetVideoMode( 1000, 480, 32, SDL_SWSURFACE );
 
   //If there was an error in setting up the screen
   if( screen == NULL )
@@ -69,7 +68,7 @@ bool init(SDL_Surface* screen, std::string caption)
     }
  
   //Set up the screen
-  screen = SDL_SetVideoMode( SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE );
+  screen = SDL_SetVideoMode(1000, 480, 32, SDL_SWSURFACE );
   
  
   //If there was an error in setting up the screen
@@ -100,7 +99,10 @@ int main( int argc, char* args[] )
 {
   SDL_EnableUNICODE( SDL_ENABLE );
 
-  
+
+  //initialize settings
+  // Settings settings;
+
 
   
 //Screen attributes
@@ -117,7 +119,7 @@ extern const int SCREEN_BPP ;
 
 
  //Initialize Menu
- Start Startup(0,0,"PACMAN");
+ Start Startup{0,0,"PACMAN"};
 
 
  //The pacman
