@@ -58,6 +58,8 @@ string_input.o: src/string_input.cpp src/string_input.h
 	$(CCC) $(CCFLAGS) -c src/string_input.cpp
 # 'make clean' tar bort objektkodsfiler och 'core' (minnesdump).
 
+
+
 clean:
 	@ \rm -rf *.o *.gch pacman
 
