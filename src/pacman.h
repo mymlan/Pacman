@@ -38,6 +38,16 @@ private:
   //The velocity of the square
   int xVel, yVel;
 
+  //The attributes of the Pacman
+  const int PACMAN_WIDTH  {30};
+  const int PACMAN_HEIGHT {29};
+
+  //the directions of the pacman
+  const int PACMAN_RIGHT {0};
+  const int PACMAN_LEFT {1};
+  const int PACMAN_UP {2};
+  const int PACMAN_DOWN {3};
+
   //Pacmans lives
   int lives;
  
