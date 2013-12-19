@@ -23,55 +23,40 @@
 #include <algorithm>
 #include "sprite.h"
 
-
-
 //========================================== FOOD ==============================================
 
 //Food
 class Food : public Sprite
 {
-private:
+ private:
   SDL_Rect box;
   bool eaten_;
-public:
-  Food(int,int); //filname
+ public:
+  Food(int,int);
   bool eaten();
   void was_eaten();
   void show() = delete;
   SDL_Rect get_box();
   void show_all_food(std::vector<Food> food_vector);
- 
-
 };
-
-
 //###############################################################################################
 
 //========================================== SPECIAL FOOD =======================================
 
-
 //Special_Food
 class Special_Food : public Sprite
 {
-private:
+ private:
   SDL_Rect box;
   bool eaten_;
-public:
-  Special_Food(int,int); //filename
+
+ public:
+  Special_Food(int,int);
   bool eaten();
   void was_eaten();
   void show();
   void show_all_special_food(std::vector<Special_Food> special_food_vector);
-
-  SDL_Rect get_box();
-
-  
+  SDL_Rect get_box();  
 };
-
-
-
-
-
-
 
 #endif

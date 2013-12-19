@@ -73,7 +73,7 @@ private:
 
 public:
   //Initializes the variables
-    Pacman(std::string filename);
+  Pacman(); //string filename
 
   //Reveals pacmans position, ghosts will ask for this
   int reveal_position_x();
@@ -114,6 +114,5 @@ public:
 
   void showlife(int lives);
 };
-
 
 #endif
