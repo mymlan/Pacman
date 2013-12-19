@@ -71,8 +71,8 @@ private:
  public:
   Start(int x, int y, std::string text);
   ~Start();
-  void show(SDL_Surface*) const;
-  void show_infopanel(SDL_Surface*) const;
+  void show(SDL_Surface*);
+  void show_infopanel(SDL_Surface*);
   void handle_input(bool &proceed, bool &quit, SDL_Event);
   bool is_start();
   void change_start();
@@ -87,7 +87,7 @@ public:
   Button(int x, int y, std::string text);
 
   void show(SDL_Surface*) const ;
-  void show(int x, int y, const char* header,SDL_Surface*) const;
+  void show(int x, int y, const char* header,SDL_Surface*);
  private:
   SDL_Surface *textpekare;
 
@@ -106,7 +106,7 @@ class Highscore_screen : public Menu
  public:
   ~Highscore_screen();
   Highscore_screen(int x, int y, std::string text);
-  void show(SDL_Surface*) const;
+  void show(SDL_Surface*);
   // void show(int x, int y, const char* header) const;
   bool is_paused() const;
   void change_pause();
@@ -121,7 +121,7 @@ class End_game : public Menu
  public:
   ~End_game();
   End_game();
-  void show(SDL_Surface*) const;
+  void show(SDL_Surface*);
   // void show(int x, int y, const char* header) const;
 
 };

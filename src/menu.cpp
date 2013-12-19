@@ -104,21 +104,18 @@ Start::~Start()
 }
 
 
-void Start::show(SDL_Surface* screen) const
+void Start::show(SDL_Surface* screen)
 {
-  apply_surface(0,0,ytpekare,screen,); 
+  apply_surface(0,0,ytpekare,screen); 
 }
 
 
-void Start::show_infopanel(SDL_Surface* screen) const
+void Start::show_infopanel(SDL_Surface* screen)
 {
-  /* for (int i=0; i<=8; i++)
-    { 
-      apply_surface( (MAP_WIDTH+i*INFOPANEL_WIDTH), 0, ytpekare, screen, &clipsInfopanel[0] );
-      }*/
-
-  textpekare = TTF_RenderText_Solid( Font, screen, color ); //surface =screen
-  apply_surface(660, 30,textpekare, screen); // surface = screen 
+  const char* header = message_.c_str();
+  SDL_Surface* texttest;
+  texttest = TTF_RenderText_Solid( Font, header , color ); //inputfont headercolor
+  apply_surface(button.x, button.y,texttest, screen); 
 }
 
 
@@ -240,10 +237,12 @@ void Button::show(SDL_Surface* screen) const
  
 }
 
-void Button::show(int x, int y, const char* header,SDL_Surface* screen) const
+void Button::show(int x, int y, const char* header,SDL_Surface* screen)
 {
-  textpekare = TTF_RenderText_Solid( Font, header , color );
-  apply_surface(x, y,textpekare, screen);  
+  SDL_Surface* texttest;
+  texttest = TTF_RenderText_Solid( Font, header , color );
+  apply_surface(button.x, button.y,texttest, screen);
+   
 }
 
 
@@ -284,10 +283,12 @@ Highscore_screen::Highscore_screen(int x, int y, std::string text)
   Font = TTF_OpenFont("img/xtrusion.ttf",55);
 } 
 
-void Highscore_screen::show(SDL_Surface* screen) const
+void Highscore_screen::show(SDL_Surface* screen)
 { 
-  textpekare = TTF_RenderText_Solid( Font, header , color );
-  apply_surface(x, y,text, screen);
+  const char* header = message_.c_str();
+  SDL_Surface* texttest;
+  texttest = TTF_RenderText_Solid( Font, header , color );
+  apply_surface(button.x, button.y,texttest, screen);
 }
 
 bool Highscore_screen::is_paused() const
@@ -341,9 +342,10 @@ End_game::End_game()
   Font = TTF_OpenFont("img/xtrusion.ttf",55);
 }
 
-void End_game::show(SDL_Surface* screen) const
+void End_game::show(SDL_Surface* screen)
 {
-  textpekare = TTF_RenderText_Solid( Font, header , color ); //inputfont headercolor
-  apply_surface(x, y,textpekare, screen); 
+  const char* header = message_.c_str();
+  SDL_Surface* texttest;
+  texttest = TTF_RenderText_Solid( Font, header , color ); //inputfont headercolor
+  apply_surface(button.x, button.y,texttest, screen); 
 }
-
