@@ -102,15 +102,23 @@ Start::~Start()
   //Quit SDL
   SDL_Quit();
 }
-
+/*
+<<<<<<< HEAD
 
 void Start::show(SDL_Surface* screen)
+=======
+void Start::show(SDL_Surface* screen) const
+>>>>>>> 8cad4a11ebeac199b4b13cd3bc2033f791ec7a57
 {
   apply_surface(0,0,ytpekare,screen); 
 }
 
-/*
+<<<<<<< HEAD
+
 void Start::show_infopanel(SDL_Surface* screen) 
+=======
+void Start::show_infopanel(SDL_Surface* screen) const
+>>>>>>> 8cad4a11ebeac199b4b13cd3bc2033f791ec7a57
 {
    for (int i=0; i<=8; i++)
     { 
@@ -136,13 +144,10 @@ void Start::handle_input(bool &proceed, bool &quit, SDL_Event event)
     }
 }
 
-
-
 bool Start::is_start()
 {
   return start;
 }
-
 
 void Start::change_start()
 {
@@ -243,8 +248,13 @@ void Button::show(SDL_Surface* screen)
 /*void Button::show(int x, int y, const char* header,SDL_Surface* screen) const
 {
   textpekare = TTF_RenderText_Solid( Font, header , color );
+<<<<<<< HEAD
   apply_surface(x, y,textpekare, screen);  
-}*/
+}
+=======
+  apply_surface(x, y,header, screen);  
+}
+>>>>>>> 8cad4a11ebeac199b4b13cd3bc2033f791ec7a57*/
 
 
 //====================== HIGHSCORE_SCREEN ===================================================
