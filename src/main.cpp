@@ -27,7 +27,7 @@
 #include "timer.h"
 #include "menu.h"
 #include "string_input.h"
-#include "settings.h"
+
 
 
 //Set up the screen
@@ -40,7 +40,7 @@ bool init()
       return false;
     }
 
-  screen = SDL_SetVideoMode( SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE );
+  screen = SDL_SetVideoMode( 1000, 480, 32, SDL_SWSURFACE );
 
   //If there was an error in setting up the screen
   if( screen == NULL )
@@ -69,7 +69,7 @@ int main( int argc, char* args[] )
   SDL_EnableUNICODE( SDL_ENABLE );
 
   //initialize settings
-  Settings settings;
+  // Settings settings;
 
   
 //Screen attributes
@@ -89,7 +89,7 @@ extern const int SCREEN_BPP ;
    
 
  //Initialize Menu
- Start Startup(0,0,"PACMAN");
+ Start Startup{0,0,"PACMAN"};
 
 
  //The pacman
