@@ -165,7 +165,7 @@ void Pacman::show(SDL_Surface* screen)
 {
   //Sprite animation;
 
-  
+  /*
     //If Pacman is moving left
     if( xVel < 0 )
     {
@@ -208,7 +208,7 @@ void Pacman::show(SDL_Surface* screen)
     {
         frame = 0;
     }
-
+    
     //Show the pacman
     if( status == PACMAN_RIGHT )
       {
@@ -227,10 +227,11 @@ void Pacman::show(SDL_Surface* screen)
       {
 	apply_surface (box.x,box.y, ytpekare, screen, &clipsDown[ frame ]);
       }
-    /*  else if( status == PACMAN_DOWN)
-      {
-	apply_surface (box.x,box.y, ytpekare , screen, &clipsDown[ frame ]);
-	}*/
+    
+
+
+*/
+    apply_surface(box.x,box.y,ytpekare,screen, &clipsRight[ frame]);
 }
 
 

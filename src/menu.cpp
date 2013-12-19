@@ -78,7 +78,7 @@ Start::Start(int x, int y, std::string text)
 
   
   ytpekare =  optimizedImage; // * ???
-
+  
   SDL_Rect clipsStartscr[1];
   SDL_Rect clipsInfopanel[1];
 

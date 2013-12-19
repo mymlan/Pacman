@@ -397,7 +397,7 @@ extern const int SCREEN_BPP ;
 
  
     // Clip the sprite sheet
-    myPacman.set_clips();
+  //   myPacman.set_clips();
  
 
     //While the user hasn't quit
