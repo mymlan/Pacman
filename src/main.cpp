@@ -242,7 +242,7 @@ extern const int MAP_WIDTH ;
     Food myFood109(610,370);
     Food myFood110(610,410);
     
-    /*
+    
     //create vectorwith all food in, called food_vector
     std::vector<Food> food_vector = 
       {myFood1,myFood2,myFood3,myFood4,myFood5,myFood6,myFood7,myFood8,myFood9,myFood10,
@@ -256,8 +256,8 @@ extern const int MAP_WIDTH ;
        myFood81,myFood82,myFood83,myFood84,myFood85,myFood86,myFood87,myFood88,myFood89,myFood90,
        myFood91,myFood92,myFood93,myFood94,myFood95,myFood96,myFood97,myFood98,myFood99,myFood100,
        myFood101,myFood102,myFood103,myFood104,myFood105,myFood106,myFood107,myFood108,myFood109,myFood110};
-    */
-    std::vector<Food> food_vector = {myFood50};
+    
+    //std::vector<Food> food_vector = {myFood50};
     
    
 
@@ -573,12 +573,14 @@ extern const int MAP_WIDTH ;
 	    SDL_Surface *new_screen = NULL; // Experiment
 	    animation.init(new_screen,"Enter Name");
 	    game_over.show();
-	    animation.update_screen();
+	    if( SDL_Flip( screen ) == -1 )
+	      {
+		return 1;
+	      }
+	    // animation.update_screen();
 	    
 	    //Keep track if whether or not the user has entered their name
-	    
-	    
-	    
+	   
 	      
 		
 	    bool nameEntered = false;
@@ -614,7 +616,13 @@ extern const int MAP_WIDTH ;
 
 
 			PlayerName.show_centered();
-			animation.update_screen();
+
+			//uppdate screen
+			if( SDL_Flip( screen ) == -1 )
+			  {
+			    return 1;
+			  }
+			//	animation.update_screen();
 			
 			// std::cout<< PlayerName.get_str() << std::endl;
 			//std::cout<< "Fyfan" << std::endl;
@@ -630,7 +638,13 @@ extern const int MAP_WIDTH ;
 	      }
 
 	      PlayerName.show_centered();
-	       animation.update_screen();
+
+	      //uppdate screen
+	      if( SDL_Flip( screen ) == -1 )
+		{
+		  return 1;
+		}
+      //  animation.update_screen();
 	  
 
 	       //}
@@ -700,10 +714,10 @@ extern const int MAP_WIDTH ;
         myPacman.show();
 	
 	//Show food on the screen
-	animation.show_all_food(food_vector);
+	myFood1.show_all_food(food_vector);
 
 	//Show special_food on the screen
-	animation.show_all_special_food(special_food_vector);
+	mySpecial_Food1.show_all_special_food(special_food_vector);
 
 
 	//Show the checkpoints - just for testing
@@ -733,13 +747,13 @@ extern const int MAP_WIDTH ;
 	myScore.show();
 	
         //Update the screen
-	animation.update_screen();
-	/*
+	//animation.update_screen();
+	
         if( SDL_Flip( screen ) == -1 )
 	  {
             return 1;
 	  }
-	*/
+	
 
         //Cap the frame rate
 	fps.delay_game();
@@ -750,7 +764,7 @@ extern const int MAP_WIDTH ;
       }
     
     //Clean up
-    animation.clean_up();
+    //    animation.clean_up();
 
     return 0;
 }

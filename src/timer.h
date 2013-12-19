@@ -41,7 +41,7 @@ private:
   //The timer status
   bool paused;
   bool started;
-  int FRAMES_PER_SECOND{20};
+  const int FRAMES_PER_SECOND{20};
   
 public:
   //Initializes variables
