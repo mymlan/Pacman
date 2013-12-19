@@ -104,22 +104,22 @@ Start::~Start()
 }
 
 
-void Start::show(SDL_Surface* screen) const
+void Start::show(SDL_Surface* screen)
 {
-  apply_surface(0,0,ytpekare,screen,); 
+  apply_surface(0,0,ytpekare,screen); 
 }
 
-
-void Start::show_infopanel(SDL_Surface* screen) const
+/*
+void Start::show_infopanel(SDL_Surface* screen) 
 {
-  /* for (int i=0; i<=8; i++)
+   for (int i=0; i<=8; i++)
     { 
       apply_surface( (MAP_WIDTH+i*INFOPANEL_WIDTH), 0, ytpekare, screen, &clipsInfopanel[0] );
-      }*/
+      }
 
-  textpekare = TTF_RenderText_Solid( Font, screen, color ); //surface =screen
+  textpekare = TTF_RenderText_Solid( Font,message_, color ); // förrut surface =screen
   apply_surface(660, 30,textpekare, screen); // surface = screen 
-}
+}*/
 
 
 void Start::handle_input(bool &proceed, bool &quit, SDL_Event event)
@@ -235,16 +235,16 @@ Button::Button(int x, int y, std::string text)
 
 }
   
-void Button::show(SDL_Surface* screen) const
+void Button::show(SDL_Surface* screen)
 {
  
 }
 
-void Button::show(int x, int y, const char* header,SDL_Surface* screen) const
+/*void Button::show(int x, int y, const char* header,SDL_Surface* screen) const
 {
   textpekare = TTF_RenderText_Solid( Font, header , color );
   apply_surface(x, y,textpekare, screen);  
-}
+}*/
 
 
 //====================== HIGHSCORE_SCREEN ===================================================
@@ -284,11 +284,11 @@ Highscore_screen::Highscore_screen(int x, int y, std::string text)
   Font = TTF_OpenFont("img/xtrusion.ttf",55);
 } 
 
-void Highscore_screen::show(SDL_Surface* screen) const
+/*void Highscore_screen::show(SDL_Surface* screen) 
 { 
   textpekare = TTF_RenderText_Solid( Font, header , color );
   apply_surface(x, y,text, screen);
-}
+}*/
 
 bool Highscore_screen::is_paused() const
 {
@@ -341,9 +341,9 @@ End_game::End_game()
   Font = TTF_OpenFont("img/xtrusion.ttf",55);
 }
 
-void End_game::show(SDL_Surface* screen) const
+/*void End_game::show(SDL_Surface* screen) const
 {
-  textpekare = TTF_RenderText_Solid( Font, header , color ); //inputfont headercolor
+   textpekare = TTF_RenderText_Solid( Font, header , color ); //inputfont headercolor
   apply_surface(x, y,textpekare, screen); 
-}
+  }*/
 
