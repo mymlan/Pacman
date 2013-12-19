@@ -63,13 +63,13 @@ private:
   //true if pacman has eaten special_food
   bool pacman_has_eaten_special_food;
 
-   
+  /*
   //The areas of the pacmansheet
   SDL_Rect clipsRight;
   SDL_Rect clipsLeft;
   SDL_Rect clipsDown;
   SDL_Rect clipsUp;
-
+  */
 
 public:
   //Initializes the variables
@@ -110,7 +110,7 @@ public:
   
   bool has_pacman_eaten_special_food();
 
-  void set_clips();
+  //void set_clips();
 
   void showlife(int lives);
 };
