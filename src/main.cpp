@@ -85,7 +85,7 @@ extern const int MAP_WIDTH ;
   bool quit = false;
 
     //Initialize Sprite
-  Sprite animation;
+  // Sprite animation;
 
     //Initialize Menu
     Start Startup(0,0,"PACMAN");
@@ -394,7 +394,11 @@ extern const int MAP_WIDTH ;
 	    theButton4.show();
 	 
 	    //Update the screen
-	    animation.update_screen();
+	    if( SDL_Flip( screen ) == -1 )
+	      {
+		return 1;
+	      }
+	    //  animation.update_screen();
 	    
 	    while(!proceed)
 	      {
@@ -472,7 +476,13 @@ extern const int MAP_WIDTH ;
 				    
 				    Highscore.show();
 				    myHighscore.show();
-				    animation.update_screen();
+				    
+				    //update screen
+				    if( SDL_Flip( screen ) == -1 )
+				      {
+					return 1;
+				      }
+				    // animation.update_screen();
 				    std::cout<< "Highscore. Game paused."<<std::endl;
 				    break; //test
 				  }
@@ -571,8 +581,12 @@ extern const int MAP_WIDTH ;
 	    bool cont=false;
 	    End_game game_over;
 	    SDL_Surface *new_screen = NULL; // Experiment
+
 	    animation.init(new_screen,"Enter Name");
+
 	    game_over.show();
+
+	    //update screen
 	    if( SDL_Flip( screen ) == -1 )
 	      {
 		return 1;
