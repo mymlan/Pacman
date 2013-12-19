@@ -100,13 +100,13 @@ Start::~Start()
 }
 
 
-void Start::show() const
+void Start::show(SDL_Surface* screen) const
 {
   apply_surface(0,0,ytpekare,screen, &clipsStartscr[0]); 
 }
 
 
-void Start::show_infopanel() const
+void Start::show_infopanel(SDL_Surface* screen) const
 {
   for (int i=0; i<=8; i++)
     { 
@@ -236,12 +236,12 @@ Button::Button(int x, int y, std::string text)
 
 }
   
-void Button::show() const
+void Button::show(SDL_Surface* screen) const
 {
  
 }
 
-void Button::show(int x, int y, const char* header) const
+void Button::show(int x, int y, const char* header,SDL_Surface* screen) const
 {
   textpekare = TTF_RenderText_Solid( infoFont, header , headerColor );
   apply_surface(x, y,textpekare, screen);  
@@ -290,7 +290,7 @@ Highscore_screen::Highscore_screen(int x, int y, std::string text)
     }
 } 
 
-void Highscore_screen::show() const
+void Highscore_screen::show(SDL_Surface* screen) const
 { 
   text = TTF_RenderText_Solid( infoFont, header , headerColor );
   apply_surface(x, y,text, screen);
@@ -352,7 +352,7 @@ End_game::End_game()
     }
 }
 
-void End_game::show() const
+void End_game::show(SDL_Surface* screen) const
 {
   text = TTF_RenderText_Solid( infoFont, header , headerColor );
   apply_surface(x, y,text, screen); 

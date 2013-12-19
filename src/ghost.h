@@ -54,7 +54,7 @@ public:
   void change_mood();
 //use reverse_direction when ghost toggles scared_
   void reverse_direction();
-  void show();
+  void show(SDL_Surface*);
   //Moves the ghost
   void move(std::vector<SDL_Rect>); 
   bool is_checkpoint(std::vector<SDL_Rect>); //, class Pacman);

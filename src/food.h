@@ -36,9 +36,9 @@ class Food : public Sprite
   Food(int,int);
   bool eaten();
   void was_eaten();
-  void show();
+  void show(SDL_Surface*);
   SDL_Rect get_box();
-  void show_all_food(std::vector<Food> food_vector);
+  void show_all_food(std::vector<Food>, SDL_Surface*);
 };
 //###############################################################################################
 
@@ -55,8 +55,8 @@ class Special_Food : public Sprite
   Special_Food(int,int);
   bool eaten();
   void was_eaten();
-  void show();
-  void show_all_special_food(std::vector<Special_Food> special_food_vector);
+  void show(SDL_Surface*);
+  void show_all_special_food(std::vector<Special_Food>, SDL_Surface*);
   SDL_Rect get_box();  
 };
 

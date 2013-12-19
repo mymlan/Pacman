@@ -38,7 +38,7 @@ class StringInput
     void handle_input();
 
     //Shows the message on screen
-    void show_centered();
+    void show_centered(SDL_Surface*);
 
     std::string get_str();
 

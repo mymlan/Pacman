@@ -107,7 +107,7 @@ void StringInput::handle_input()
 	}
 }
 //}
-void StringInput::show_centered()
+void StringInput::show_centered(SDL_Surface* screen)
 {
   Sprite draw;
   std::cout<<"show centered"<<std::endl;

@@ -81,7 +81,7 @@ public:
 
   //Keeps tracks of pacmans lives and when he dies
   int life();
-  void showlife();
+  void showlife(SDL_Surface*);
   bool game_over();
   bool eat_eaten(class Ghost&, class Score&);
  
@@ -98,7 +98,7 @@ public:
   void move(std::vector<SDL_Rect>, SDL_Rect);
 
   //Shows the Pacman on the screen
-  void show();
+  void show(SDL_Surface*);
   
   //Sets Pacmans position to startposition
   void get_home();
@@ -112,7 +112,7 @@ public:
 
   void set_clips();
 
-  void showlife(int lives);
+  void showlife(int, SDL_Surface*);
 };
 
 #endif
