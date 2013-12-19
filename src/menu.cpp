@@ -79,6 +79,10 @@ Start::Start(int x, int y, std::string text)
   
   ytpekare =  optimizedImage; // * ???
 
+  SDL_Rect clipsStartscr[1];
+  SDL_Rect clipsInfopanel[1];
+
+
 }
 
 Start::~Start()
@@ -89,7 +93,7 @@ Start::~Start()
 
   //dessa rader under kanske inte ska vara här
   //Close the font that was used
-  TTF_CloseFont( inputFont );
+  TTF_CloseFont(Font );
              
     
   //Quit SDL_ttf
@@ -174,7 +178,7 @@ Button::~Button()
 
   //dessa rader under kanske inte ska vara här
   //Close the font that was used
-  TTF_CloseFont( inputFont );
+  TTF_CloseFont( Font );
              
     
   //Quit SDL_ttf
@@ -197,12 +201,8 @@ Button::Button(int x, int y, std::string text)
   button.h = BUTTON_HEIGHT;
   textpekare = NULL;
   //Load infoFont
-  infoFont = TTF_OpenFont("img/KarmaFuture.ttf",22);
+ Font = TTF_OpenFont("img/KarmaFuture.ttf",22);
 
-  if (infoFont ==NULL)
-    {
-      return false;
-    }
 
 
   //The image that's loaded
@@ -232,7 +232,7 @@ Button::Button(int x, int y, std::string text)
     }
 
   
-  *ytpekare =  optimizedImage;
+  ytpekare =  optimizedImage;
 
 }
   
@@ -258,7 +258,7 @@ Highscore_screen::~Highscore_screen()
 
   //dessa rader under kanske inte ska vara här
   //Close the font that was used
-  TTF_CloseFont( inputFont );
+  TTF_CloseFont( Font );
              
     
   //Quit SDL_ttf
@@ -284,10 +284,7 @@ Highscore_screen::Highscore_screen(int x, int y, std::string text)
   //Load  Font
   Font = TTF_OpenFont("img/xtrusion.ttf",55);
 
-  if (Font ==NULL)
-    {
-      return false;
-    }
+
 } 
 
 void Highscore_screen::show() const
@@ -320,7 +317,7 @@ End_game::~End_game()
 
   //dessa rader under kanske inte ska vara här
   //Close the font that was used
-  TTF_CloseFont( inputFont );
+  TTF_CloseFont( Font );
              
     
   //Quit SDL_ttf
@@ -345,12 +342,8 @@ End_game::End_game()
 
   //Load  Font
   Font = TTF_OpenFont("img/xtrusion.ttf",55);
-
-  if (Font ==NULL)
-    {
-      return false;
-    }
 }
+
 
 void End_game::show() const
 {
