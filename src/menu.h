@@ -34,8 +34,9 @@ protected:
   std::string message_;
   TTF_Font *Font;
 public:
-  //virtual void show() const = 0;
-  virtual ~Menu() = default;
+ 
+ Menu(std::string filename): Sprite::Sprite(std::string filename){}
+  virtual ~Menu();
   
   
 

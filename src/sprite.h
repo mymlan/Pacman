@@ -45,9 +45,6 @@ public:
 
   SDL_Surface *ytpekare;
 
-  //The event structure
-  SDL_Event event;
-
 };
 
 
