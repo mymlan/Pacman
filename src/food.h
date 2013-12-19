@@ -39,7 +39,6 @@ class Food : public Sprite
   SDL_Rect get_box();
   void show_all_food(std::vector<Food> food_vector);
 };
-
 //###############################################################################################
 
 //========================================== SPECIAL FOOD =======================================
@@ -50,6 +49,7 @@ class Special_Food : public Sprite
  private:
   SDL_Rect box;
   bool eaten_;
+
  public:
   Special_Food(int,int);
   bool eaten();

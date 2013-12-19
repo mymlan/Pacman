@@ -73,7 +73,6 @@ bool Food::eaten()
 void Food::was_eaten()
 {
   eaten_=true;
-
 }
 
 void Food::show()
@@ -152,12 +151,11 @@ bool Special_Food::eaten()
 }
 
 void Special_Food::show()
-{if (!eaten)
+{
+  if (!eaten)
     {
       apply_surface(box.x,box.y,ytpekare, screen);
     }
- 
- 
 }
 
 void Special_Food::show_all_special_food(std::vector<Special_Food> special_food_vector);
