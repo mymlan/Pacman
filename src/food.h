@@ -11,6 +11,7 @@
 
 
 //The headers
+#include "sprite.h"
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
 #include <string>
@@ -21,7 +22,7 @@
 #include <vector>
 #include <iterator>
 #include <algorithm>
-#include "sprite.h"
+
 
 //========================================== FOOD ==============================================
 
