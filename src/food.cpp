@@ -25,8 +25,7 @@
 //  FOOD
 //============================================================================
 
-
-Food::Food(int x_cord, int y_cord ) // string filename
+Food::Food(int x_cord, int y_cord)
 {
   bool eaten_=false;
  
@@ -45,13 +44,13 @@ Food::Food(int x_cord, int y_cord ) // string filename
   SDL_Surface* optimizedImage = NULL;
 
   //Load the image
-  loadedImage = IMG_Load( "img/food2.bmp" ); //filename.c_str()
+  loadedImage = IMG_Load("img/food2.bmp");
 
   //If the image loaded
   if( loadedImage != NULL )
     {
       //Create an optimized surface
-      optimizedImage = SDL_DisplayFormat( loadedImage );
+      optimizedImage = SDL_DisplayFormat(  );
 
       //Free the old surface
       SDL_FreeSurface( loadedImage );
@@ -66,15 +65,15 @@ Food::Food(int x_cord, int y_cord ) // string filename
   *ytpekare =  optimizedImage;
 }
 
+bool Food::eaten()
+{
+  return eaten_;
+}
+
 void Food::was_eaten()
 {
   eaten_=true;
 
-}
-
-bool Food::eaten()
-{
-  return eaten_;
 }
 
 void Food::show()
@@ -102,7 +101,7 @@ void Food::show_all_food(std::vector<Food> food_vector)
 //============================================================================
 //  Class: Special_Food
 //============================================================================
-Special_Food::Special_Food(int x_cord, int y_cord) // filename
+Special_Food::Special_Food(int x_cord, int y_cord, std::string filename)
 {
   bool eaten_=false;
 
@@ -121,7 +120,7 @@ Special_Food::Special_Food(int x_cord, int y_cord) // filename
   SDL_Surface* optimizedImage = NULL;
 
   //Load the image
-  loadedImage = IMG_Load( "img/special_food.bmp" );
+  loadedImage = IMG_Load("img/special_food.bmp" );
 
   //If the image loaded
   if( loadedImage != NULL )

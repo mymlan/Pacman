@@ -26,7 +26,7 @@
 
 
 
-Pacman::Pacman(std::string filename)
+Pacman::Pacman() // string filename
 {
     //Initialize the offsets
     box.x = 320;
@@ -59,7 +59,7 @@ Pacman::Pacman(std::string filename)
   SDL_Surface* optimizedImage = NULL;
 
   //Load the image
-  loadedImage = IMG_Load( filename.c_str() );
+  loadedImage = IMG_Load("img/Pacman.bmp");
   
   //If the image loaded
   if( loadedImage != NULL )
