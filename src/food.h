@@ -36,7 +36,7 @@ class Food : public Sprite
   Food(int,int);
   bool eaten();
   void was_eaten();
-  void show() = delete;
+  void show();
   SDL_Rect get_box();
   void show_all_food(std::vector<Food> food_vector);
 };

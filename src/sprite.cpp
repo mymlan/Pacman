@@ -21,7 +21,7 @@
 
 
 
-=============================================
+//============================================================================
 // Constructor 
 //============================================================================
 Sprite::Sprite(std::string filename)
@@ -54,7 +54,7 @@ Sprite::Sprite(std::string filename)
     }
 
   
-  *ytpekare =  optimizedImage;
+  ytpekare =  optimizedImage;
 
 }
 
@@ -84,7 +84,7 @@ Sprite::~Sprite()
 // Ändrar vi till 2 argument: SDL_Surface* destination, SDL_Rect* clip = NULL
 // så lär vi ändra på massor med ställen!
 
-void Sprite::apply_surface( int x, int y, SDL_Surface* ytpekare, SDL_Surface* destination, SDL_Rect* clip = NULL)
+void Sprite::apply_surface( int x, int y, SDL_Surface* ytpekare, SDL_Surface* destination, SDL_Rect* clip)
 {
     //Holds offsets
     SDL_Rect offset;

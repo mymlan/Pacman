@@ -39,7 +39,8 @@ protected:
 
 public:
   virtual void show();
-  Menu(std::string filename);//: new Sprite (std::string filename){}
+  Menu();
+  // Menu(std::string filename);//: new Sprite (std::string filename){}
   virtual ~Menu();
 };
 
@@ -117,8 +118,8 @@ class End_game : public Menu
  public:
   ~End_game();
   End_game();
-  void show() const = delete;
-  void show(int x, int y, const char* header) const;
+  void show() const;
+  // void show(int x, int y, const char* header) const;
 
 };
 

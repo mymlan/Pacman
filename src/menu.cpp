@@ -23,12 +23,12 @@
 //============================================================================
 //  Class: Menu
 //============================================================================
-
+/*
 Menu::Menu(std::string filename)
 {
-  Sprite(filename);
+  Sprite::Sprite(filename);
 }
-
+*/
 //========================= START ==============================================
 
 Start::Start(int x, int y, std::string text)
@@ -47,10 +47,6 @@ Start::Start(int x, int y, std::string text)
   //Load  Font
   Font = TTF_OpenFont("img/xtrusion.ttf",55);
 
-  if (Font ==NULL)
-    {
-      return false;
-    }
   textpekare = NULL;
   
 
@@ -61,7 +57,7 @@ Start::Start(int x, int y, std::string text)
   SDL_Surface* optimizedImage = NULL;
 
   //Load the image
-  loadedImage = IMG_Load( filename.c_str() );
+  loadedImage = IMG_Load( "src/startup.bmp" ); // filename.c_str()
 
   //If the image loaded
   if( loadedImage != NULL )
@@ -81,7 +77,7 @@ Start::Start(int x, int y, std::string text)
     }
 
   
-  *ytpekare =  optimizedImage;
+  ytpekare =  optimizedImage; // * ???
 
 }
 
@@ -361,3 +357,4 @@ void End_game::show() const
   text = TTF_RenderText_Solid( infoFont, header , headerColor );
   apply_surface(x, y,text, screen); 
 }
+

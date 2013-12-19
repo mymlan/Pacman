@@ -75,7 +75,7 @@ void Food::was_eaten()
   eaten_=true;
 }
 
-void Food::show()
+void Food::show()  // = delete? /ingrid
 {
   if (!eaten)
     {
