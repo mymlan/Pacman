@@ -84,10 +84,13 @@ extern const int SCREEN_BPP ;
  //Quit flag
  bool quit = false;
 
+    //Initialize Sprite
+  // Sprite animation;
    
 
  //Initialize Menu
  Start Startup(0,0,"PACMAN");
+
 
  //The pacman
  Pacman myPacman;
@@ -387,7 +390,11 @@ extern const int SCREEN_BPP ;
 	    theButton4.show();
 	 
 	    //Update the screen
-	    animation.update_screen();
+	    if( SDL_Flip( screen ) == -1 )
+	      {
+		return 1;
+	      }
+	    //  animation.update_screen();
 	    
 	    while(!proceed)
 	      {
@@ -465,7 +472,13 @@ extern const int SCREEN_BPP ;
 				    
 				    Highscore.show();
 				    myHighscore.show();
-				    animation.update_screen();
+				    
+				    //update screen
+				    if( SDL_Flip( screen ) == -1 )
+				      {
+					return 1;
+				      }
+				    // animation.update_screen();
 				    std::cout<< "Highscore. Game paused."<<std::endl;
 				    break; //test
 				  }
@@ -564,8 +577,12 @@ extern const int SCREEN_BPP ;
 	    bool cont=false;
 	    End_game game_over;
 	    SDL_Surface *new_screen = NULL; // Experiment
+
 	    animation.init(new_screen,"Enter Name");
+
 	    game_over.show();
+
+	    //update screen
 	    if( SDL_Flip( screen ) == -1 )
 	      {
 		return 1;
@@ -732,6 +749,7 @@ extern const int SCREEN_BPP ;
 	theButton2.show();
 	theButton3.show();
 	theButton4.show();
+
 
 	//show the lives on the screen
 	myPacman.showlife();
