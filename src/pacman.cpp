@@ -124,21 +124,20 @@ void Pacman::handle_input(SDL_Event event)
 
 void Pacman::move(std::vector<SDL_Rect> maze, SDL_Rect wall25)
 {
-  //Sprite
-  Sprite animation;
+  
 
     //Move pacman left or right
     box.x += xVel;
     //If pacman went too far to the left or right or has collided with the walls
     for (std::vector<SDL_Rect>::iterator it = maze.begin() ; it != maze.end(); ++it)
       {
-	if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( animation.check_collision( box, *it ) ) )
+	if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || (check_collision( box, *it ) ) )
 	  {
 	    //Move back
 	    box.x -= xVel;
 	  }
       }   
-	if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( animation.check_collision( box, wall25 ) ) )
+	if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall25 ) ) )
 	  {
 	    //Move back
 	    box.x -= xVel;
@@ -150,7 +149,7 @@ void Pacman::move(std::vector<SDL_Rect> maze, SDL_Rect wall25)
     //If pacman went too far up or down or has collided with the walls
     for (std::vector<SDL_Rect>::iterator it = maze.begin() ; it != maze.end(); ++it)
       {
-	if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( animation.check_collision( box, *it ) ) )
+	if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || (check_collision( box, *it ) ) )
 	  {
 	    //Move back
 	    box.y -= yVel;
@@ -248,9 +247,9 @@ bool Pacman::game_over()
 //Collision between
 bool Pacman::eat_eaten(Ghost& ghost_object,Score& myScore)
 {
-  Sprite animation;
+ 
   
-  if (animation.check_collision(box, ghost_object.get_box()))
+  if (check_collision(box, ghost_object.get_box()))
       {
 	if (ghost_object.is_scared())
 	  {
@@ -272,11 +271,11 @@ bool Pacman::eat_eaten(Ghost& ghost_object,Score& myScore)
 //Pacman eats food
 void Pacman::eat_food(std::vector<Food>& food_vector, Score& myScore) //Food& food_object
 {
-  Sprite animation;
+  
   for (std::vector<Food>::iterator it = food_vector.begin() ; it != food_vector.end(); ++it)
     {
     
-      if ((animation.check_collision(box, (*it).get_box())) and !(*it).eaten())
+      if ((check_collision(box, (*it).get_box())) and !(*it).eaten())
 	{
 	  myScore.add_points(1);
 	  (*it).was_eaten();
@@ -293,10 +292,10 @@ void Pacman::eat_food(std::vector<Food>& food_vector, Score& myScore) //Food& fo
 //Pacman eats special_food
 void Pacman::eat_special_food(std::vector<class Special_Food>& special_food_vector,Score& myScore)
 {
-  Sprite animation;
+  
  for (std::vector<Special_Food>::iterator it = special_food_vector.begin() ; it != special_food_vector.end(); ++it)
     {
-      if ((animation.check_collision(box, (*it).get_box())) and !(*it).eaten())
+      if ((check_collision(box, (*it).get_box())) and !(*it).eaten())
 	{
 	  myScore.add_points(10);
 	  (*it).was_eaten();
