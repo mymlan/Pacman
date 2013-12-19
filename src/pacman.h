@@ -42,23 +42,23 @@ private:
   int lives;
  
   //Its current frame
-    int frame;
+  int frame;
 
-    //Its animation status
-    int status;
+  //Its animation status
+  int status;
 
-    //food left
-    int food_left;
+  //food left
+  int food_left;
 
-    //true if pacman has eaten special_food
-    bool pacman_has_eaten_special_food;
+  //true if pacman has eaten special_food
+  bool pacman_has_eaten_special_food;
 
    
-    //The areas of the pacmansheet
-    SDL_Rect clipsRight;
-    SDL_Rect clipsLeft;
-    SDL_Rect clipsDown;
-    SDL_Rect clipsUp;
+  //The areas of the pacmansheet
+  SDL_Rect clipsRight;
+  SDL_Rect clipsLeft;
+  SDL_Rect clipsDown;
+  SDL_Rect clipsUp;
 
 
 public:
