@@ -59,6 +59,39 @@ bool init()
   //If everything initialized fine
   return true;
 }
+
+bool init(SDL_Surface* screen, std::string caption)
+{
+  //Initialize all SDL subsystems
+  if( SDL_Init( SDL_INIT_EVERYTHING ) == -1 )
+    {
+      return false;
+    }
+ 
+  //Set up the screen
+  screen = SDL_SetVideoMode( SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE );
+  
+ 
+  //If there was an error in setting up the screen
+  if( screen == NULL )
+    {
+      return false;
+    }
+ 
+  //Set the window caption
+  SDL_WM_SetCaption( caption.c_str(), NULL );
+     
+  //Initialize SDL_ttf
+  if(TTF_Init() == -1)
+    {
+      return false;
+    }
+ 
+  //If everything initialized fine
+  return true;
+}
+
+
 //============================================================================
 //  MAIN
 //============================================================================
@@ -67,8 +100,7 @@ int main( int argc, char* args[] )
 {
   SDL_EnableUNICODE( SDL_ENABLE );
 
-  //initialize settings
-  Settings settings;
+  
 
   
 //Screen attributes
@@ -83,9 +115,6 @@ extern const int SCREEN_BPP ;
  //Quit flag
  bool quit = false;
 
-    //Initialize Sprite
-  // Sprite animation;
-   
 
  //Initialize Menu
  Start Startup(0,0,"PACMAN");
@@ -393,7 +422,7 @@ extern const int SCREEN_BPP ;
 	      {
 		return 1;
 	      }
-	    //  animation.update_screen();
+	    
 	    
 	    while(!proceed)
 	      {
@@ -466,7 +495,7 @@ extern const int SCREEN_BPP ;
 				  {
 				  case SDLK_p: cont = true; std::cout << "Play!"<< std::endl; break;
 				  case SDLK_q: cont = true ; quit = true; std::cout << "Game quit" << std::endl; return 0; break;
-				  case SDLK_h: animation.init(new_screen, "Highscore");
+				  case SDLK_h: init(new_screen, "Highscore");
 				    Highscore_screen Highscore(400,10, "HIGHSCORE");
 				    
 				    Highscore.show();
@@ -477,7 +506,7 @@ extern const int SCREEN_BPP ;
 				      {
 					return 1;
 				      }
-				    // animation.update_screen();
+				    
 				    std::cout<< "Highscore. Game paused."<<std::endl;
 				    break; //test
 				  }
@@ -577,7 +606,7 @@ extern const int SCREEN_BPP ;
 	    End_game game_over;
 	    SDL_Surface *new_screen = NULL; // Experiment
 
-	    animation.init(new_screen,"Enter Name");
+	    init(new_screen,"Enter Name");
 
 	    game_over.show();
 
@@ -586,7 +615,7 @@ extern const int SCREEN_BPP ;
 	      {
 		return 1;
 	      }
-	    // animation.update_screen();
+	    
 	    
 	    //Keep track if whether or not the user has entered their name
 	   
@@ -604,7 +633,7 @@ extern const int SCREEN_BPP ;
 			
 			  //Get user input
 			  PlayerName.handle_input();
-			  //std::cout<< "knapptryck"<< std::endl;
+			
 			  
 			  //If the enter key was pressed
 			  if( ( event.type == SDL_KEYDOWN ) && ( event.key.keysym.sym == SDLK_RETURN ) )
@@ -614,12 +643,7 @@ extern const int SCREEN_BPP ;
 			      //cont =true;///////
 			      std::cout<< PlayerName.get_str()<< std::endl;
 			      std::cout<< "Enter"<< std::endl;
-				   //måste cleana oxå
-			      //return 0;
-			      
-			      
-			      //Change the message
-			      // message = TTF_RenderText_Solid( font, "Rank: 1st", textColor );
+				   
 			    }
 			
 
@@ -631,19 +655,12 @@ extern const int SCREEN_BPP ;
 			  {
 			    return 1;
 			  }
-			//	animation.update_screen();
 			
-			// std::cout<< PlayerName.get_str() << std::endl;
-			//std::cout<< "Fyfan" << std::endl;
 		      }
 		  }
 		
 		
-		/* switch(event.key.keysym.sym)
-		   {
-		   case SDLK_q: quit=true; cont=true; return 0;  break;
-		   }
-		*/
+	
 	      }
 
 	      PlayerName.show_centered();
@@ -653,11 +670,10 @@ extern const int SCREEN_BPP ;
 		{
 		  return 1;
 		}
-      //  animation.update_screen();
+    
 	  
 
-	       //}
-	    //quit=true;
+	       
 	      }
 	  
 
@@ -684,8 +700,7 @@ extern const int SCREEN_BPP ;
 	    }
 
 
-	//denna kod orsakar att spokena vaxlar mellan att vara arga och radda varje uppdatering!
-	
+		
 	// Sets ghosts back to chasing Pacman
 	if(special_food_timer.get_ticks() > 5000)
 	  {
@@ -756,8 +771,7 @@ extern const int SCREEN_BPP ;
 	//Show score on the side of the screen
 	myScore.show();
 	
-        //Update the screen
-	//animation.update_screen();
+      
 	
         if( SDL_Flip( screen ) == -1 )
 	  {
@@ -773,8 +787,7 @@ extern const int SCREEN_BPP ;
 	    }*/
       }
     
-    //Clean up
-    //    animation.clean_up();
+  
 
     return 0;
 }
