@@ -23,20 +23,6 @@
 
 
 
-
-//Screen attributes
-extern const int SCREEN_WIDTH ; //640;
-extern const int SCREEN_HEIGHT ;
-extern const int SCREEN_BPP ;
-
-//Map attributes
-extern const int MAP_WIDTH ;
-
-//The event structure
-SDL_Event event;
-
-
-
 //============================================================================
 // Sprite 
 //============================================================================
@@ -61,16 +47,6 @@ public:
 
   //The event structure
   SDL_Event event;
-
-  /*
-  //The areas of the pacmansheet
-  SDL_Rect clipsRight;
-  SDL_Rect clipsLeft;
-  SDL_Rect clipsDown;
-  SDL_Rect clipsUp;
-  SDL_Rect clipsStartscr;
-  SDL_Rect clipsInfopanel;
-  */
 
 };
 
