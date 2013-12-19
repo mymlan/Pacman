@@ -152,13 +152,13 @@ bool Special_Food::eaten()
 
 void Special_Food::show(SDL_Surface* screen)
 {
-  if (!eaten)
+  if (!eaten_)
     {
       apply_surface(box.x,box.y,ytpekare, screen);
     }
 }
 
-void Special_Food::show_all_special_food(std::vector<Special_Food> special_food_vector, SDL_Surface* screen);
+void Special_Food::show_all_special_food(std::vector<Special_Food> special_food_vector, SDL_Surface* screen)
 {
   for (std::vector<Special_Food>::iterator it = special_food_vector.begin() ; it != special_food_vector.end(); ++it)
     {
