@@ -121,7 +121,7 @@ class End_game : public Menu
  public:
   ~End_game();
   End_game();
-  void show(SDL_Surface*) const;
+  void show(SDL_Surface*);
   // void show(int x, int y, const char* header) const;
 
 };
