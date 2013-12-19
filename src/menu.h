@@ -73,7 +73,7 @@ private:
   ~Start();
   void show(SDL_Surface*) const;
   void show_infopanel(SDL_Surface*) const;
-  void handle_input(bool &proceed, bool &quit);
+  void handle_input(bool &proceed, bool &quit, SDL_Event);
   bool is_start();
   void change_start();
   void set_clips();

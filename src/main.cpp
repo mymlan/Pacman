@@ -442,7 +442,7 @@ extern const int SCREEN_BPP ;
 		
 		//If a key is pressed
 		while(SDL_PollEvent( &event))
-		  Startup.handle_input(proceed,quit);
+		  Startup.handle_input(proceed,quit,event);
 		
 	      }
 	  }
