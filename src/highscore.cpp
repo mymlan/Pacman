@@ -105,7 +105,7 @@ void Highscore::show(SDL_Surface* screen)
     entry.append(position_str).append(highscoretable[i].return_name()).append(" ").append(points_str);
     
     Highscore_screen myHighscorelist(400,100+50*i, entry);
-    myHighscorelist.show();
+    myHighscorelist.show(screen);
   }
 }
 
