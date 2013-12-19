@@ -123,10 +123,8 @@ void Ghost::move(std::vector<SDL_Rect> maze) //checks collision with walls
 }
 
 //behöver denna funktion verkligen ta in en pacmanklass???
-bool Ghost::is_checkpoint(std::vector<SDL_Rect> checkmaze, Pacman paccy) //looks for a checkpoint
+bool Ghost::is_checkpoint(std::vector<SDL_Rect> checkmaze) //, Pacman paccy) //looks for a checkpoint
 {
-  
-
   //check if ghost is right on top of checkpoint, and not just at the checkpoints corner
   box.x -= xVel;
   box.y -= yVel;
