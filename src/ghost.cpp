@@ -60,7 +60,7 @@ void Ghost::reverse_direction()
   crashed_ = 0;
 }
 
-void Ghost::show()
+void Ghost::show(SDL_Surface* screen)
 {
   apply_surface(box.x,box.y,ytpekare,screen);
 }

@@ -46,7 +46,7 @@ public:
   std::string get_score(); // return score as string
   void set_score(int);
   void set_name(std::string);
-  void show();
+  void show(SDL_Surface*);
   int return_score(); // returns score as int
   std::string return_name();
   // static bool sortingfunction( Score, Score) ;

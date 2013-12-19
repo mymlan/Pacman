@@ -75,7 +75,7 @@ void Food::was_eaten()
   eaten_=true;
 }
 
-void Food::show()  // = delete? /ingrid
+void Food::show(SDL_Surface* screen)  // = delete? /ingrid
 {
   if (!eaten_)
     {
@@ -89,11 +89,11 @@ SDL_Rect Food::get_box()
   return box;
 }
 
-void Food::show_all_food(std::vector<Food> food_vector)
+void Food::show_all_food(std::vector<Food> food_vector, SDL_Surface* screen)
 {
   for (std::vector<Food>::iterator it = food_vector.begin() ; it != food_vector.end(); ++it)
     {
-      (*it).show();
+      (*it).show(screen);
     }
 }
 
@@ -150,7 +150,7 @@ bool Special_Food::eaten()
   return eaten_;
 }
 
-void Special_Food::show()
+void Special_Food::show(SDL_Surface* screen)
 {
   if (!eaten)
     {
@@ -158,11 +158,11 @@ void Special_Food::show()
     }
 }
 
-void Special_Food::show_all_special_food(std::vector<Special_Food> special_food_vector);
+void Special_Food::show_all_special_food(std::vector<Special_Food> special_food_vector, SDL_Surface* screen);
 {
   for (std::vector<Special_Food>::iterator it = special_food_vector.begin() ; it != special_food_vector.end(); ++it)
     {
-      (*it).show();
+      (*it).show(screen);
     }
 }
 

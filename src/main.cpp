@@ -397,7 +397,7 @@ extern const int SCREEN_BPP ;
 
  
     // Clip the sprite sheet
-    myPacman.set_clips();
+  //   myPacman.set_clips();
  
 
     //While the user hasn't quit
@@ -412,13 +412,13 @@ extern const int SCREEN_BPP ;
 	    bool proceed = false;
 
 	    //Start screen
-	    Startup.show();
+	    Startup.show(screen);
 	    
-	    Startup.show_infopanel();
-	    theButton1.show();
-	    theButton2.show();
-	    theButton3.show();
-	    theButton4.show();
+	    Startup.show_infopanel(screen);
+	    theButton1.show(screen);
+	    theButton2.show(screen);
+	    theButton3.show(screen);
+	    theButton4.show(screen);
 	 
 	    //Update the screen
 	    if( SDL_Flip( screen ) == -1 )
@@ -501,8 +501,8 @@ extern const int SCREEN_BPP ;
 				  case SDLK_h: init(new_screen, "Highscore");
 				    Highscore_screen Highscore(400,10, "HIGHSCORE");
 				    
-				    Highscore.show();
-				    myHighscore.show();
+				    Highscore.show(screen);
+				    myHighscore.show(screen);
 				    
 				    //update screen
 				    if( SDL_Flip( screen ) == -1 )
@@ -611,7 +611,7 @@ extern const int SCREEN_BPP ;
 
 	    init(new_screen,"Enter Name");
 
-	    game_over.show();
+	    game_over.show(screen);
 
 	    //update screen
 	    if( SDL_Flip( screen ) == -1 )
@@ -651,7 +651,7 @@ extern const int SCREEN_BPP ;
 			
 
 
-			PlayerName.show_centered();
+			PlayerName.show_centered(screen);
 
 			//uppdate screen
 			if( SDL_Flip( screen ) == -1 )
@@ -666,7 +666,7 @@ extern const int SCREEN_BPP ;
 	
 	      }
 
-	      PlayerName.show_centered();
+	      PlayerName.show_centered(screen);
 
 	      //uppdate screen
 	      if( SDL_Flip( screen ) == -1 )
@@ -738,13 +738,13 @@ extern const int SCREEN_BPP ;
 	SDL_FillRect( screen, &wall25, SDL_MapRGB( screen->format, 0xAF, 0x00, 0x00) );
 
         //Show pacman on the screen
-        myPacman.show();
+        myPacman.show(screen);
 	
 	//Show food on the screen
-	myFood1.show_all_food(food_vector);
+	myFood1.show_all_food(food_vector,screen);
 
 	//Show special_food on the screen
-	mySpecial_Food1.show_all_special_food(special_food_vector);
+	mySpecial_Food1.show_all_special_food(special_food_vector,screen);
 
 
 	//Show the checkpoints - just for testing
@@ -754,25 +754,25 @@ extern const int SCREEN_BPP ;
 	  }
 
 	//Show ghost on the screen
-	myGhost1.show();
-	myGhost2.show();
-	myGhost3.show();
+	myGhost1.show(screen);
+	myGhost2.show(screen);
+	myGhost3.show(screen);
 
 	//show infopanel
-	Startup.show_infopanel();
+	Startup.show_infopanel(screen);
 
 	//show the buttons
-	theButton1.show();
-	theButton2.show();
-	theButton3.show();
-	theButton4.show();
+	theButton1.show(screen);
+	theButton2.show(screen);
+	theButton3.show(screen);
+	theButton4.show(screen);
 
 
 	//show the lives on the screen
-	myPacman.showlife();
+	myPacman.showlife(screen);
 
 	//Show score on the side of the screen
-	myScore.show();
+	myScore.show(screen);
 	
       
 	

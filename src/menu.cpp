@@ -78,7 +78,7 @@ Start::Start(int x, int y, std::string text)
 
   
   ytpekare =  optimizedImage; // * ???
-
+  
   SDL_Rect clipsStartscr[1];
   SDL_Rect clipsInfopanel[1];
 
@@ -104,13 +104,13 @@ Start::~Start()
 }
 
 
-void Start::show() const
+void Start::show(SDL_Surface* screen) const
 {
   apply_surface(0,0,ytpekare,screen, &clipsStartscr[0]); 
 }
 
 
-void Start::show_infopanel() const // inget inarg tidigare
+void Start::show_infopanel(SDL_Surface* screen) const
 {
   for (int i=0; i<=8; i++)
     { 
@@ -235,12 +235,12 @@ Button::Button(int x, int y, std::string text)
 
 }
   
-void Button::show() const
+void Button::show(SDL_Surface* screen) const
 {
  
 }
 
-void Button::show(int x, int y, const char* header) const
+void Button::show(int x, int y, const char* header,SDL_Surface* screen) const
 {
   textpekare = TTF_RenderText_Solid( Font, header , color );
   apply_surface(x, y,textpekare, screen);  
@@ -284,7 +284,7 @@ Highscore_screen::Highscore_screen(int x, int y, std::string text)
   Font = TTF_OpenFont("img/xtrusion.ttf",55);
 } 
 
-void Highscore_screen::show() const
+void Highscore_screen::show(SDL_Surface* screen) const
 { 
   textpekare = TTF_RenderText_Solid( Font, header , color );
   apply_surface(x, y,text, screen);
@@ -341,8 +341,7 @@ End_game::End_game()
   Font = TTF_OpenFont("img/xtrusion.ttf",55);
 }
 
-
-void End_game::show() const
+void End_game::show(SDL_Surface* screen) const
 {
   textpekare = TTF_RenderText_Solid( Font, header , color ); //inputfont headercolor
   apply_surface(x, y,textpekare, screen); 

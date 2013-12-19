@@ -63,13 +63,13 @@ private:
   //true if pacman has eaten special_food
   bool pacman_has_eaten_special_food;
 
-   
+  /*
   //The areas of the pacmansheet
   SDL_Rect clipsRight;
   SDL_Rect clipsLeft;
   SDL_Rect clipsDown;
   SDL_Rect clipsUp;
-
+  */
 
 public:
   //Initializes the variables
@@ -81,7 +81,7 @@ public:
 
   //Keeps tracks of pacmans lives and when he dies
   int life();
-  void showlife();
+  void showlife(SDL_Surface*);
   bool game_over();
   bool eat_eaten(class Ghost&, class Score&);
  
@@ -98,7 +98,7 @@ public:
   void move(std::vector<SDL_Rect>, SDL_Rect);
 
   //Shows the Pacman on the screen
-  void show();
+  void show(SDL_Surface*);
   
   //Sets Pacmans position to startposition
   void get_home();
@@ -110,9 +110,9 @@ public:
   
   bool has_pacman_eaten_special_food();
 
-  void set_clips();
+  //void set_clips();
 
-  void showlife(int lives);
+  void showlife(int, SDL_Surface*);
 };
 
 #endif

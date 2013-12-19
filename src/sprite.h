@@ -38,10 +38,10 @@ public:
 
   void apply_surface(int x, int y, SDL_Surface* ytpekare, SDL_Surface* destination, SDL_Rect* clip = NULL ); //virtual
   
-   bool check_collision( SDL_Rect A, SDL_Rect B ); //virtual
+  bool check_collision( SDL_Rect A, SDL_Rect B ); //virtual
   
 
-   virtual void show() = 0; //virtual
+  virtual void show(SDL_Surface*) = 0; //pure virtual
 
 
  protected:

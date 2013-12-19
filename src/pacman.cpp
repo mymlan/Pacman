@@ -161,11 +161,11 @@ void Pacman::move(std::vector<SDL_Rect> maze, SDL_Rect wall25)
 
 
 
-void Pacman::show()
+void Pacman::show(SDL_Surface* screen)
 {
   //Sprite animation;
 
-  
+  /*
     //If Pacman is moving left
     if( xVel < 0 )
     {
@@ -208,7 +208,7 @@ void Pacman::show()
     {
         frame = 0;
     }
-
+    
     //Show the pacman
     if( status == PACMAN_RIGHT )
       {
@@ -227,10 +227,11 @@ void Pacman::show()
       {
 	apply_surface (box.x,box.y, ytpekare, screen, &clipsDown[ frame ]);
       }
-    /*  else if( status == PACMAN_DOWN)
-      {
-	apply_surface (box.x,box.y, ytpekare , screen, &clipsDown[ frame ]);
-	}*/
+    
+
+
+*/
+    apply_surface(box.x,box.y,ytpekare,screen, &clipsRight[ frame]);
 }
 
 
@@ -384,7 +385,7 @@ void Pacman::set_clips()
 }
 
 
-void Pacman::showlife(int lives)
+void Pacman::showlife(int lives, SDL_Surface* screen)
 {
 if (lives==2)
     {

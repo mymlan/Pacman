@@ -80,7 +80,7 @@ void Highscore::load_list()
 }
 
 
-void Highscore::show()
+void Highscore::show(SDL_Surface* screen)
 {
   apply_surface(0,0,ytpekare,screen); // ytpekare = score tidigare
 
