@@ -290,17 +290,12 @@ extern const int SCREEN_BPP ;
     
 
   //Initialize
-  if( animation.init() == false )
+  if( init() == false )
     {
       return 1;
     }
     
-  //Load the files
-  if( animation.load_files() == false )
-    {
-      std::cout << "trubbel att ladda filerna" << std::endl;
-      return 1;
-    }
+  
   
   //Initialize walls
   SDL_Rect wall1 = {40,40,40,200}; //dessa två har samma parametrar som checkpoint1 och checkpoint2
@@ -368,7 +363,7 @@ extern const int SCREEN_BPP ;
 
  
     // Clip the sprite sheet
-    animation.set_clips();
+    myPacman.set_clips();
  
 
     //While the user hasn't quit
