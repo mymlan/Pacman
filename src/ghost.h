@@ -33,49 +33,36 @@ class Ghost : public Sprite
 protected:
   //keeps track of previous direction, helps the ghosts from getting stuck.
    int crashed_;
-
 //The collission box of the ghost
   SDL_Rect box;
-
   //The velocity of the ghost
   int xVel, yVel;
-
 //The attributes of the Pacman
   const int GHOST_WIDTH  {30};
   const int GHOST_HEIGHT {29};
-
   //Angry or scare ghost. false is  angry, true is scared
   bool scared_;
-
-
   //1 is left, 2 is right, 3 is up, and 4 is down. 0 will be the starting value, meaning the ghost hasn't found out where pacman is
   int first_way_to_pacman_;
   int second_way_to_pacman_;
-public:
 
-  
-  //Moves the ghost
-  void move(std::vector<SDL_Rect>);
-  
-  
-  SDL_Rect get_box();
-  
-  //use reverse_direction when ghost toggles scared_
-  void reverse_direction();
- 
-  //Sets Ghost position to startposition
-  virtual void Get_home() = 0;
+public:
   
   //Returns if ghost is scared/angry
   bool is_scared();
-  
   //Switches ghost between chase and flee states
   void change_mood();
-
+//use reverse_direction when ghost toggles scared_
+  void reverse_direction();
   void show();
+  //Moves the ghost
+  void move(std::vector<SDL_Rect>); 
+  bool is_checkpoint(std::vector<SDL_Rect>, class Pacman);
+  SDL_Rect get_box();
+
+//Sets Ghost position to startposition
+  virtual void get_home() = 0;
 };
-
-
 
 class Ghost1 : public Ghost
 {
@@ -89,10 +76,7 @@ public:
   void get_home();  
 
   //Shows the ghost on the screen
-  void show();
-
- //Looks for checkpoints, 
-  bool is_checkpoint(std::vector<SDL_Rect>, Pacman);
+  //  void show();
 
   //If the ghost finds a checkpoint, it reorients. uses is_checkpoint?
   void do_if_checkpoint(std::vector<SDL_Rect>, Pacman);
@@ -112,11 +96,7 @@ public:
   void get_home();
 
   //Shows the ghost on the screen
-  void show();
-
-
-//Looks for checkpoints
-  bool is_checkpoint(std::vector<SDL_Rect>);
+  // void show();
 
 //If the ghost finds a checkpoint, it reorients. uses is_checkpoint?
   void do_if_checkpoint(std::vector<SDL_Rect>);
@@ -134,10 +114,7 @@ public:
   void get_home();
 
   //Shows the ghost on the screen
-  void show();
-  
-  //Looks for checkpoints
-  bool is_checkpoint(std::vector<SDL_Rect>, Pacman);
+  //  void show();
 
  //If the ghost finds a checkpoint, it reorients. uses is_checkpoint
   void do_if_checkpoint(std::vector<SDL_Rect>, Pacman);
