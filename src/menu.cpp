@@ -105,7 +105,7 @@ Start::~Start()
 
 void Start::show(SDL_Surface* screen) const
 {
-  apply_surface(0,0,ytpekare,screen,); 
+  apply_surface(0,0,ytpekare,screen); 
 }
 
 void Start::show_infopanel(SDL_Surface* screen) const
