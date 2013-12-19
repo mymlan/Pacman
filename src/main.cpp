@@ -111,8 +111,7 @@ extern const int SCREEN_BPP ;
  //StringInput
  StringInput PlayerName;
 
- //Initialize variables
- animation.initialize();
+
 
  //Initialize Food
  Food myFood1(10,50);
