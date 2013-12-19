@@ -103,12 +103,10 @@ Start::~Start()
   SDL_Quit();
 }
 
-
 void Start::show(SDL_Surface* screen) const
 {
   apply_surface(0,0,ytpekare,screen, &clipsStartscr[0]); 
 }
-
 
 void Start::show_infopanel(SDL_Surface* screen) const
 {
@@ -136,13 +134,10 @@ void Start::handle_input(bool &proceed, bool &quit)
     }
 }
 
-
-
 bool Start::is_start()
 {
   return start;
 }
-
 
 void Start::change_start()
 {
@@ -243,7 +238,7 @@ void Button::show(SDL_Surface* screen) const
 void Button::show(int x, int y, const char* header,SDL_Surface* screen) const
 {
   textpekare = TTF_RenderText_Solid( Font, header , color );
-  apply_surface(x, y,textpekare, screen);  
+  apply_surface(x, y,header, screen);  
 }
 
 
