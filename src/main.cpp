@@ -740,12 +740,14 @@ extern const int MAP_WIDTH ;
             return 1;
 	  }
 	*/
+
         //Cap the frame rate
-        if( fps.get_ticks() < 1000 / FRAMES_PER_SECOND )
+	fps.delay_game();
+	/* if( fps.get_ticks() < 1000 / FRAMES_PER_SECOND )
 	  {
             SDL_Delay( ( 1000 / FRAMES_PER_SECOND ) - fps.get_ticks() );
-	  }
-	}
+	    }*/
+      }
     
     //Clean up
     animation.clean_up();

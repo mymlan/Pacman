@@ -41,6 +41,7 @@ private:
   //The timer status
   bool paused;
   bool started;
+  int FRAMES_PER_SECOND{20};
   
 public:
   //Initializes variables
@@ -58,6 +59,9 @@ public:
   //Checks the status of the timer
   bool is_started();
   bool is_paused();
+
+  void delay_game();
+ 
 };
 
 
