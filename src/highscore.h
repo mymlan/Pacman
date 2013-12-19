@@ -27,15 +27,17 @@
 //========================================== HIGHSCORE============================================
 
 //Highscore
-class Highscore
+class Highscore : public Sprite
 {
 private:
   std::vector<Score> highscoretable;
+ 
 public:
   bool is_new_highscore(Score&);
   void save_new_highscore(Score&);
   void show();
   void load_list();
+ 
 };
 
 #endif

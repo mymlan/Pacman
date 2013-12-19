@@ -41,7 +41,7 @@ Ghost1::Ghost1()
   crashed_ = 24;
 
   //Set the ghost's dimensions
-  box.w = GHOST_WIDTH;    //we should change the global constants names PACMAN_WIDTH to CHARACTER_WIDTH
+  box.w = GHOST_WIDTH;   
   box.h = GHOST_HEIGHT;
 
   //Initialize the velocity
@@ -89,8 +89,8 @@ Ghost2::Ghost2()
   crashed_ = false;
 
   //Set the ghost's dimensions
-  box.w = PACMAN_WIDTH;    //we should change the global constants names PACMAN_WIDTH to CHARACTER_WIDTH
-  box.h = PACMAN_HEIGHT;
+  box.w = GHOST_WIDTH;    
+  box.h = GHOST_HEIGHT;
 
   //Initialize the velocity
   xVel = 10;
@@ -141,8 +141,8 @@ Ghost3::Ghost3()
   crashed_ = false;
 
   //Set the ghost's dimensions
-  box.w = PACMAN_WIDTH;    //we should change the global constants names PACMAN_WIDTH to CHARACTER_WIDTH
-  box.h = PACMAN_HEIGHT;
+  box.w = GHOST_WIDTH;   
+  box.h = GHOST_HEIGHT;
 
   //Initialize the velocity
   xVel = 0;
@@ -203,7 +203,7 @@ void Ghost::show()
 
 void Ghost::move(std::vector<SDL_Rect> maze) //checks collision with walls
 {
-  Sprite animation;
+  
   //Set velocity and direction
   switch(first_way_to_pacman_)
     {
@@ -221,7 +221,7 @@ void Ghost::move(std::vector<SDL_Rect> maze) //checks collision with walls
   //If the ghost went too far to the left or right or has collided with the walls
   for (std::vector<SDL_Rect>::iterator it = maze.begin() ; it != maze.end(); ++it) //try all the walls
     {
-      if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( animation.check_collision( box, *it ) ) )
+      if( ( box.x < 0 ) || ( box.x + GHOST_WIDTH > MAP_WIDTH ) || ( check_collision( box, *it ) ) )
 	{
 
 	  //Move back
@@ -239,7 +239,7 @@ void Ghost::move(std::vector<SDL_Rect> maze) //checks collision with walls
   //If the square went too far up or down or has collided with the walls
   for (std::vector<SDL_Rect>::iterator it = maze.begin() ; it != maze.end(); ++it)
     {
-      if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( animation.check_collision( box, *it ) ) )
+      if( ( box.y < 0 ) || ( box.y + GHOST_HEIGHT > SCREEN_HEIGHT ) || ( check_collision( box, *it ) ) )
 	{
 	  //Move back
 	  box.y -= yVel;
@@ -262,7 +262,7 @@ void Ghost::move(std::vector<SDL_Rect> maze) //checks collision with walls
 //behöver denna funktion verkligen ta in en pacmanklass???
 bool Ghost1::is_checkpoint(std::vector<SDL_Rect> checkmaze, Pacman paccy) //looks for a checkpoint
 {
-  Sprite animation;
+  
 
   //check if ghost is right on top of checkpoint, and not just at the checkpoints corner
   box.x -= xVel;
@@ -271,7 +271,7 @@ bool Ghost1::is_checkpoint(std::vector<SDL_Rect> checkmaze, Pacman paccy) //look
   //check for checkpoint collission
   for(std::vector<SDL_Rect>::iterator it = checkmaze.begin() ; it != checkmaze.end(); ++it) //try all the checkpoints
     {
-      if( animation.check_collision( box, *it ) )
+      if( check_collision( box, *it ) )
 	{
 	  //restore actual position
 	  box.x += xVel;
@@ -289,7 +289,7 @@ bool Ghost1::is_checkpoint(std::vector<SDL_Rect> checkmaze, Pacman paccy) //look
 
 bool Ghost2::is_checkpoint(std::vector<SDL_Rect> checkmaze) //looks for a checkpoint
 {
-  Sprite animation;
+  
 
   //check if ghost is right on top of checkpoint, and not just at the checkpoints corner
   box.x -= xVel;
@@ -298,7 +298,7 @@ bool Ghost2::is_checkpoint(std::vector<SDL_Rect> checkmaze) //looks for a checkp
   //check for checkpoint collission
   for(std::vector<SDL_Rect>::iterator it = checkmaze.begin() ; it != checkmaze.end(); ++it) //try all the checkpoints
     {
-      if(animation.check_collision( box, *it ) )
+      if(check_collision( box, *it ) )
 	{
 	  //restore actual position
 	  box.x += xVel;
@@ -315,7 +315,7 @@ bool Ghost2::is_checkpoint(std::vector<SDL_Rect> checkmaze) //looks for a checkp
 
 bool Ghost3::is_checkpoint(std::vector<SDL_Rect> checkmaze, Pacman paccy) //looks for a checkpoint
 {
-  Sprite animation;
+  
 
  //check if ghost is right on top of checkpoint, and not just at the checkpoints corner
   box.x -= xVel;
@@ -324,7 +324,7 @@ bool Ghost3::is_checkpoint(std::vector<SDL_Rect> checkmaze, Pacman paccy) //look
   //check for checkpoint collission
   for(std::vector<SDL_Rect>::iterator it = checkmaze.begin() ; it != checkmaze.end(); ++it) //try all the checkpoints
     {
-      if( animation.check_collision( box, *it ))
+      if( check_collision( box, *it ))
 	{
 	  //restore actual position
 	  box.x += xVel;

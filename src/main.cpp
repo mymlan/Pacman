@@ -78,50 +78,51 @@ extern const int SCREEN_HEIGHT ;
 extern const int SCREEN_BPP ;
 
 //Map attributes
-extern const int MAP_WIDTH ;
+ extern const int MAP_WIDTH ;
   
 
-  //Quit flag
-  bool quit = false;
+ //Quit flag
+ bool quit = false;
 
     //Initialize Sprite
   // Sprite animation;
+   
 
-    //Initialize Menu
-    Start Startup(0,0,"PACMAN");
-
-    //The pacman
-    Pacman myPacman();
-
-    //The ghost
-    Ghost1 myGhost1;
-
-    //The second ghost
-    Ghost2 myGhost2;
-
-    //The third ghost
-    Ghost3 myGhost3;
-
-    //Player score
-    Score myScore;
-
-    //Highscore
-    Highscore myHighscore;
+ //Initialize Menu
+ Start Startup(0,0,"PACMAN");
 
 
-    //StringInput
-    StringInput PlayerName;
+ //The pacman
+ Pacman myPacman;
 
-    //Initialize variables
-    animation.initialize();
+ //The ghost
+ Ghost1 myGhost1;
 
-    //Initialize Food
-    Food myFood1(10,50);
-    Food myFood2(10,90);
-    Food myFood3(10,130);
-    Food myFood4(10,170);
-    Food myFood5(10,210);
-    Food myFood6(10,250);
+ //The second ghost
+ Ghost2 myGhost2;
+
+ //The third ghost
+ Ghost3 myGhost3;
+
+ //Player score
+ Score myScore;
+
+ //Highscore
+ Highscore myHighscore;
+
+
+ //StringInput
+ StringInput PlayerName;
+
+
+
+ //Initialize Food
+ Food myFood1(10,50);
+ Food myFood2(10,90);
+ Food myFood3(10,130);
+ Food myFood4(10,170);
+ Food myFood5(10,210);
+ Food myFood6(10,250);
     Food myFood7(10,290);
     Food myFood8(10,330);
     Food myFood9(10,370);
@@ -753,6 +754,7 @@ extern const int MAP_WIDTH ;
 	theButton2.show();
 	theButton3.show();
 	theButton4.show();
+
 
 	//show the lives on the screen
 	myPacman.showlife();
