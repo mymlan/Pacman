@@ -39,6 +39,10 @@ protected:
   //The velocity of the ghost
   int xVel, yVel;
 
+//The attributes of the Pacman
+  const int PACMAN_WIDTH  {30};
+  const int PACMAN_HEIGHT {29};
+
   //Angry or scare ghost. false is  angry, true is scared
   bool scared_;
 

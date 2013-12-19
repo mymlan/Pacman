@@ -33,6 +33,10 @@ protected:
   SDL_Rect button;
   std::string message_;
   TTF_Font *Font;
+  //The attributes of the Buttons
+  const int BUTTON_WIDTH {220};
+  const int BUTTON_HEIGHT {40};
+
 public:
  
  Menu(std::string filename): Sprite::Sprite(std::string filename){}
@@ -66,8 +70,12 @@ private:
   SDL_Rect clipsStartscr;
   SDL_Rect clipsInfopanel;
   
-  int MAP_WIDTH;
-  int INFOPANEL_WIDTH;
+  const int MAP_WIDTH{640};
+  //int INFOPANEL_WIDTH;
+ //The attributes of the Infopanel
+  const int INFOPANEL_WIDTH {40};
+  const int INFOPANEL_HEIGHT {480};
+  const int SCREEN_HEIGHT{480};
   
 };
 
@@ -82,6 +90,8 @@ public:
   void show(int x, int y, const char* header) const;
  private:
   SDL_Surface *textpekare;
+
+
 };
 
 
