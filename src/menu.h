@@ -102,8 +102,8 @@ class Highscore_screen : public Menu
  public:
   ~Highscore_screen();
   Highscore_screen(int x, int y, std::string text);
-  void show() const = delete;
-  void show(int x, int y, const char* header) const;
+  void show() const;
+  // void show(int x, int y, const char* header) const;
   bool is_paused() const;
   void change_pause();
 };

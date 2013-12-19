@@ -102,8 +102,8 @@ int main( int argc, char* args[] )
 
   //initialize settings
   // Settings settings;
-
-
+  //initialize the variable event, which we use to check events
+SDL_Event event;
   
 //Screen attributes
 extern const int SCREEN_WIDTH ; //640;
