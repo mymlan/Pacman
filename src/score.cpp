@@ -35,10 +35,7 @@ Score::Score()
   //Load player scoreFont
   scoreFont = TTF_OpenFont("img/arial.ttf",28);
 
-  if (scoreFont ==NULL)
-    {
-      return false;
-    }
+  
 }
 
 void Score::reset_score()
@@ -77,9 +74,9 @@ void Score::set_name(std::string new_name)
   name=new_name;
 }
 
-void Score::show(SDL_Surface* screen)
+/*void Score::show(SDL_Surface* screen)
 {
   score = TTF_RenderText_Solid( scoreFont, get_score().c_str(), textColor );
   apply_surface(0,0,score, screen);
-}
+  }*/
 

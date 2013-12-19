@@ -33,7 +33,7 @@ class Food : public Sprite
   SDL_Rect box;
   bool eaten_;
  public:
-  Food(int,int);
+  Food(int x_cord,int y_cord);
   bool eaten();
   void was_eaten();
   void show(SDL_Surface*);

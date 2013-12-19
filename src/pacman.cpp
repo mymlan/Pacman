@@ -59,7 +59,7 @@ Pacman::Pacman() // string filename
   SDL_Surface* optimizedImage = NULL;
 
   //Load the image
-  loadedImage = IMG_Load("img/Pacman.bmp");
+  loadedImage = IMG_Load("img/square.bmp");
   
   //If the image loaded
   if( loadedImage != NULL )
@@ -79,7 +79,7 @@ Pacman::Pacman() // string filename
     }
   
   
-  *ytpekare =  optimizedImage;
+  ytpekare =  optimizedImage;
   
   
 }
@@ -106,7 +106,7 @@ int Pacman::life()
 
 
 
-void Pacman::handle_input()
+void Pacman::handle_input(SDL_Event event)
 {
     //If a key was pressed
     if( event.type == SDL_KEYDOWN )
@@ -124,21 +124,20 @@ void Pacman::handle_input()
 
 void Pacman::move(std::vector<SDL_Rect> maze, SDL_Rect wall25)
 {
-  //Sprite
-  Sprite animation;
+  
 
     //Move pacman left or right
     box.x += xVel;
     //If pacman went too far to the left or right or has collided with the walls
     for (std::vector<SDL_Rect>::iterator it = maze.begin() ; it != maze.end(); ++it)
       {
-	if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( animation.check_collision( box, *it ) ) )
+	if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || (check_collision( box, *it ) ) )
 	  {
 	    //Move back
 	    box.x -= xVel;
 	  }
       }   
-	if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( animation.check_collision( box, wall25 ) ) )
+	if( ( box.x < 0 ) || ( box.x + PACMAN_WIDTH > MAP_WIDTH ) || ( check_collision( box, wall25 ) ) )
 	  {
 	    //Move back
 	    box.x -= xVel;
@@ -150,7 +149,7 @@ void Pacman::move(std::vector<SDL_Rect> maze, SDL_Rect wall25)
     //If pacman went too far up or down or has collided with the walls
     for (std::vector<SDL_Rect>::iterator it = maze.begin() ; it != maze.end(); ++it)
       {
-	if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || ( animation.check_collision( box, *it ) ) )
+	if( ( box.y < 0 ) || ( box.y + PACMAN_HEIGHT > SCREEN_HEIGHT ) || (check_collision( box, *it ) ) )
 	  {
 	    //Move back
 	    box.y -= yVel;
@@ -231,7 +230,7 @@ void Pacman::show(SDL_Surface* screen)
 
 
 */
-    apply_surface(box.x,box.y,ytpekare,screen, &clipsRight[ frame]);
+    apply_surface(box.x,box.y,ytpekare,screen);
 }
 
 
@@ -248,9 +247,9 @@ bool Pacman::game_over()
 //Collision between
 bool Pacman::eat_eaten(Ghost& ghost_object,Score& myScore)
 {
-  Sprite animation;
+ 
   
-  if (animation.check_collision(box, ghost_object.get_box()))
+  if (check_collision(box, ghost_object.get_box()))
       {
 	if (ghost_object.is_scared())
 	  {
@@ -272,11 +271,11 @@ bool Pacman::eat_eaten(Ghost& ghost_object,Score& myScore)
 //Pacman eats food
 void Pacman::eat_food(std::vector<Food>& food_vector, Score& myScore) //Food& food_object
 {
-  Sprite animation;
+  
   for (std::vector<Food>::iterator it = food_vector.begin() ; it != food_vector.end(); ++it)
     {
     
-      if ((animation.check_collision(box, (*it).get_box())) and !(*it).eaten())
+      if ((check_collision(box, (*it).get_box())) and !(*it).eaten())
 	{
 	  myScore.add_points(1);
 	  (*it).was_eaten();
@@ -293,10 +292,10 @@ void Pacman::eat_food(std::vector<Food>& food_vector, Score& myScore) //Food& fo
 //Pacman eats special_food
 void Pacman::eat_special_food(std::vector<class Special_Food>& special_food_vector,Score& myScore)
 {
-  Sprite animation;
+  
  for (std::vector<Special_Food>::iterator it = special_food_vector.begin() ; it != special_food_vector.end(); ++it)
     {
-      if ((animation.check_collision(box, (*it).get_box())) and !(*it).eaten())
+      if ((check_collision(box, (*it).get_box())) and !(*it).eaten())
 	{
 	  myScore.add_points(10);
 	  (*it).was_eaten();
@@ -339,7 +338,7 @@ bool Pacman::has_pacman_eaten_special_food()
   return pacman_has_eaten_special_food;
 }
 
-
+/*
 void Pacman::set_clips()
 {
     //Clip the sprites
@@ -383,15 +382,17 @@ void Pacman::set_clips()
     clipsUp[ 1 ].w = PACMAN_WIDTH;
     clipsUp[ 1 ].h = PACMAN_HEIGHT;
 }
+*/
 
 
+ /*
 void Pacman::showlife(int lives, SDL_Surface* screen)
 {
 if (lives==2)
     {
-      apply_surface(910,440 ,pacman, screen, &clipsLeft[1] );
-       apply_surface(910+PACMAN_WIDTH,440 ,pacman, screen, &clipsLeft[1] );
-       apply_surface(910+2*PACMAN_WIDTH,440 ,pacman, screen, &clipsLeft[1] );
+      apply_surface(910,440 ,ytpekare, screen);
+       apply_surface(910+PACMAN_WIDTH,440 ,ytpekare, screen);
+       apply_surface(910+2*PACMAN_WIDTH,440 ,ytpekare, screen);
     }   
  else if (lives==1)
     {
@@ -405,3 +406,4 @@ if (lives==2)
      apply_surface(910+2*PACMAN_WIDTH,440 ,pacman, screen, &clipsLeft[1] );
    }
 }
+*/

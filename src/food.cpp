@@ -100,7 +100,7 @@ void Food::show_all_food(std::vector<Food> food_vector, SDL_Surface* screen)
 //============================================================================
 //  Class: Special_Food
 //============================================================================
-Special_Food::Special_Food(int x_cord, int y_cord, std::string filename)
+Special_Food::Special_Food(int x_cord, int y_cord)
 {
   bool eaten_=false;
 
@@ -109,8 +109,8 @@ Special_Food::Special_Food(int x_cord, int y_cord, std::string filename)
   box.y = y_cord;
 
   //Set the foods dimensions
-  box.w = PACMAN_WIDTH;    //we should change the global constants names PACMAN_WIDTH to CHARACTER_WIDTH
-  box.h = PACMAN_HEIGHT;
+  box.w = 29;    //we should change the global constants names PACMAN_WIDTH to CHARACTER_WIDTH
+  box.h = 30;
 
   //The image that's loaded
   SDL_Surface* loadedImage = NULL;
@@ -137,7 +137,7 @@ Special_Food::Special_Food(int x_cord, int y_cord, std::string filename)
 	  SDL_SetColorKey( optimizedImage, SDL_SRCCOLORKEY, SDL_MapRGB( optimizedImage->format, 0, 0xFF, 0xFF ) );
         }
     }  
-  *ytpekare =  optimizedImage;
+  ytpekare =  optimizedImage;
 }
 
 void Special_Food::was_eaten()
@@ -152,13 +152,13 @@ bool Special_Food::eaten()
 
 void Special_Food::show(SDL_Surface* screen)
 {
-  if (!eaten)
+  if (!eaten_)
     {
       apply_surface(box.x,box.y,ytpekare, screen);
     }
 }
 
-void Special_Food::show_all_special_food(std::vector<Special_Food> special_food_vector, SDL_Surface* screen);
+void Special_Food::show_all_special_food(std::vector<Special_Food> special_food_vector, SDL_Surface* screen)
 {
   for (std::vector<Special_Food>::iterator it = special_food_vector.begin() ; it != special_food_vector.end(); ++it)
     {

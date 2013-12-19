@@ -86,7 +86,7 @@ public:
   ~Button();
   Button(int x, int y, std::string text);
 
-  void show(SDL_Surface*) const ;
+  void show(SDL_Surface*) ;
   void show(int x, int y, const char* header,SDL_Surface*);
  private:
   SDL_Surface *textpekare;

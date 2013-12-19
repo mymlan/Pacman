@@ -103,12 +103,10 @@ Start::~Start()
   SDL_Quit();
 }
 
-
 void Start::show(SDL_Surface* screen)
 {
   apply_surface(0,0,ytpekare,screen); 
 }
-
 
 void Start::show_infopanel(SDL_Surface* screen)
 {
@@ -117,7 +115,6 @@ void Start::show_infopanel(SDL_Surface* screen)
   texttest = TTF_RenderText_Solid( Font, header , color ); //inputfont headercolor
   apply_surface(button.x, button.y,texttest, screen); 
 }
-
 
 void Start::handle_input(bool &proceed, bool &quit, SDL_Event event)
   
@@ -133,13 +130,10 @@ void Start::handle_input(bool &proceed, bool &quit, SDL_Event event)
     }
 }
 
-
-
 bool Start::is_start()
 {
   return start;
 }
-
 
 void Start::change_start()
 {
@@ -232,7 +226,7 @@ Button::Button(int x, int y, std::string text)
 
 }
   
-void Button::show(SDL_Surface* screen) const
+void Button::show(SDL_Surface* screen)
 {
  
 }
@@ -242,7 +236,6 @@ void Button::show(int x, int y, const char* header,SDL_Surface* screen)
   SDL_Surface* texttest;
   texttest = TTF_RenderText_Solid( Font, header , color );
   apply_surface(button.x, button.y,texttest, screen);
-   
 }
 
 
@@ -305,7 +298,6 @@ void Highscore_screen::change_pause()
 }
 
 
-
 //====================== END_GAME ===================================================
 End_game::~End_game()
 {
@@ -349,3 +341,4 @@ void End_game::show(SDL_Surface* screen)
   texttest = TTF_RenderText_Solid( Font, header , color ); //inputfont headercolor
   apply_surface(button.x, button.y,texttest, screen); 
 }
+

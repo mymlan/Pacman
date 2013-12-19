@@ -24,7 +24,7 @@
 //============================================================================
 // Constructor 
 //============================================================================
-Sprite::Sprite(std::string filename)
+/*Sprite::Sprite(std::string filename)
   
 {
   //The image that's loaded
@@ -57,7 +57,7 @@ Sprite::Sprite(std::string filename)
   ytpekare =  optimizedImage;
 
 }
-
+*/
 
 //============================================================================
 //  Memory release

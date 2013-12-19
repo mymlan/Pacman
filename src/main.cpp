@@ -105,7 +105,7 @@ int main( int argc, char* args[] )
   //initialize settings
   // Settings settings;
   //initialize the variable event, which we use to check events
-SDL_Event event;
+  SDL_Event event;
   
 //Screen attributes
 extern const int SCREEN_WIDTH ; //640;
@@ -524,7 +524,7 @@ extern const int SCREEN_BPP ;
 
 	  
 	    //Handle events for the pacman
-	    myPacman.handle_input();
+	    myPacman.handle_input(event);
 
 
 	  
@@ -769,7 +769,7 @@ extern const int SCREEN_BPP ;
 
 
 	//show the lives on the screen
-	myPacman.showlife(screen);
+	//	myPacman.showlife(screen);
 
 	//Show score on the side of the screen
 	myScore.show(screen);
