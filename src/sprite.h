@@ -36,12 +36,12 @@ public:
   // virtual void apply_surface( SDL_Surface* destination, SDL_Rect* clip = NULL ); 
   // som den såg ut inatt
 
-  virtual void apply_surface(int x, int y, SDL_Surface* ytpekare, SDL_Surface* destination, SDL_Rect* clip = NULL );
+  void apply_surface(int x, int y, SDL_Surface* ytpekare, SDL_Surface* destination, SDL_Rect* clip = NULL ); //virtual
   
-  virtual bool check_collision( SDL_Rect A, SDL_Rect B );
+   bool check_collision( SDL_Rect A, SDL_Rect B ); //virtual
   
 
-  virtual void show() = 0;
+   virtual void show() = 0; //virtual
 
 
  protected:

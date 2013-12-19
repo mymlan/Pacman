@@ -24,6 +24,11 @@
 //  Class: Menu
 //============================================================================
 
+Menu::Menu(std::string filename)
+{
+  Sprite(filename);
+}
+
 //========================= START ==============================================
 
 Start::Start(int x, int y, std::string text)

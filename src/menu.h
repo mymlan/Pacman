@@ -38,8 +38,8 @@ protected:
   const int BUTTON_HEIGHT {40};
 
 public:
- 
- Menu(std::string filename): Sprite::Sprite(std::string filename){}
+  virtual void show();
+  Menu(std::string filename);//: new Sprite (std::string filename){}
   virtual ~Menu();
 };
 
@@ -48,20 +48,7 @@ public:
 
 class Start : public Menu
 {
-public:
-  Start(int x, int y, std::string text);
-  ~Start();
 
-
-  void show() const;
-  void show_infopanel() const;
-  void handle_input(bool &proceed, bool &quit);
-
-
-  bool is_start();
-  void change_start();
-  
-  void set_clips();
   
 private:
   bool start;
@@ -76,7 +63,16 @@ private:
   const int INFOPANEL_WIDTH {40};
   const int INFOPANEL_HEIGHT {480};
   const int SCREEN_HEIGHT{480};
+ public:
+  Start(int x, int y, std::string text);
+  ~Start();
+  void show() const;
+  void show_infopanel() const;
+  void handle_input(bool &proceed, bool &quit);
+  bool is_start();
+  void change_start();
   
+  void set_clips();
 };
 
 //========================================== BUTTON ==============================================
