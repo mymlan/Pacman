@@ -163,7 +163,7 @@ void Pacman::move(std::vector<SDL_Rect> maze, SDL_Rect wall25)
 
 void Pacman::show()
 {
-  Sprite animation;
+  //Sprite animation;
 
   
     //If Pacman is moving left
@@ -212,21 +212,25 @@ void Pacman::show()
     //Show the pacman
     if( status == PACMAN_RIGHT )
       {
-        apply_surface(box.x, box.y, ytpekare, screen, &clipsRight[ frame] );
+        apply_surface(box.x,box.y, ytpekare , screen, &clipsRight[ frame]);
       }
     else if( status == PACMAN_LEFT )
       {
-        apply_surface( box.x,box.y, ytpekare, screen, &clipsLeft[ frame ] );
+        apply_surface(box.x,box.y, ytpekare, screen, &clipsLeft[ frame ] );
       }
     else if( status == PACMAN_UP)
       {
-	apply_surface (box.x, box.y, ytpekare, screen, &clipsUp[ frame ]);
+	apply_surface (box.x,box.y, ytpekare, screen, &clipsUp[ frame ]);
       }
 
     else if( status == PACMAN_DOWN)
       {
-	apply_surface (box.x,box.y, ytpekare , screen, &clipsDown[ frame ]);
+	apply_surface (box.x,box.y, ytpekare, screen, &clipsDown[ frame ]);
       }
+    /*  else if( status == PACMAN_DOWN)
+      {
+	apply_surface (box.x,box.y, ytpekare , screen, &clipsDown[ frame ]);
+	}*/
 }
 
 
@@ -378,12 +382,6 @@ void Pacman::set_clips()
     clipsUp[ 1 ].w = PACMAN_WIDTH;
     clipsUp[ 1 ].h = PACMAN_HEIGHT;
 }
-
-void Pacman::showlife(int lives)
-{
-
-}
-
 
 
 void Pacman::showlife(int lives)

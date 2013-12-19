@@ -81,19 +81,25 @@ Sprite::~Sprite()
 // Images 
 //============================================================================
  
+// Ändrar vi till 2 argument: SDL_Surface* destination, SDL_Rect* clip = NULL
+// så lär vi ändra på massor med ställen!
 
-
-void Sprite::apply_surface( SDL_Surface* destination, SDL_Rect* clip )
+void Sprite::apply_surface( int x, int y, SDL_Surface* ytpekare, SDL_Surface* destination, SDL_Rect* clip = NULL)
 {
     //Holds offsets
     SDL_Rect offset;
 
+    //Var tidigare
+    //  offset.x = box.x;
+    //  offset.y = box.y;
+
     //Get offsets
-    offset.x = box.x;
-    offset.y = box.y;
+    offset.x = x;
+    offset.y = y;
 
     //Blit
-    SDL_BlitSurface( ytpekare, source, clip, destination, &offset );
+    SDL_BlitSurface( ytpekare, clip, destination, &offset ); //Har tagit bort source som andraargument
+    //  SDL_BlitSurface( ytpekare, source, clip, destination, &offset );
 
 }
 
