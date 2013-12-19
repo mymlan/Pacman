@@ -28,8 +28,10 @@
 #include "menu.h"
 #include "string_input.h"
 
-//Set up the screen
-SDL_Surface *screen {NULL};
+//Set up the screen   /// ---- flyttade till menu.h /Ingrid
+SDL_Surface *screen {NULL}; //
+
+ 
    
 bool init()
 {//Initialize all SDL subsystems
@@ -120,7 +122,6 @@ extern const int SCREEN_BPP ;
 
  //Initialize Menu
  Start Startup{0,0,"PACMAN"};
-
 
  //The pacman
  Pacman myPacman;

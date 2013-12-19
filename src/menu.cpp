@@ -79,6 +79,10 @@ Start::Start(int x, int y, std::string text)
   
   ytpekare =  optimizedImage; // * ???
 
+  SDL_Rect clipsStartscr[1];
+  SDL_Rect clipsInfopanel[1];
+
+
 }
 
 Start::~Start()
@@ -89,8 +93,8 @@ Start::~Start()
 
   //dessa rader under kanske inte ska vara här
   //Close the font that was used
-  TTF_CloseFont( inputFont );
-             
+
+  TTF_CloseFont(Font );           
     
   //Quit SDL_ttf
   TTF_Quit();
@@ -113,8 +117,8 @@ void Start::show_infopanel(SDL_Surface* screen) const
       apply_surface( (MAP_WIDTH+i*INFOPANEL_WIDTH), 0, ytpekare, screen, &clipsInfopanel[0] );
     }
 
-  textpekare = TTF_RenderText_Solid( Font, header, headerColor );
-  apply_surface(660, 30,textpekare, screen); 
+  textpekare = TTF_RenderText_Solid( Font, surface, color ); //surface =screen
+  apply_surface(660, 30,textpekare, surface); // surface = screen 
 }
 
 
@@ -174,8 +178,8 @@ Button::~Button()
 
   //dessa rader under kanske inte ska vara här
   //Close the font that was used
-  TTF_CloseFont( inputFont );
-             
+
+  TTF_CloseFont( Font );         
     
   //Quit SDL_ttf
   TTF_Quit();
@@ -196,13 +200,8 @@ Button::Button(int x, int y, std::string text)
   button.w = BUTTON_WIDTH;
   button.h = BUTTON_HEIGHT;
   textpekare = NULL;
-  //Load infoFont
-  infoFont = TTF_OpenFont("img/KarmaFuture.ttf",22);
-
-  if (infoFont ==NULL)
-    {
-      return false;
-    }
+  //Load Font
+  Font = TTF_OpenFont("img/KarmaFuture.ttf",22);
 
 
   //The image that's loaded
@@ -210,7 +209,7 @@ Button::Button(int x, int y, std::string text)
 
   //The optimized surface that will be used
   SDL_Surface* optimizedImage = NULL;
-
+  /*
   //Load the image
   loadedImage = IMG_Load( filename.c_str() );
 
@@ -230,9 +229,9 @@ Button::Button(int x, int y, std::string text)
 	  SDL_SetColorKey( optimizedImage, SDL_SRCCOLORKEY, SDL_MapRGB( optimizedImage->format, 0, 0xFF, 0xFF ) );
         }
     }
+  */
 
-  
-  *ytpekare =  optimizedImage;
+  ytpekare =  optimizedImage; // * ?? /Ingrid
 
 }
   
@@ -243,7 +242,7 @@ void Button::show(SDL_Surface* screen) const
 
 void Button::show(int x, int y, const char* header,SDL_Surface* screen) const
 {
-  textpekare = TTF_RenderText_Solid( infoFont, header , headerColor );
+  textpekare = TTF_RenderText_Solid( Font, header , color );
   apply_surface(x, y,textpekare, screen);  
 }
 
@@ -258,8 +257,8 @@ Highscore_screen::~Highscore_screen()
 
   //dessa rader under kanske inte ska vara här
   //Close the font that was used
-  TTF_CloseFont( inputFont );
-             
+
+  TTF_CloseFont( Font );          
     
   //Quit SDL_ttf
   TTF_Quit();
@@ -283,16 +282,11 @@ Highscore_screen::Highscore_screen(int x, int y, std::string text)
 
   //Load  Font
   Font = TTF_OpenFont("img/xtrusion.ttf",55);
-
-  if (Font ==NULL)
-    {
-      return false;
-    }
 } 
 
 void Highscore_screen::show(SDL_Surface* screen) const
 { 
-  text = TTF_RenderText_Solid( infoFont, header , headerColor );
+  textpekare = TTF_RenderText_Solid( Font, header , color );
   apply_surface(x, y,text, screen);
 }
 
@@ -320,7 +314,7 @@ End_game::~End_game()
 
   //dessa rader under kanske inte ska vara här
   //Close the font that was used
-  TTF_CloseFont( inputFont );
+  TTF_CloseFont( Font );
              
     
   //Quit SDL_ttf
@@ -345,16 +339,11 @@ End_game::End_game()
 
   //Load  Font
   Font = TTF_OpenFont("img/xtrusion.ttf",55);
-
-  if (Font ==NULL)
-    {
-      return false;
-    }
 }
 
 void End_game::show(SDL_Surface* screen) const
 {
-  text = TTF_RenderText_Solid( infoFont, header , headerColor );
-  apply_surface(x, y,text, screen); 
+  textpekare = TTF_RenderText_Solid( Font, header , color ); //inputfont headercolor
+  apply_surface(x, y,textpekare, screen); 
 }
 
