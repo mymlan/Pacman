@@ -27,7 +27,6 @@
 #include "timer.h"
 #include "menu.h"
 #include "string_input.h"
-#include "settings.h"
 
 
 //Set up the screen
