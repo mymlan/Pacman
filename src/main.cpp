@@ -72,6 +72,13 @@ int main( int argc, char* args[] )
   Settings settings;
 
   
+//Screen attributes
+extern const int SCREEN_WIDTH ; //640;
+extern const int SCREEN_HEIGHT ;
+extern const int SCREEN_BPP ;
+
+//Map attributes
+extern const int MAP_WIDTH ;
   
 
   //Quit flag
