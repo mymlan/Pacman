@@ -32,7 +32,12 @@ class Menu : public Sprite
 protected:
   SDL_Rect button;
   std::string message_;
+  SDL_Surface *textpekare;
   TTF_Font *Font;
+  SDL_Color color;
+  SDL_Surface *screen {NULL};
+SDL_Surface *header {NULL};
+
   //The attributes of the Buttons
   const int BUTTON_WIDTH {220};
   const int BUTTON_HEIGHT {40};
@@ -50,10 +55,9 @@ public:
 class Start : public Menu
 {
 
-  
 private:
   bool start;
-  SDL_Surface *textpekare;
+
 
   SDL_Rect clipsStartscr;
   SDL_Rect clipsInfopanel;
@@ -72,7 +76,6 @@ private:
   void handle_input(bool &proceed, bool &quit);
   bool is_start();
   void change_start();
-  
   void set_clips();
 };
 
