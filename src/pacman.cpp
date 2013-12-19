@@ -59,7 +59,7 @@ Pacman::Pacman() // string filename
   SDL_Surface* optimizedImage = NULL;
 
   //Load the image
-  loadedImage = IMG_Load("img/Pacman.bmp");
+  loadedImage = IMG_Load("img/square.bmp");
   
   //If the image loaded
   if( loadedImage != NULL )
@@ -79,7 +79,7 @@ Pacman::Pacman() // string filename
     }
   
   
-  *ytpekare =  optimizedImage;
+  ytpekare =  optimizedImage;
   
   
 }
@@ -106,7 +106,7 @@ int Pacman::life()
 
 
 
-void Pacman::handle_input()
+void Pacman::handle_input(SDL_Event event)
 {
     //If a key was pressed
     if( event.type == SDL_KEYDOWN )
@@ -231,7 +231,7 @@ void Pacman::show(SDL_Surface* screen)
 
 
 */
-    apply_surface(box.x,box.y,ytpekare,screen, &clipsRight[ frame]);
+    apply_surface(box.x,box.y,ytpekare,screen);
 }
 
 
@@ -339,7 +339,7 @@ bool Pacman::has_pacman_eaten_special_food()
   return pacman_has_eaten_special_food;
 }
 
-
+/*
 void Pacman::set_clips()
 {
     //Clip the sprites
@@ -383,15 +383,17 @@ void Pacman::set_clips()
     clipsUp[ 1 ].w = PACMAN_WIDTH;
     clipsUp[ 1 ].h = PACMAN_HEIGHT;
 }
+*/
 
 
+ /*
 void Pacman::showlife(int lives, SDL_Surface* screen)
 {
 if (lives==2)
     {
-      apply_surface(910,440 ,pacman, screen, &clipsLeft[1] );
-       apply_surface(910+PACMAN_WIDTH,440 ,pacman, screen, &clipsLeft[1] );
-       apply_surface(910+2*PACMAN_WIDTH,440 ,pacman, screen, &clipsLeft[1] );
+      apply_surface(910,440 ,ytpekare, screen);
+       apply_surface(910+PACMAN_WIDTH,440 ,ytpekare, screen);
+       apply_surface(910+2*PACMAN_WIDTH,440 ,ytpekare, screen);
     }   
  else if (lives==1)
     {
@@ -405,3 +407,4 @@ if (lives==2)
      apply_surface(910+2*PACMAN_WIDTH,440 ,pacman, screen, &clipsLeft[1] );
    }
 }
+*/

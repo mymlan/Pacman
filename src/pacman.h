@@ -81,7 +81,7 @@ public:
 
   //Keeps tracks of pacmans lives and when he dies
   int life();
-  void showlife(SDL_Surface*);
+  //void showlife(SDL_Surface*);
   bool game_over();
   bool eat_eaten(class Ghost&, class Score&);
  
@@ -92,7 +92,7 @@ public:
   void eat_special_food(std::vector<class Special_Food>&, class Score&);
 
   //Takes key presses and adjusts the square's velocity
-  void handle_input();
+  void handle_input(SDL_Event);
 
   //Moves the Pacman
   void move(std::vector<SDL_Rect>, SDL_Rect);
