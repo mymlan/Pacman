@@ -27,7 +27,39 @@
 #include "timer.h"
 #include "menu.h"
 #include "string_input.h"
+#include "settings.h"
 
+
+//Set up the screen
+SDL_Surface *screen {NULL};
+   
+bool init()
+{//Initialize all SDL subsystems
+  if( SDL_Init( SDL_INIT_EVERYTHING ) == -1 )
+    {
+      return false;
+    }
+
+  screen = SDL_SetVideoMode( SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE );
+
+  //If there was an error in setting up the screen
+  if( screen == NULL )
+    {
+      return false;
+    }
+
+  //Set the window caption
+  SDL_WM_SetCaption( "Pacman", NULL );
+
+  //Initialize SDL_ttf
+  if(TTF_Init() == -1)
+    {
+      return false;
+    }
+
+  //If everything initialized fine
+  return true;
+}
 //============================================================================
 //  MAIN
 //============================================================================
@@ -36,8 +68,14 @@ int main( int argc, char* args[] )
 {
   SDL_EnableUNICODE( SDL_ENABLE );
 
-    //Quit flag
-    bool quit = false;
+  //initialize settings
+  Settings settings;
+
+  
+  
+
+  //Quit flag
+  bool quit = false;
 
     //Initialize Sprite
     Sprite animation;
@@ -67,6 +105,8 @@ int main( int argc, char* args[] )
     //StringInput
     StringInput PlayerName;
 
+    //Initialize variables
+    animation.initialize();
 
     //Initialize Food
     Food myFood1(10,50);
@@ -627,29 +667,27 @@ int main( int argc, char* args[] )
 	
 
 
-        //Fill the screen white
-        //SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0xFF, 0xFF, 0xFF ) );
+        //Fill the screen white or blue, depending on whether the ghost is scared
+       
 	if(myGhost1.is_scared())
 	  {
-	    animation.fill_screen_color();
+	    SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0xFF, 0xFF, 0xFF ) );
 	  }
 	else
 	  {
-	    animation.fill_screen_white();
+	    SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0x3, 0x5, 0x80 ) );
 	  } 
 
+
         //Show the walls
-	animation.show_walls(maze);
-	
-	/*	for (std::vector<SDL_Rect>::iterator it = maze.begin() ; it != maze.end(); ++it)
-		{
-		SDL_FillRect( screen, &(*it), SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF) );
-		}*/
+	for (std::vector<SDL_Rect>::iterator it = maze.begin() ; it != maze.end(); ++it)
+	  {
+	    SDL_FillRect( screen, &(*it), SDL_MapRGB( screen->format, 0x00, 0x00, 0xEF) );
+	  }
 
 
-	//Show wall 25 the wall that separates the ghosts nest from playfield
-	animation.show_one_wall(wall25); //The Wonderwall
-	//SDL_FillRect( screen, &wall25, SDL_MapRGB( screen->format, 0xAF, 0x00, 0x00) );
+	//show the wonderwall
+	SDL_FillRect( screen, &wall25, SDL_MapRGB( screen->format, 0xAF, 0x00, 0x00) );
 
         //Show pacman on the screen
         myPacman.show();

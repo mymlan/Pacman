@@ -115,6 +115,11 @@ void Ghost::reverse_direction()
   crashed_ = 0;
 }
 
+void Ghost::show()
+{
+  apply_surface(box.x,box.y,ytpekare,screen);
+}
+
 void Ghost::move(std::vector<SDL_Rect> maze) //checks collision with walls
 {
   Sprite animation;
@@ -440,32 +445,7 @@ void Ghost3::seek(Pacman paccy)
 
 
 
-void Ghost1::show()
-{
-  //Show the ghost
-  //apply_surface( box.x, box.y, ghost, screen );
-  Sprite animation;
-  animation.show_ghost(box.x, box.y, ghost);
-}
 
-void Ghost2::show()
-{
-  //show the ghost2
-  //apply_surface( box.x, box.y, ghost2, screen );
-  Sprite animation;
-  animation.show_ghost(box.x, box.y, ghost2);
-
-
-}
-
-
-void Ghost3::show()
-{
-  //show the ghost3
-  //apply_surface( box.x, box.y, ghost3, screen );
-  Sprite animation;
-  animation.show_ghost(box.x, box.y, ghost3);
-}
 
 //Returns SDL-object of ghost
 SDL_Rect Ghost::get_box()

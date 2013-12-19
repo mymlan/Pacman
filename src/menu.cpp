@@ -24,14 +24,33 @@
 //  Class: Menu
 //============================================================================
 
-
 //========================= START ==============================================
+
+
+Start::~Start()
+{
+  //Free the surface
+  SDL_FreeSurface( ytpekare );
+ 
+
+  //dessa rader under kanske inte ska vara här
+  //Close the font that was used
+  TTF_CloseFont( inputFont );
+             
+    
+  //Quit SDL_ttf
+  TTF_Quit();
+
+  //Quit SDL
+  SDL_Quit();
+}
 
 Start::Start(int x, int y, std::string text)
 {
   //Initialize
   button.x = x;
   button.y = y;
+  
   message_ = text;
   start = true;
 
@@ -39,49 +58,34 @@ Start::Start(int x, int y, std::string text)
   button.w = BUTTON_WIDTH;
   button.h = BUTTON_HEIGHT;
 
+  //Load  Font
+  Font = TTF_OpenFont("img/xtrusion.ttf",55);
+
+  if (Font ==NULL)
+    {
+      return false;
+    }
+  text = NULL;
+
+ytpekare=load
 }
 
 void Start::show() const
 {
-  Sprite animation;
-  animation.show_start_background();
-  /* apply_surface(0,0,startup,screen, &clipsStartscr[0]); 
-  std::cout << "Hey Big Boy/Girl!!!" <<std::endl;
-  //apply_surface(0,0,startup,screen);
-  */
- //Show the startbuttons
-  /*
-  //  SDL_FillRect( screen, &button, SDL_MapRGB( screen->format, 0xEF, 0xEF, 0xEF) );
-   for (int i=0; i<=8; i++)
-    { 
-
-    apply_surface( (MAP_WIDTH+i*INFOPANEL_WIDTH), 0, startup, screen, &clipsInfopanel[0] );
-  
-    }
-   text = TTF_RenderText_Solid( headerFont, message_.c_str() , headerColor );
-   apply_surface(660, 30,text, screen); 
-  */
+  apply_surface(0,0,ytpekare,screen, &clipsStartscr[0]); 
 }
 
 
 void Start::show_infopanel() const
 {
-  Sprite animation;
-  animation.show_infopanel(message_.c_str());
-  /*//Show the startbuttons
-  
-  //  SDL_FillRect( screen, &button, SDL_MapRGB( screen->format, 0xEF, 0xEF, 0xEF) );
-   for (int i=0; i<=8; i++)
+  for (int i=0; i<=8; i++)
     { 
-
-    apply_surface( (MAP_WIDTH+i*INFOPANEL_WIDTH), 0, startup, screen, &clipsInfopanel[0] );
-  
+      apply_surface( (MAP_WIDTH+i*INFOPANEL_WIDTH), 0, ytpekare, screen, &clipsInfopanel[0] );
     }
 
-   text = TTF_RenderText_Solid( headerFont, message_.c_str() , headerColor );
-   apply_surface(660, 30,text, screen); 
-  */}
-
+  textpekare = TTF_RenderText_Solid( Font, header, headerColor );
+  apply_surface(660, 30,textpekare, screen); 
+}
 
 void Start::handle_input(bool &proceed, bool &quit)
   
@@ -113,8 +117,42 @@ void Start::change_start()
     start =true;
 }
 
+void Start::set_clips()
+{
+  clipsStartscr[ 0 ].x = 0;
+  clipsStartscr[ 0 ].y = 0;
+  clipsStartscr[ 0 ].w = MAP_WIDTH;
+  clipsStartscr[ 0 ].h = SCREEN_HEIGHT;
+
+  clipsInfopanel[ 0 ].x = MAP_WIDTH;
+  clipsInfopanel[ 0 ].y = 0;
+  clipsInfopanel[ 0 ].w = INFOPANEL_WIDTH;
+  clipsInfopanel[ 0 ].h = INFOPANEL_HEIGHT;
+
+}
+
+
+
 //====================== BUTTON ==========================================================
 
+Button::~Button()
+{
+  //Free the surface
+  SDL_FreeSurface( ytpekare );
+ 
+
+  //dessa rader under kanske inte ska vara här
+  //Close the font that was used
+  TTF_CloseFont( inputFont );
+             
+    
+  //Quit SDL_ttf
+  TTF_Quit();
+
+  //Quit SDL
+  SDL_Quit();
+
+}
 
 Button::Button(int x, int y, std::string text)
 {
@@ -126,21 +164,44 @@ Button::Button(int x, int y, std::string text)
  //Set dimension
   button.w = BUTTON_WIDTH;
   button.h = BUTTON_HEIGHT;
-  
-}
-  
-void Button::show() const
-{
-  Sprite animation;
-  animation.show_button(button.x, button.y, message_.c_str());
-  /*text = TTF_RenderText_Solid( infoFont, message_.c_str() , headerColor );
-  apply_surface(button.x, button.y,text, screen);  
-  */
-}
+  textpekare = NULL;
+  //Load infoFont
+  infoFont = TTF_OpenFont("img/KarmaFuture.ttf",22);
 
+  if (infoFont ==NULL)
+    {
+      return false;
+    }
+
+}
+  
+void Button::show(int x, int y, const char* header) const
+{
+  textpekare = TTF_RenderText_Solid( infoFont, header , headerColor );
+  apply_surface(x, y,textpekare, screen);  
+}
 
 
 //====================== HIGHSCORE_SCREEN ===================================================
+
+Highscore_screen::~Highscore_screen()
+{
+  //Free the surface
+  SDL_FreeSurface( ytpekare );
+ 
+
+  //dessa rader under kanske inte ska vara här
+  //Close the font that was used
+  TTF_CloseFont( inputFont );
+             
+    
+  //Quit SDL_ttf
+  TTF_Quit();
+
+  //Quit SDL
+  SDL_Quit();
+
+}
 
 Highscore_screen::Highscore_screen(int x, int y, std::string text)
 {
@@ -154,12 +215,19 @@ Highscore_screen::Highscore_screen(int x, int y, std::string text)
   button.w = BUTTON_WIDTH;
   button.h = BUTTON_HEIGHT;
 
+  //Load  Font
+  Font = TTF_OpenFont("img/xtrusion.ttf",55);
+
+  if (Font ==NULL)
+    {
+      return false;
+    }
 } 
 
 void Highscore_screen::show() const
-{
-  Sprite animation;
-  animation.show_button(button.x, button.y, message_.c_str());
+{ 
+  text = TTF_RenderText_Solid( infoFont, header , headerColor );
+  apply_surface(x, y,text, screen);
 }
 
 bool Highscore_screen::is_paused() const
@@ -178,7 +246,24 @@ void Highscore_screen::change_pause()
 
 
 //====================== END_GAME ===================================================
+End_game::~End_game()
+{
+  //Free the surface
+  SDL_FreeSurface( ytpekare );
+ 
 
+  //dessa rader under kanske inte ska vara här
+  //Close the font that was used
+  TTF_CloseFont( inputFont );
+             
+    
+  //Quit SDL_ttf
+  TTF_Quit();
+
+  //Quit SDL
+  SDL_Quit();
+
+}
 
 End_game::End_game()
 {
@@ -191,11 +276,18 @@ End_game::End_game()
   //Set dimension
   button.w = BUTTON_WIDTH;
   button.h = BUTTON_HEIGHT;
+
+  //Load  Font
+  Font = TTF_OpenFont("img/xtrusion.ttf",55);
+
+  if (Font ==NULL)
+    {
+      return false;
+    }
 }
 
 void End_game::show() const
 {
-  Sprite draw;
-  draw.show_button(button.x, button.y, message_.c_str());
-  
+  text = TTF_RenderText_Solid( infoFont, header , headerColor );
+  apply_surface(x, y,text, screen); 
 }

@@ -28,17 +28,20 @@
 //========================================== FOOD ==============================================
 
 //Food
-class Food
+class Food : public Sprite
 {
 private:
   SDL_Rect box;
   bool eaten_;
 public:
-  Food(int,int);
+  Food(int,int, std::string filename );
   bool eaten();
   void was_eaten();
-  void show();
+  void show() = delete;
   SDL_Rect get_box();
+  void show_all_food(std::vector<Food> food_vector);
+ 
+
 };
 
 
@@ -48,35 +51,25 @@ public:
 
 
 //Special_Food
-class Special_Food
+class Special_Food : public Sprite
 {
 private:
   SDL_Rect box;
   bool eaten_;
 public:
-  Special_Food(int,int);
+  Special_Food(int,int, std::string filename);
   bool eaten();
   void was_eaten();
   void show();
+  void show_all_special_food(std::vector<Special_Food> special_food_vector);
+
   SDL_Rect get_box();
+
+  
 };
 
 
-/*
-//Ghosts checkpoints, to make their ways in the maze
-class Checkpoint
-{
-private:
-  SDL_Rect box;
 
-<<<<<<< HEAD
-public:
-  Checkpoint(int, int);
-  SDL_Rect get_box();
-  void show(); //används för att testa, ska egentligen vara osynlig
- 
-};
-*/
 
 
 

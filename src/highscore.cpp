@@ -82,8 +82,8 @@ void Highscore::load_list()
 
 void Highscore::show()
 {
-  Sprite animation;
-  animation.show_highscore(0,0);
+  apply_surface(0,0,score,screen);
+
   load_list();
   int size=highscoretable.size();
   int entry_points{0};

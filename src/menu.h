@@ -27,15 +27,18 @@
 
 //========================================== MENU ==============================================
 
-class Menu
+class Menu : public Sprite
 {
 protected:
   SDL_Rect button;
   std::string message_;
-
+  TTF_Font *Font;
 public:
-  virtual void show() const = 0;
+  //virtual void show() const = 0;
   virtual ~Menu() = default;
+  
+  
+
 };
 
 
@@ -50,20 +53,30 @@ public:
   void handle_input(bool &proceed, bool &quit);
 
   Start(int x, int y, std::string text);
-  ~Start() = default;
-
+  ~Start();
+  void set_clips();
+  
 private:
   bool start;
+  SDL_Surface *textpekare;
+
+  SDL_Rect clipsStartscr;
+  SDL_Rect clipsInfopanel;
+  
+  
 };
 
 
 class Button : public Menu
 {
 public:
-  ~Button()=default;
+  ~Button();
   Button(int x, int y, std::string text);
 
-  void show() const;
+  void show() const = delete;
+  void show(int x, int y, const char* header) const;
+ private:
+  SDL_Surface *textpekare;
 };
 
 
@@ -73,22 +86,21 @@ class Highscore_screen : public Menu
   bool pause_;
   
  public:
-  ~Highscore_screen() = default;
+  ~Highscore_screen();
   Highscore_screen(int x, int y, std::string text);
-  void show() const;
+  void show() const = delete;
+  void show(int x, int y, const char* header) const;
   bool is_paused() const;
   void change_pause();
-
 };
 
 class End_game : public Menu
 {
  public:
-  ~End_game() = default;
+  ~End_game();
   End_game();
-  void show() const;
-
-
+  void show() const = delete;
+  void show(int x, int y, const char* header) const;
 
 };
 

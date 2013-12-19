@@ -28,7 +28,7 @@
 
 
 //===================== PACMAN ==============================================
-class Pacman
+class Pacman : public Sprite
 {
 private:
   //The collision box of the square
@@ -53,9 +53,17 @@ private:
     //true if pacman has eaten special_food
     bool pacman_has_eaten_special_food;
 
+   
+    //The areas of the pacmansheet
+    SDL_Rect clipsRight;
+    SDL_Rect clipsLeft;
+    SDL_Rect clipsDown;
+    SDL_Rect clipsUp;
+
+
 public:
   //Initializes the variables
-  Pacman();
+    Pacman(std::string filename);
 
   //Reveals pacmans position, ghosts will ask for this
   int reveal_position_x();
@@ -92,6 +100,9 @@ public:
   
   bool has_pacman_eaten_special_food();
 
+  void set_clips();
+
+  void showlife(int lives);
 };
 
 

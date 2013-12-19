@@ -26,7 +26,7 @@
 
 
 
-Pacman::Pacman()
+Pacman::Pacman(std::string filename)
 {
     //Initialize the offsets
     box.x = 320;
@@ -51,6 +51,37 @@ Pacman::Pacman()
 
     food_left = 1;//114;
     pacman_has_eaten_special_food = false;
+
+//The image that's loaded
+  SDL_Surface* loadedImage = NULL;
+
+  //The optimized surface that will be used
+  SDL_Surface* optimizedImage = NULL;
+
+  //Load the image
+  loadedImage = IMG_Load( filename.c_str() );
+  
+  //If the image loaded
+  if( loadedImage != NULL )
+    {
+      //Create an optimized surface
+      optimizedImage = SDL_DisplayFormat( loadedImage );
+      
+      //Free the old surface
+      SDL_FreeSurface( loadedImage );
+
+      //If the surface was optimized
+      if( optimizedImage != NULL )
+        {
+	  //Color key surface
+	  SDL_SetColorKey( optimizedImage, SDL_SRCCOLORKEY, SDL_MapRGB( optimizedImage->format, 0, 0xFF, 0xFF ) );
+        }
+    }
+  
+  
+  *ytpekare =  optimizedImage;
+  
+  
 }
 
 
@@ -73,29 +104,6 @@ int Pacman::life()
 }
 
 
-void Pacman::showlife()
-{
-  Sprite animation;
-  animation.showlife(lives); 
-  /* if (lives==2)
-    {
-      apply_surface(910,440 ,pacman, screen, &clipsLeft[1] );
-       apply_surface(910+PACMAN_WIDTH,440 ,pacman, screen, &clipsLeft[1] );
-       apply_surface(910+2*PACMAN_WIDTH,440 ,pacman, screen, &clipsLeft[1] );
-    }   
- else if (lives==1)
-    {
-
-      apply_surface(910+PACMAN_WIDTH,440 ,pacman, screen, &clipsLeft[1] );
-      apply_surface(910+2*PACMAN_WIDTH,440 ,pacman, screen, &clipsLeft[1] );
-    }
-    
- else if( lives==0)
-   {
-     apply_surface(910+2*PACMAN_WIDTH,440 ,pacman, screen, &clipsLeft[1] );
-   }
-  */
-}
 
 
 void Pacman::handle_input()
@@ -202,25 +210,23 @@ void Pacman::show()
     }
 
     //Show the pacman
-    animation.show_pacman(box.x, box.y, status, frame);
-/*
     if( status == PACMAN_RIGHT )
-    {
-        apply_surface(box.x, box.y, pacman, screen, &clipsRight[ frame] );
-    }
+      {
+        apply_surface(box.x, box.y, ytpekare, screen, &clipsRight[ frame] );
+      }
     else if( status == PACMAN_LEFT )
-    {
-        apply_surface( box.x,box.y, pacman, screen, &clipsLeft[ frame ] );
-    }
+      {
+        apply_surface( box.x,box.y, ytpekare, screen, &clipsLeft[ frame ] );
+      }
     else if( status == PACMAN_UP)
       {
-	apply_surface (box.x, box.y, pacman, screen, &clipsUp[ frame ]);
+	apply_surface (box.x, box.y, ytpekare, screen, &clipsUp[ frame ]);
       }
 
- else if( status == PACMAN_DOWN)
+    else if( status == PACMAN_DOWN)
       {
-	apply_surface (box.x,box.y, pacman , screen, &clipsDown[ frame ]);
-	}*/
+	apply_surface (box.x,box.y, ytpekare , screen, &clipsDown[ frame ]);
+      }
 }
 
 
@@ -326,4 +332,77 @@ void Pacman::pacman_change_mood()
 bool Pacman::has_pacman_eaten_special_food()
 {
   return pacman_has_eaten_special_food;
+}
+
+
+void Pacman::set_clips()
+{
+    //Clip the sprites
+    clipsRight[ 0 ].x = 0;
+    clipsRight[ 0 ].y = 0;
+    clipsRight[ 0 ].w = PACMAN_WIDTH;
+    clipsRight[ 0 ].h = PACMAN_HEIGHT;
+
+    clipsRight[ 1 ].x = 0;
+    clipsRight[ 1 ].y = PACMAN_HEIGHT;
+    clipsRight[ 1 ].w = PACMAN_WIDTH;
+    clipsRight[ 1 ].h = PACMAN_HEIGHT;
+
+    clipsDown[ 0 ].x = PACMAN_WIDTH;
+    clipsDown[ 0 ].y = 0;
+    clipsDown[ 0 ].w = PACMAN_WIDTH;
+    clipsDown[ 0 ].h = PACMAN_HEIGHT;
+
+    clipsDown[ 1 ].x = PACMAN_WIDTH ;
+    clipsDown[ 1 ].y = PACMAN_HEIGHT;
+    clipsDown[ 1 ].w = PACMAN_WIDTH;
+    clipsDown[ 1 ].h = PACMAN_HEIGHT;
+    
+    clipsLeft[ 0 ].x = PACMAN_WIDTH * 2 ;
+    clipsLeft[ 0 ].y = 0 ;
+    clipsLeft[ 0 ].w = PACMAN_WIDTH;
+    clipsLeft[ 0 ].h = PACMAN_HEIGHT;
+
+    clipsLeft[ 1 ].x = PACMAN_WIDTH * 2;
+    clipsLeft[ 1 ].y = PACMAN_HEIGHT;
+    clipsLeft[ 1 ].w = PACMAN_WIDTH;
+    clipsLeft[ 1 ].h = PACMAN_HEIGHT;
+
+    clipsUp[ 0 ].x = PACMAN_WIDTH * 3;
+    clipsUp[ 0 ].y = 0;
+    clipsUp[ 0 ].w = PACMAN_WIDTH;
+    clipsUp[ 0 ].h = PACMAN_HEIGHT;
+
+    clipsUp[ 1 ].x = PACMAN_WIDTH * 3;
+    clipsUp[ 1 ].y = PACMAN_HEIGHT;
+    clipsUp[ 1 ].w = PACMAN_WIDTH;
+    clipsUp[ 1 ].h = PACMAN_HEIGHT;
+}
+
+void Pacman::showlife(int lives)
+{
+
+}
+
+
+
+void Pacman::showlife(int lives)
+{
+if (lives==2)
+    {
+      apply_surface(910,440 ,pacman, screen, &clipsLeft[1] );
+       apply_surface(910+PACMAN_WIDTH,440 ,pacman, screen, &clipsLeft[1] );
+       apply_surface(910+2*PACMAN_WIDTH,440 ,pacman, screen, &clipsLeft[1] );
+    }   
+ else if (lives==1)
+    {
+
+      apply_surface(910+PACMAN_WIDTH,440 ,pacman, screen, &clipsLeft[1] );
+      apply_surface(910+2*PACMAN_WIDTH,440 ,pacman, screen, &clipsLeft[1] );
+    }
+    
+ else if( lives==0)
+   {
+     apply_surface(910+2*PACMAN_WIDTH,440 ,pacman, screen, &clipsLeft[1] );
+   }
 }

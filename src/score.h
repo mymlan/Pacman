@@ -27,11 +27,12 @@
 
 
 //========================================== SCORE ==============================================
-class Score
+class Score : public Sprite
 {
 private:
   int points=0;
   std::string name="";
+  TTF_Font *scoreFont;
 public:
   Score();
   //Score(const Score& other) : points(other.points), name(other.name) {}

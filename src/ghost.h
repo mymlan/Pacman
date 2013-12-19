@@ -27,7 +27,7 @@
 #include "pacman.h"
 
 //================================== GHOST ============================================================== 
-class Ghost
+class Ghost : public Sprite
 {
 protected:
   //keeps track of previous direction, helps the ghosts from getting stuck.
@@ -67,7 +67,7 @@ public:
   //Switches ghost between chase and flee states
   void change_mood();
 
- 
+  void show();
 };
 
 
