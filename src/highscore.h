@@ -33,6 +33,7 @@ private:
   std::vector<Score> highscoretable;
  
 public:
+  Highscore();
   bool is_new_highscore(Score&);
   void save_new_highscore(Score&);
   void show();

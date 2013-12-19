@@ -557,7 +557,7 @@ extern const int SCREEN_BPP ;
 	if(checktimer1.get_ticks() > 300) //was it long enough since we found a checkpoint?
 	  {
 	    myGhost1.do_if_checkpoint(checkmaze, myPacman);
-	    if(myGhost1.is_checkpoint(checkmaze, myPacman))
+	    if(myGhost1.is_checkpoint(checkmaze))
 	      {checktimer1.start();} //restart the timer so that ghost only will look at a checkpoint once
 	  }
 	
@@ -581,7 +581,7 @@ extern const int SCREEN_BPP ;
 	if(checktimer3.get_ticks() > 1000) //was it long enough since we found a checkpoint?
 	  {
 	    myGhost3.do_if_checkpoint(checkmaze, myPacman);
-	    if(myGhost3.is_checkpoint(checkmaze, myPacman))
+	    if(myGhost3.is_checkpoint(checkmaze))
 	      {checktimer3.start();} //restart the timer so that ghost only will look at a checkpoint once
 	  }
 

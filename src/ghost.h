@@ -57,7 +57,7 @@ public:
   void show();
   //Moves the ghost
   void move(std::vector<SDL_Rect>); 
-  bool is_checkpoint(std::vector<SDL_Rect>, class Pacman);
+  bool is_checkpoint(std::vector<SDL_Rect>); //, class Pacman);
   SDL_Rect get_box();
 
 //Sets Ghost position to startposition
