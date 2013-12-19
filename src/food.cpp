@@ -34,8 +34,8 @@ Food::Food(int x_cord, int y_cord)
   box.y = y_cord;
 
   //Set the foods dimensions
-  box.w = PACMAN_WIDTH; //we should change the global constants names PACMAN_WIDTH to CHARACTER_WIDTH
-  box.h = PACMAN_HEIGHT;
+  box.w = 29;
+  box.h = 30;
 
   //The image that's loaded
   SDL_Surface* loadedImage = NULL;
@@ -50,7 +50,7 @@ Food::Food(int x_cord, int y_cord)
   if( loadedImage != NULL )
     {
       //Create an optimized surface
-      optimizedImage = SDL_DisplayFormat(  );
+      optimizedImage = SDL_DisplayFormat(loadedImage);
 
       //Free the old surface
       SDL_FreeSurface( loadedImage );
@@ -62,7 +62,7 @@ Food::Food(int x_cord, int y_cord)
 	  SDL_SetColorKey( optimizedImage, SDL_SRCCOLORKEY, SDL_MapRGB( optimizedImage->format, 0, 0xFF, 0xFF ) );
         }
     }  
-  *ytpekare =  optimizedImage;
+  ytpekare =  optimizedImage; // * ??
 }
 
 bool Food::eaten()
@@ -77,7 +77,7 @@ void Food::was_eaten()
 
 void Food::show()  // = delete? /ingrid
 {
-  if (!eaten)
+  if (!eaten_)
     {
       apply_surface(box.x,box.y,ytpekare, screen);
     }
