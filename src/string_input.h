@@ -35,7 +35,7 @@ class StringInput
     ~StringInput();
 
     //Handles input
-    void handle_input();
+    void handle_input(SDL_Event);
 
     //Shows the message on screen
     void show_centered(SDL_Surface*);
