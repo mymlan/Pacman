@@ -18,7 +18,8 @@
 #include <iterator>
 #include <algorithm>
 #include "pacman.h"
-#include "score.h"
+#include "sprite.h"
+
 
 //============================================================================
 //  Class: Pacman (KOD)
@@ -82,7 +83,7 @@ Pacman::Pacman() // string filename
     }
   
   
-  ytpekare =  optimizedImage;
+  ytpekare_ =  optimizedImage;
   
   
 }

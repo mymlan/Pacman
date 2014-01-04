@@ -22,9 +22,9 @@
 #include <vector>
 #include <iterator>
 #include <algorithm>
-#include "sprite.h"
-#include "ghost.h"
-#include "score.h"
+//#include "sprite.h"
+//#include "ghost.h"
+//#include "score.h"
 
 
 //===================== PACMAN ==============================================
