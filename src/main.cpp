@@ -635,7 +635,7 @@ extern const int SCREEN_BPP ;
 		      {
 			
 			  //Get user input
-			  PlayerName.handle_input();
+			  PlayerName.handle_input(event);
 			
 			  
 			  //If the enter key was pressed

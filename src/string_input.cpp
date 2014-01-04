@@ -39,7 +39,7 @@ StringInput::~StringInput()
     SDL_EnableUNICODE( SDL_DISABLE );
 }
 
-void StringInput::handle_input()
+void StringInput::handle_input(SDL_Event event)
 {
   std::cout<< "handleinput"<< std::endl;
   SDL_EnableUNICODE( SDL_ENABLE );
