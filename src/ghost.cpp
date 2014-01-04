@@ -191,7 +191,7 @@ Ghost1::Ghost1()
   if( loadedImage != NULL )
     {
       //Create an optimized surface
-      optimizedImage = SDL_DisplayFormat(  );
+      optimizedImage = SDL_DisplayFormat(ytpekare);
 
       //Free the old surface
       SDL_FreeSurface( loadedImage );
