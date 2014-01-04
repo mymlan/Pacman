@@ -203,7 +203,7 @@ Ghost1::Ghost1()
 	  SDL_SetColorKey( optimizedImage, SDL_SRCCOLORKEY, SDL_MapRGB( optimizedImage->format, 0, 0xFF, 0xFF ) );
         }
     }  
-  *ytpekare =  optimizedImage;
+  ytpekare =  optimizedImage;
 }
 
 //Moves freely, and looks for checkpoints
@@ -343,7 +343,7 @@ Ghost2::Ghost2()
 	  SDL_SetColorKey( optimizedImage, SDL_SRCCOLORKEY, SDL_MapRGB( optimizedImage->format, 0, 0xFF, 0xFF ) );
         }
     }  
-  *ytpekare =  optimizedImage;
+  ytpekare =  optimizedImage;
 
 }
 
@@ -424,7 +424,7 @@ Ghost3::Ghost3()
 	  SDL_SetColorKey( optimizedImage, SDL_SRCCOLORKEY, SDL_MapRGB( optimizedImage->format, 0, 0xFF, 0xFF ) );
         }
     }  
-  *ytpekare =  optimizedImage;
+  ytpekare =  optimizedImage;
 
 }
 
