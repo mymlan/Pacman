@@ -47,7 +47,9 @@ public:
  protected:
 
   SDL_Surface *ytpekare;
-
+  int MAP_WIDTH;
+  int SCREEN_HEIGHT;
+  int SCREEN_WIDTH;
 };
 
 

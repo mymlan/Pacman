@@ -160,6 +160,11 @@ Ghost1::Ghost1()
   //Initialize the offsets
   box.x = 0;
   box.y = 0;
+
+  MAP_WIDTH=640;
+  SCREEN_HEIGHT=480;
+  SCREEN_WIDTH=1000;
+
   
   //Initialize the seek and destroy directions. first way to pacman is the most desirable way to go.
   first_way_to_pacman_ = 2;
@@ -304,6 +309,11 @@ Ghost2::Ghost2()
   //Initialize the offsets
   box.x = 100;
   box.y = 0;
+
+  MAP_WIDTH=640;
+  SCREEN_HEIGHT=480;
+  SCREEN_WIDTH=1000;
+
   
   //Initialize the seek and destroy directions. first way to pacman is the most desirable way to go.
   first_way_to_pacman_ = 1;
@@ -381,6 +391,11 @@ Ghost3::Ghost3()
   //Initialize the offsets
   box.x = 0;
   box.y = 100;
+
+  MAP_WIDTH=640;
+  SCREEN_HEIGHT=480;
+  SCREEN_WIDTH=1000;
+
   
   //Initialize the seek and destroy directions. first way to pacman is the most desirable way to go.
   first_way_to_pacman_ = 4;

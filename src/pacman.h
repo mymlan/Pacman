@@ -41,7 +41,7 @@ private:
   //The attributes of the Pacman
   const int PACMAN_WIDTH  {30};
   const int PACMAN_HEIGHT {29};
-  int  MAP_WIDTH;
+  //int  MAP_WIDTH;
   int SCREEN_HEIGHT;
   int SCREEN_WIDTH;
 
