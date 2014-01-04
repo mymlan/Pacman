@@ -282,7 +282,7 @@ void Pacman::eat_food(std::vector<Food>& food_vector, Score& myScore) //Food& fo
   for (std::vector<Food>::iterator it = food_vector.begin() ; it != food_vector.end(); ++it)
     {
     
-      if ((check_collision(box, (*it).get_box())) and !(*it).eaten))
+      if ((check_collision(box, (*it).get_box())) and !(*it).eaten())
 	{
 	  myScore.add_points(1);
 	  (*it).was_eaten();
