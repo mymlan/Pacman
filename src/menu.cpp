@@ -118,10 +118,21 @@ void Start::show(SDL_Surface* screen)
 
 void Start::show_infopanel(SDL_Surface* screen)
 {
-  const char* header = message_.c_str();
+ for (int i=0; i<=8; i++)
+    { 
+
+    apply_surface( (MAP_WIDTH+i*INFOPANEL_WIDTH), 0, ytpekare, screen );
+  
+    }
+ /*
+ textpekare = TTF_RenderText_Solid( headerFont, message_.c_str(), headerColor );
+ apply_surface(660, 30,textpekare, screen); 
+ */
+  /*const char* header = message_.c_str();
   SDL_Surface* texttest;
   texttest = TTF_RenderText_Solid( Font, header , color ); //inputfont headercolor
   apply_surface(button.x, button.y,texttest, screen); 
+  */
 }
 
 void Start::handle_input(bool &proceed, bool &quit, SDL_Event event)
@@ -202,6 +213,7 @@ Button::Button(int x, int y, std::string text)
   //Load Font
   Font = TTF_OpenFont("img/KarmaFuture.ttf",22);
 
+  color = {255,255,0,0};
 
   //The image that's loaded
   SDL_Surface* loadedImage = NULL;
@@ -236,7 +248,8 @@ Button::Button(int x, int y, std::string text)
   
 void Button::show(SDL_Surface* screen)
 {
- 
+  textpekare = TTF_RenderText_Solid( Font, message_.c_str() , color );
+  apply_surface(button.x, button.y,textpekare, screen);  
 }
 
 void Button::show(int x, int y, const char* header,SDL_Surface* screen)

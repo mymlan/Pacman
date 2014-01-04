@@ -414,7 +414,7 @@ std::cout<<"Precis Innan Startup visas!!"<<std::endl;
       {
 
 	//=================== Startup =========================
-	std::cout<<"Jag är inne i Startup va?"<<std::endl;
+	
 	if(Startup.is_start())
 	  {	
 	    //Set proceed-flag to false
@@ -426,6 +426,7 @@ std::cout<<"Precis Innan Startup visas!!"<<std::endl;
 	    std::cout<<"bild (We kill Pacman) visas"<<std::endl;
 	    Startup.show_infopanel(screen);
 	    theButton1.show(screen);
+	    std::cout<<"var är button?"<<std::endl;
 	    theButton2.show(screen);
 	    theButton3.show(screen);
 	    theButton4.show(screen);
