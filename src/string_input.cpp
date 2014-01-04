@@ -115,7 +115,7 @@ void StringInput::show_centered(SDL_Surface* screen)
     if( text != NULL )
     {
         //Show the name
-        draw.apply_surface( ( SCREEN_WIDTH - text->w ) / 2, ( SCREEN_HEIGHT - text->h ) / 2, text, screen );
+        draw.apply_surface( ( 1000 - text->w ) / 2, ( 480 - text->h ) / 2, text, screen );
     }
 }
 
