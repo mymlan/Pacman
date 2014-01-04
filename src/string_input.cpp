@@ -15,7 +15,7 @@
 #include <iostream>
 #include "string_input.h"
 #include "sprite.h"
-
+#include "pacman.h"
 
 
 StringInput::StringInput()
@@ -109,7 +109,7 @@ void StringInput::handle_input()
 //}
 void StringInput::show_centered(SDL_Surface* screen)
 {
-  Sprite draw;
+  Pacman draw;
   std::cout<<"show centered"<<std::endl;
     //If the surface isn't blank
     if( text != NULL )
