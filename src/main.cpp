@@ -103,6 +103,8 @@ int main( int argc, char* args[] )
   
   SDL_EnableUNICODE( SDL_ENABLE );
 
+  init(screen, "Pacman");
+
 
   //initialize settings
   // Settings settings;

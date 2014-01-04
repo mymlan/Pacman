@@ -32,6 +32,7 @@
 
 Pacman::Pacman() // string filename
 {
+  
     //Initialize the offsets
     box.x = 320;
     box.y = 440;
@@ -59,8 +60,12 @@ Pacman::Pacman() // string filename
     food_left = 1;//114;
     pacman_has_eaten_special_food = false;
 
+
+
 //The image that's loaded
   SDL_Surface* loadedImage = NULL;
+
+
 
   //The optimized surface that will be used
   SDL_Surface* optimizedImage = NULL;
@@ -68,9 +73,12 @@ Pacman::Pacman() // string filename
   //Load the image
   loadedImage = IMG_Load("img/square.bmp");
   
+
+
   //If the image loaded
   if( loadedImage != NULL )
     {
+     
       //Create an optimized surface
       optimizedImage = SDL_DisplayFormat( loadedImage );
       
