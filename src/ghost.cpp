@@ -200,7 +200,7 @@ Ghost1::Ghost1()
   if( loadedImage != NULL )
     { 
 
-      std::cout<<"hejsan"<<std::endl;
+     
       //Create an optimized surface
       optimizedImage = SDL_DisplayFormat(loadedImage);
 

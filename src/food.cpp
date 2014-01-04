@@ -36,7 +36,7 @@ Food::Food(int x_cord, int y_cord)
   //Set the foods dimensions
   box.w = 29;
   box.h = 30;
-
+ 
   //The image that's loaded
   SDL_Surface* loadedImage = NULL;
 
@@ -63,6 +63,8 @@ Food::Food(int x_cord, int y_cord)
         }
     }  
   ytpekare =  optimizedImage; // * ??
+
+  
 }
 
 bool Food::eaten()
@@ -112,6 +114,7 @@ Special_Food::Special_Food(int x_cord, int y_cord)
   box.w = 29;    //we should change the global constants names PACMAN_WIDTH to CHARACTER_WIDTH
   box.h = 30;
 
+  
   //The image that's loaded
   SDL_Surface* loadedImage = NULL;
 
@@ -124,12 +127,13 @@ Special_Food::Special_Food(int x_cord, int y_cord)
   //If the image loaded
   if( loadedImage != NULL )
     {
+      
       //Create an optimized surface
       optimizedImage = SDL_DisplayFormat( loadedImage );
-
+      std::cout<<"jag är inne va?"<<std::endl;
       //Free the old surface
       SDL_FreeSurface( loadedImage );
-
+      
       //If the surface was optimized
       if( optimizedImage != NULL )
         {
@@ -138,6 +142,8 @@ Special_Food::Special_Food(int x_cord, int y_cord)
         }
     }  
   ytpekare =  optimizedImage;
+  
+  
 }
 
 void Special_Food::was_eaten()

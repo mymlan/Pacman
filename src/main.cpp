@@ -132,23 +132,23 @@ extern const int SCREEN_BPP ;
  std::cerr<<"i main4"<< std::endl;
  //The ghost
  Ghost1 myGhost1;
- 
+  std::cout<<"main5"<<std::endl;
  //The second ghost
  Ghost2 myGhost2;
-
+ std::cout<<"main6"<<std::endl;
  //The third ghost
  Ghost3 myGhost3;
-
+ std::cout<<"main7"<<std::endl;
  //Player score
  Score myScore;
-
+ std::cout<<"main8"<<std::endl;
  //Highscore
  Highscore myHighscore;
-
+ std::cout<<"main9"<<std::endl;
 
  //StringInput
  StringInput PlayerName;
-
+ std::cout<<"main10"<<std::endl;
 
  //Initialize Food
  Food myFood1(10,50);
@@ -276,6 +276,17 @@ extern const int SCREEN_BPP ;
     Food myFood108(610,330);
     Food myFood109(610,370);
     Food myFood110(610,410);
+
+
+    //Special_food
+    Special_Food mySpecial_Food1(10,10);
+
+  std::cout<<"main12"<<std::endl;
+    Special_Food mySpecial_Food2(10,450);
+    Special_Food mySpecial_Food3(610 ,10);
+    Special_Food mySpecial_Food4(570,410);
+
+    Special_Food mySpecial_Food(370,0);
   
     
     //create vectorwith all food in, called food_vector
@@ -294,27 +305,21 @@ extern const int SCREEN_BPP ;
     
     //std::vector<Food> food_vector = {myFood50};
     
-   
+    std::cout<<"main11"<<std::endl;
 
-    //Special_food
-    Special_Food mySpecial_Food1(10,10);
-    Special_Food mySpecial_Food2(10,450);
-    Special_Food mySpecial_Food3(610 ,10);
-    Special_Food mySpecial_Food4(570,410);
 
-    Special_Food mySpecial_Food(370,0);
     std::vector<Special_Food> special_food_vector = {mySpecial_Food1,mySpecial_Food2,mySpecial_Food3,mySpecial_Food4};
 
     //The frame rate regulator
     Timer fps;
 
-
+  
     //The checkpoint timers, helps the ghosts so they dont get distracted by the checkpoints
     Timer checktimer1;
     Timer checktimer2;
     Timer checktimer3;
 
-
+    std::cout<<"main12"<<std::endl;
 
     // Timer for controlling when pacman eats ghosts
     Timer special_food_timer;
@@ -403,7 +408,7 @@ extern const int SCREEN_BPP ;
     // Clip the sprite sheet
   //   myPacman.set_clips();
  
-
+std::cout<<"Precis Innan Startup visas!!"<<std::endl;
     //While the user hasn't quit
     while( quit == false )
       {
