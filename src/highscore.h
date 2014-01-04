@@ -33,7 +33,7 @@ private:
   std::vector<Score> highscoretable;
  
 public:
-  Highscore();
+   Highscore() = default;
   bool is_new_highscore(Score&);
   void save_new_highscore(Score&);
   void show(SDL_Surface*);

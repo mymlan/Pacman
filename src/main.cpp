@@ -99,6 +99,8 @@ bool init(SDL_Surface* screen, std::string caption)
 
 int main( int argc, char* args[] )
 {
+  std::cerr<<"i main"<< std::endl;
+  
   SDL_EnableUNICODE( SDL_ENABLE );
 
 
@@ -115,20 +117,20 @@ extern const int SCREEN_BPP ;
 //Map attributes
  extern const int MAP_WIDTH ;
   
-
+ 
  //Quit flag
  bool quit = false;
 
-
+ std::cerr<<"i main2"<< std::endl;
  //Initialize Menu
  Start Startup{0,0,"PACMAN"};
-
+ std::cerr<<"i main3"<< std::endl;
  //The pacman
  Pacman myPacman;
-
+ std::cerr<<"i main4"<< std::endl;
  //The ghost
  Ghost1 myGhost1;
-
+ 
  //The second ghost
  Ghost2 myGhost2;
 
@@ -144,7 +146,6 @@ extern const int SCREEN_BPP ;
 
  //StringInput
  StringInput PlayerName;
-
 
 
  //Initialize Food
@@ -273,7 +274,7 @@ extern const int SCREEN_BPP ;
     Food myFood108(610,330);
     Food myFood109(610,370);
     Food myFood110(610,410);
-    
+  
     
     //create vectorwith all food in, called food_vector
     std::vector<Food> food_vector = 
@@ -384,6 +385,7 @@ extern const int SCREEN_BPP ;
   SDL_Rect checkpoint20={175,175,5,5};
   SDL_Rect checkpoint21={100,260,5,5};
   SDL_Rect checkpoint22={100,460,5,5};
+  std::cerr<<"efter initieringsskiten"<< std::endl;
 
 //SDL_Rect checkpoint7 = {
   //   SDL_Rect checkpoint8 = {

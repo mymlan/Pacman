@@ -42,8 +42,7 @@ class StringInput
 
     std::string get_str();
 
-
-
+    TTF_Font *inputFont;
 
 };
 

@@ -29,6 +29,14 @@ Menu::Menu(std::string filename)
   Sprite::Sprite(filename);
 }
 */
+Menu::~Menu()
+{
+}
+
+/*Expression_Tree::~Expression_Tree()
+{
+}
+*/
 //========================= START ==============================================
 
 Start::Start(int x, int y, std::string text)

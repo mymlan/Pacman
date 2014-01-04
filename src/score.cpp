@@ -74,9 +74,10 @@ void Score::set_name(std::string new_name)
   name=new_name;
 }
 
-/*void Score::show(SDL_Surface* screen)
+void Score::show(SDL_Surface* screen)
 {
-  score = TTF_RenderText_Solid( scoreFont, get_score().c_str(), textColor );
+  SDL_Surface* score;
+  score = TTF_RenderText_Solid( scoreFont, get_score().c_str(), {0,0,0,0} );
   apply_surface(0,0,score, screen);
-  }*/
+}
 

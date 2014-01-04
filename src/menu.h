@@ -43,8 +43,8 @@ SDL_Surface *header {NULL};
   const int BUTTON_HEIGHT {40};
 
 public:
-  virtual void show(SDL_Surface*);
-  Menu();
+  //  virtual void show(SDL_Surface*);
+  // Menu();
   // Menu(std::string filename);//: new Sprite (std::string filename){}
   virtual ~Menu();
 };
