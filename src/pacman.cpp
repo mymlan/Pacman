@@ -83,7 +83,7 @@ Pacman::Pacman() // string filename
     }
   
   
-  ytpekare_ =  optimizedImage;
+  ytpekare =  optimizedImage;
   
   
 }
