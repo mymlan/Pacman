@@ -189,18 +189,26 @@ Ghost1::Ghost1()
   //The optimized surface that will be used
   SDL_Surface* optimizedImage = NULL;
 
+ 
   //Load the image
   loadedImage = IMG_Load("img/ghost-picture.bmp");
 
+
+
+
   //If the image loaded
   if( loadedImage != NULL )
-    {
-      //Create an optimized surface
-      optimizedImage = SDL_DisplayFormat(ytpekare);
+    { 
 
+      std::cout<<"hejsan"<<std::endl;
+      //Create an optimized surface
+      optimizedImage = SDL_DisplayFormat(loadedImage);
+
+    
       //Free the old surface
       SDL_FreeSurface( loadedImage );
-
+     
+      
       //If the surface was optimized
       if( optimizedImage != NULL )
         {
@@ -341,7 +349,7 @@ Ghost2::Ghost2()
   if( loadedImage != NULL )
     {
       //Create an optimized surface
-      optimizedImage = SDL_DisplayFormat(ytpekare);
+      optimizedImage = SDL_DisplayFormat(loadedImage);
 
       //Free the old surface
       SDL_FreeSurface( loadedImage );
@@ -427,7 +435,7 @@ Ghost3::Ghost3()
   if( loadedImage != NULL )
     {
       //Create an optimized surface
-      optimizedImage = SDL_DisplayFormat(ytpekare);
+      optimizedImage = SDL_DisplayFormat(loadedImage);
 
       //Free the old surface
       SDL_FreeSurface( loadedImage );
