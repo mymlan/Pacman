@@ -65,7 +65,7 @@ Start::Start(int x, int y, std::string text)
   SDL_Surface* optimizedImage = NULL;
 
   //Load the image
-  loadedImage = IMG_Load( "src/startup.bmp" ); // filename.c_str()
+  loadedImage = IMG_Load( "img/startup.bmp" ); // filename.c_str()
 
   //If the image loaded
   if( loadedImage != NULL )

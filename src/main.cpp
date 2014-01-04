@@ -414,15 +414,16 @@ std::cout<<"Precis Innan Startup visas!!"<<std::endl;
       {
 
 	//=================== Startup =========================
-
+	std::cout<<"Jag är inne i Startup va?"<<std::endl;
 	if(Startup.is_start())
 	  {	
 	    //Set proceed-flag to false
 	    bool proceed = false;
-
+	    
+	    std::cout<<"Nu kommer bilden!!!"<<std::endl;
 	    //Start screen
 	    Startup.show(screen);
-	    
+	    std::cout<<"bild (We kill Pacman) visas"<<std::endl;
 	    Startup.show_infopanel(screen);
 	    theButton1.show(screen);
 	    theButton2.show(screen);
