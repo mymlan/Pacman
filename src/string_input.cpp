@@ -102,7 +102,7 @@ void StringInput::handle_input()
             SDL_FreeSurface( text );
 
             //Render a new text surface
-            text = TTF_RenderText_Solid( inputFont, str.c_str(), textColor );
+            text = TTF_RenderText_Solid( inputFont, str.c_str(), {0,0,0,0});// textColor );
         }
 	}
 }
