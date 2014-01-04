@@ -196,7 +196,7 @@ Ghost1::Ghost1()
   if( loadedImage != NULL )
     {
       //Create an optimized surface
-      optimizedImage = SDL_DisplayFormat(  );
+      optimizedImage = SDL_DisplayFormat(ytpekare);
 
       //Free the old surface
       SDL_FreeSurface( loadedImage );
@@ -208,7 +208,7 @@ Ghost1::Ghost1()
 	  SDL_SetColorKey( optimizedImage, SDL_SRCCOLORKEY, SDL_MapRGB( optimizedImage->format, 0, 0xFF, 0xFF ) );
         }
     }  
-  *ytpekare =  optimizedImage;
+  ytpekare =  optimizedImage;
 }
 
 //Moves freely, and looks for checkpoints
