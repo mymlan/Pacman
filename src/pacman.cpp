@@ -19,6 +19,9 @@
 #include <algorithm>
 #include "pacman.h"
 #include "sprite.h"
+#include "ghost.h"
+#include "food.h"
+#include "score.h"
 
 
 //============================================================================
