@@ -124,7 +124,7 @@ extern const int SCREEN_BPP ;
 
  
  //Initialize Menu
- Start Startup{0,0,"PACMAN"};
+ Start Startup{660,30,"PACMAN"};
  
  
  //The pacman
@@ -515,9 +515,14 @@ extern const int SCREEN_BPP ;
 				  case SDLK_p: cont = true; std::cout << "Play!"<< std::endl; break;
 				  case SDLK_q: cont = true ; quit = true; std::cout << "Game quit" << std::endl; return 0; break;
 				  case SDLK_h: init(new_screen, "Highscore");
+
+
 				    Highscore_screen Highscore(400,10, "HIGHSCORE");
-				    
+
+			
 				    Highscore.show(screen);
+	   
+
 				    myHighscore.show(screen);
 				    
 				    //update screen
@@ -525,7 +530,9 @@ extern const int SCREEN_BPP ;
 				      {
 					return 1;
 				      }
+			
 				    
+
 				    std::cout<< "Highscore. Game paused."<<std::endl;
 				    break; //test
 				  }
@@ -721,12 +728,12 @@ extern const int SCREEN_BPP ;
 		myGhost2.change_mood();
 		myGhost3.change_mood();
 	      }
-		special_food_timer.start();
-		myPacman.pacman_change_mood();
-	    }
-
-
-		
+	    special_food_timer.start();
+	    myPacman.pacman_change_mood();
+	  }
+	
+	
+	
 	// Sets ghosts back to chasing Pacman
 	if(special_food_timer.get_ticks() > 5000)
 	  {
@@ -736,7 +743,7 @@ extern const int SCREEN_BPP ;
 	    special_food_timer.stop();
 	  }
 	
-
+	
 
         //Fill the screen white or blue, depending on whether the ghost is scared
        
@@ -805,10 +812,10 @@ extern const int SCREEN_BPP ;
 
 
 	//show the lives on the screen
-	//	myPacman.showlife(screen);
+       	myPacman.showlife(3, screen);
 
 	//Show score on the side of the screen
-	//	myScore.show(screen);
+		myScore.show(screen);
 	
       
 	

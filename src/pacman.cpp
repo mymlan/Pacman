@@ -400,7 +400,7 @@ void Pacman::set_clips()
 */
 
 
- /*
+ 
 void Pacman::showlife(int lives, SDL_Surface* screen)
 {
 if (lives==2)
@@ -412,13 +412,13 @@ if (lives==2)
  else if (lives==1)
     {
 
-      apply_surface(910+PACMAN_WIDTH,440 ,pacman, screen, &clipsLeft[1] );
-      apply_surface(910+2*PACMAN_WIDTH,440 ,pacman, screen, &clipsLeft[1] );
+      apply_surface(910+PACMAN_WIDTH,440 ,ytpekare, screen );
+      apply_surface(910+2*PACMAN_WIDTH,440 ,ytpekare, screen );
     }
     
  else if( lives==0)
    {
-     apply_surface(910+2*PACMAN_WIDTH,440 ,pacman, screen, &clipsLeft[1] );
+     apply_surface(910+2*PACMAN_WIDTH,440 ,ytpekare, screen );
    }
 }
-*/
+
