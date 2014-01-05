@@ -571,7 +571,7 @@ extern const int SCREEN_BPP ;
 	  {checktimer1.start();}
 	  
 	
-	std::cout<<"hej jonca"<<std::endl;
+
 	if(checktimer1.get_ticks() > 300) //was it long enough since we found a checkpoint?
 	  {
 	    myGhost1.do_if_checkpoint(checkmaze, myPacman);
@@ -581,7 +581,7 @@ extern const int SCREEN_BPP ;
 	      } //restart the timer so that ghost only will look at a checkpoint once
 	  }
 
-	std::cout<<"hejdå jonca"<<std::endl;
+
 	    
 
 	/*
