@@ -2,7 +2,7 @@
 
 Board::Board(SDL_Surface *screen)
 : screen(screen)
-, Startup(0,0,"PACMAN")
+, Startup(660,30,"PACMAN")
 , theButton1(660,100,"Press \"S\" to start ")
 , theButton2(660, 150,"Press \"P\" to pause ")
 , theButton3(660, 200,"Press \"Q\" to quit")
@@ -355,6 +355,9 @@ void Board::draw_everything()
 	theButton2.show(screen);
 	theButton3.show(screen);
 	theButton4.show(screen);
+
+	myPacman.showlife(3, screen);
+	myScore.show(screen);
 
 	update_screen();
 }
