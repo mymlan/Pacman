@@ -220,7 +220,7 @@ Ghost1::Ghost1()
 }
 
 //Moves freely, and looks for checkpoints
-void Ghost1::do_if_checkpoint( std::vector<SDL_Rect> checkmaze, Pacman paccy ) 
+void Ghost1::do_if_checkpoint( std::vector<SDL_Rect> checkmaze, Pacman& paccy ) 
 {
   
   if(is_checkpoint(checkmaze))
@@ -452,7 +452,7 @@ Ghost3::Ghost3()
 }
 
 //Moves freely, and looks for checkpoints
-void Ghost3::do_if_checkpoint( std::vector<SDL_Rect> checkmaze, Pacman paccy ) 
+void Ghost3::do_if_checkpoint( std::vector<SDL_Rect> checkmaze, Pacman& paccy ) 
 {
   
   if (is_checkpoint(checkmaze))

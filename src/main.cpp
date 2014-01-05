@@ -129,7 +129,7 @@ extern const int SCREEN_BPP ;
  
  //The pacman
  Pacman myPacman;
- /*
+ 
  //The ghost
  Ghost1 myGhost1;
  
@@ -138,7 +138,7 @@ extern const int SCREEN_BPP ;
 
  //The third ghost
  Ghost3 myGhost3;
- 
+ /*
  //Player score
  Score myScore;
  */
@@ -155,23 +155,23 @@ extern const int SCREEN_BPP ;
  Food myFood1(10,50);
 
  /*
- Food myFood2(10,90);
- Food myFood3(10,130);
- Food myFood4(10,170);
- Food myFood5(10,210);
- Food myFood6(10,250);
-    Food myFood7(10,290);
-    Food myFood8(10,330);
-    Food myFood9(10,370);
-    Food myFood10(10,410);
+   Food myFood2(10,90);
+   Food myFood3(10,130);
+   Food myFood4(10,170);
+   Food myFood5(10,210);
+   Food myFood6(10,250);
+   Food myFood7(10,290);
+   Food myFood8(10,330);
+   Food myFood9(10,370);
+   Food myFood10(10,410);
 
-    Food myFood11(50,10);
-    Food myFood12(50,250);
-    Food myFood13(50,450);
+   Food myFood11(50,10);
+   Food myFood12(50,250);
+   Food myFood13(50,450);
 
-    Food myFood14(90,10);
-    Food myFood15(90,170);
-    Food myFood16(90,210);
+   Food myFood14(90,10);
+   Food myFood15(90,170);
+   Food myFood16(90,210);
     Food myFood17(90,250);
     Food myFood18(90,290);
     Food myFood19(90,330);
@@ -306,50 +306,50 @@ extern const int SCREEN_BPP ;
        myFood91,myFood92,myFood93,myFood94,myFood95,myFood96,myFood97,myFood98,myFood99,myFood100,
        myFood101,myFood102,myFood103,myFood104,myFood105,myFood106,myFood107,myFood108,myFood109,myFood110};
     
-    //std::vector<Food> food_vector = {myFood50};
+       //std::vector<Food> food_vector = {myFood50};
     
   
 
 
-    std::vector<Special_Food> special_food_vector = {mySpecial_Food1,mySpecial_Food2,mySpecial_Food3,mySpecial_Food4};
+       std::vector<Special_Food> special_food_vector = {mySpecial_Food1,mySpecial_Food2,mySpecial_Food3,mySpecial_Food4};
  */
  //create vectorwith all food in, called food_vector
  std::vector<Food> food_vector = {myFood1};
  
  //The frame rate regulator
-    Timer fps;
+ Timer fps;
 
   
-    //The checkpoint timers, helps the ghosts so they dont get distracted by the checkpoints
-    Timer checktimer1;
-    Timer checktimer2;
-    Timer checktimer3;
+ //The checkpoint timers, helps the ghosts so they dont get distracted by the checkpoints
+ Timer checktimer1;
+ Timer checktimer2;
+ Timer checktimer3;
 
    
 
-    // Timer for controlling when pacman eats ghosts
-    Timer special_food_timer;
+ // Timer for controlling when pacman eats ghosts
+ Timer special_food_timer;
     
  
-    Button theButton1(660,100,"Press \"S\" to start ");
-    Button theButton2(660, 150,"Press \"P\" to pause ");
-    Button theButton3(660, 200,"Press \"Q\" to quit");
-    Button theButton4(660,250,"Press \"H\" to show highscore");
+ Button theButton1(660,100,"Press \"S\" to start ");
+ Button theButton2(660, 150,"Press \"P\" to pause ");
+ Button theButton3(660, 200,"Press \"Q\" to quit");
+ Button theButton4(660,250,"Press \"H\" to show highscore");
     
 
-  //Initialize
-  if( init() == false )
-    {
-      return 1;
-    }
+ //Initialize
+ if( init() == false )
+   {
+     return 1;
+   }
     
   
   
-  //Initialize walls
-  SDL_Rect wall1 = {40,40,40,200}; //dessa två har samma parametrar som checkpoint1 och checkpoint2
-  SDL_Rect wall2 = {80,40,80,40}; //
-  SDL_Rect wall3 = {80,120,40,40};
-  SDL_Rect wall4 = {120,40,40,120};
+ //Initialize walls
+ SDL_Rect wall1 = {40,40,40,200}; //dessa två har samma parametrar som checkpoint1 och checkpoint2
+ SDL_Rect wall2 = {80,40,80,40}; //
+ SDL_Rect wall3 = {80,120,40,40};
+ SDL_Rect wall4 = {120,40,40,120};
   SDL_Rect wall5 = {200,40,160,40};
   SDL_Rect wall6 = {320,80,40,40};
   SDL_Rect wall7 = {200,120,160,40};
@@ -555,30 +555,36 @@ extern const int SCREEN_BPP ;
 		
         //Move the pacman
         myPacman.move(maze, wall25);
-	/*
+	
 	//Ghosts finds out where pacman is
 	myGhost1.seek(myPacman);
 	myGhost2.seek(); 
 	myGhost3.seek(myPacman);
-
+	
 	//Move the ghosts
 	myGhost1.move(maze);
 	myGhost2.move(maze);
 	myGhost3.move(maze);
 
-	
+		
 	if(!checktimer1.is_started()) //If the timer is off, turn it on
 	  {checktimer1.start();}
+	  
 	
-
-
+	std::cout<<"hej jonca"<<std::endl;
 	if(checktimer1.get_ticks() > 300) //was it long enough since we found a checkpoint?
 	  {
 	    myGhost1.do_if_checkpoint(checkmaze, myPacman);
 	    if(myGhost1.is_checkpoint(checkmaze))
-	      {checktimer1.start();} //restart the timer so that ghost only will look at a checkpoint once
+	      {
+		checktimer1.start();
+	      } //restart the timer so that ghost only will look at a checkpoint once
 	  }
-	
+
+	std::cout<<"hejdå jonca"<<std::endl;
+	    
+
+	/*
 
 
 	if(!checktimer2.is_started()) //If the timer is off, turn it on
@@ -602,10 +608,10 @@ extern const int SCREEN_BPP ;
 	    if(myGhost3.is_checkpoint(checkmaze))
 	      {checktimer3.start();} //restart the timer so that ghost only will look at a checkpoint once
 	  }
+*/
 
 
-
-
+	/*
 	//Is a ghost eating Pacman or are Pacman eating a ghost
 	if (myPacman.eat_eaten(myGhost1, myScore) || myPacman.eat_eaten(myGhost2, myScore) || myPacman.eat_eaten(myGhost3, myScore))
 	  {
@@ -618,7 +624,8 @@ extern const int SCREEN_BPP ;
 		  }
 	      }
 	  }
-	*/
+	*/	
+
 	/*	//Om alla Food objekt är uppätna avslutas spelet. Ska troligtvis ske något annat
 	if(myPacman.no_food_left())
 	  {
@@ -766,12 +773,12 @@ extern const int SCREEN_BPP ;
 
 	//Show food on the screen
 	//myFood1.show_all_food(food_vector,screen);
-	
+	/*	
 	for (std::vector<Food>::iterator it = food_vector.begin() ; it != food_vector.end(); ++it)
 	  {
 	    (*it).show(screen);
 	  }
-
+*/
 
 
 
@@ -779,17 +786,17 @@ extern const int SCREEN_BPP ;
 	//Show special_food on the screen
 	//	mySpecial_Food1.show_all_special_food(special_food_vector,screen);
 	
-	/*	//Show the checkpoints - just for testing
+	//Show the checkpoints - just for testing
 	for (std::vector<SDL_Rect>::iterator it = checkmaze.begin() ; it != checkmaze.end(); ++it)
 	  {
 	    SDL_FillRect( screen, &(*it), SDL_MapRGB( screen->format, 0x00, 0xEF, 0xEF) );
 	  }
-*/
-	/*	//Show ghost on the screen
+
+	//Show ghost on the screen
 	myGhost1.show(screen);
 	myGhost2.show(screen);
 	myGhost3.show(screen);
-*/
+
 	//show infopanel
 	Startup.show_infopanel(screen);
 

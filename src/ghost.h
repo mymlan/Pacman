@@ -79,7 +79,7 @@ public:
   //  void show();
 
   //If the ghost finds a checkpoint, it reorients. uses is_checkpoint?
-  void do_if_checkpoint(std::vector<SDL_Rect>, Pacman);
+  void do_if_checkpoint(std::vector<SDL_Rect>, Pacman&);
 
 
 };
@@ -117,7 +117,7 @@ public:
   //  void show();
 
  //If the ghost finds a checkpoint, it reorients. uses is_checkpoint
-  void do_if_checkpoint(std::vector<SDL_Rect>, Pacman);
+  void do_if_checkpoint(std::vector<SDL_Rect>, Pacman&);
 
  
 };
