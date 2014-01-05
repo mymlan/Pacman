@@ -126,9 +126,10 @@ extern const int SCREEN_BPP ;
  //Initialize Menu
  Start Startup{0,0,"PACMAN"};
  
+ 
  //The pacman
  Pacman myPacman;
- 
+ /*
  //The ghost
  Ghost1 myGhost1;
  
@@ -140,17 +141,20 @@ extern const int SCREEN_BPP ;
  
  //Player score
  Score myScore;
- 
+ */
  //Highscore
  Highscore myHighscore;
- 
+ /*
 
  //StringInput
  StringInput PlayerName;
- 
+ */
 
+ 
  //Initialize Food
  Food myFood1(10,50);
+
+ /*
  Food myFood2(10,90);
  Food myFood3(10,130);
  Food myFood4(10,170);
@@ -308,8 +312,11 @@ extern const int SCREEN_BPP ;
 
 
     std::vector<Special_Food> special_food_vector = {mySpecial_Food1,mySpecial_Food2,mySpecial_Food3,mySpecial_Food4};
-
-    //The frame rate regulator
+ */
+ //create vectorwith all food in, called food_vector
+ std::vector<Food> food_vector = {myFood1};
+ 
+ //The frame rate regulator
     Timer fps;
 
   
@@ -323,7 +330,7 @@ extern const int SCREEN_BPP ;
     // Timer for controlling when pacman eats ghosts
     Timer special_food_timer;
     
-
+ 
     Button theButton1(660,100,"Press \"S\" to start ");
     Button theButton2(660, 150,"Press \"P\" to pause ");
     Button theButton3(660, 200,"Press \"Q\" to quit");
@@ -545,10 +552,10 @@ extern const int SCREEN_BPP ;
                 quit = true;
 	      }
 	  }
-	
+		
         //Move the pacman
         myPacman.move(maze, wall25);
-	
+	/*
 	//Ghosts finds out where pacman is
 	myGhost1.seek(myPacman);
 	myGhost2.seek(); 
@@ -611,8 +618,8 @@ extern const int SCREEN_BPP ;
 		  }
 	      }
 	  }
-
-	//Om alla Food objekt är uppätna avslutas spelet. Ska troligtvis ske något annat
+	*/
+	/*	//Om alla Food objekt är uppätna avslutas spelet. Ska troligtvis ske något annat
 	if(myPacman.no_food_left())
 	  {
 	    bool cont=false;
@@ -674,7 +681,7 @@ extern const int SCREEN_BPP ;
 		
 		
 	
-	      }
+		  }
 
 	      PlayerName.show_centered(screen);
 
@@ -687,15 +694,15 @@ extern const int SCREEN_BPP ;
 	  
 
 	       
-	      }
+	  }*/
 	  
 
 
-
+	
 	//Is a Pacman eating food
-	myPacman.eat_food(food_vector, myScore);
+	//myPacman.eat_food(food_vector, myScore);
 
-
+	/*
 	//Is Pacman eating special_food
 	myPacman.eat_special_food(special_food_vector, myScore);
 
@@ -738,6 +745,10 @@ extern const int SCREEN_BPP ;
 	  
 	  } 
 
+	*/
+
+	SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0xFF, 0xFF, 0xFF ));
+
 
         //Show the walls
 	for (std::vector<SDL_Rect>::iterator it = maze.begin() ; it != maze.end(); ++it)
@@ -750,27 +761,35 @@ extern const int SCREEN_BPP ;
 	SDL_FillRect( screen, &wall25, SDL_MapRGB( screen->format, 0xAF, 0x00, 0x00) );
 
         //Show pacman on the screen
-        myPacman.show(screen);
+	myPacman.show(screen);
 	
 
 	//Show food on the screen
-	myFood1.show_all_food(food_vector,screen);
-
-	std::cout<<"lululol"<<std::endl;
-	//Show special_food on the screen
-	mySpecial_Food1.show_all_special_food(special_food_vector,screen);
+	//myFood1.show_all_food(food_vector,screen);
 	
-	//Show the checkpoints - just for testing
+	for (std::vector<Food>::iterator it = food_vector.begin() ; it != food_vector.end(); ++it)
+	  {
+	    (*it).show(screen);
+	  }
+
+
+
+
+	
+	//Show special_food on the screen
+	//	mySpecial_Food1.show_all_special_food(special_food_vector,screen);
+	
+	/*	//Show the checkpoints - just for testing
 	for (std::vector<SDL_Rect>::iterator it = checkmaze.begin() ; it != checkmaze.end(); ++it)
 	  {
 	    SDL_FillRect( screen, &(*it), SDL_MapRGB( screen->format, 0x00, 0xEF, 0xEF) );
 	  }
-
-	//Show ghost on the screen
+*/
+	/*	//Show ghost on the screen
 	myGhost1.show(screen);
 	myGhost2.show(screen);
 	myGhost3.show(screen);
-
+*/
 	//show infopanel
 	Startup.show_infopanel(screen);
 
@@ -785,7 +804,7 @@ extern const int SCREEN_BPP ;
 	//	myPacman.showlife(screen);
 
 	//Show score on the side of the screen
-	myScore.show(screen);
+	//	myScore.show(screen);
 	
       
 	

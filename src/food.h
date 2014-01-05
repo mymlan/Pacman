@@ -38,7 +38,7 @@ class Food : public Sprite
   void was_eaten();
   void show(SDL_Surface*);
   SDL_Rect get_box();
-  void show_all_food(std::vector<Food>, SDL_Surface*);
+  // void show_all_food(std::vector<Food>, SDL_Surface*);
 };
 //###############################################################################################
 

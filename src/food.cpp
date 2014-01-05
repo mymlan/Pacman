@@ -93,13 +93,14 @@ SDL_Rect Food::get_box()
   return box;
 }
 
+/*
 void Food::show_all_food(std::vector<Food> food_vector, SDL_Surface* screen)
 {
   for (std::vector<Food>::iterator it = food_vector.begin() ; it != food_vector.end(); ++it)
     {
       (*it).show(screen);
     }
-}
+}*/
 
 //============================================================================
 //  Class: Special_Food
