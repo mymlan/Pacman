@@ -81,9 +81,9 @@ void Food::show(SDL_Surface* screen)  // = delete? /ingrid
 {
   if (!eaten_)
     {
-      std::cout<<"like someboody"<<std::endl;
+    
       apply_surface(box.x,box.y,ytpekare, screen);
-      std::cout<<"genom"<<std::endl;
+     
     }
 }
 

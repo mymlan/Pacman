@@ -99,7 +99,6 @@ bool init(SDL_Surface* screen, std::string caption)
 
 int main( int argc, char* args[] )
 {
-  std::cerr<<"i main"<< std::endl;
   
   SDL_EnableUNICODE( SDL_ENABLE );
 
@@ -123,32 +122,32 @@ extern const int SCREEN_BPP ;
  //Quit flag
  bool quit = false;
 
- std::cerr<<"i main2"<< std::endl;
+ 
  //Initialize Menu
  Start Startup{0,0,"PACMAN"};
- std::cerr<<"i main3"<< std::endl;
+ 
  //The pacman
  Pacman myPacman;
- std::cerr<<"i main4"<< std::endl;
+ 
  //The ghost
  Ghost1 myGhost1;
-  std::cout<<"main5"<<std::endl;
+ 
  //The second ghost
  Ghost2 myGhost2;
- std::cout<<"main6"<<std::endl;
+
  //The third ghost
  Ghost3 myGhost3;
- std::cout<<"main7"<<std::endl;
+ 
  //Player score
  Score myScore;
- std::cout<<"main8"<<std::endl;
+ 
  //Highscore
  Highscore myHighscore;
- std::cout<<"main9"<<std::endl;
+ 
 
  //StringInput
  StringInput PlayerName;
- std::cout<<"main10"<<std::endl;
+ 
 
  //Initialize Food
  Food myFood1(10,50);
@@ -281,7 +280,7 @@ extern const int SCREEN_BPP ;
     //Special_food
     Special_Food mySpecial_Food1(10,10);
 
-  std::cout<<"main12"<<std::endl;
+  
     Special_Food mySpecial_Food2(10,450);
     Special_Food mySpecial_Food3(610 ,10);
     Special_Food mySpecial_Food4(570,410);
@@ -305,7 +304,7 @@ extern const int SCREEN_BPP ;
     
     //std::vector<Food> food_vector = {myFood50};
     
-    std::cout<<"main11"<<std::endl;
+  
 
 
     std::vector<Special_Food> special_food_vector = {mySpecial_Food1,mySpecial_Food2,mySpecial_Food3,mySpecial_Food4};
@@ -319,7 +318,7 @@ extern const int SCREEN_BPP ;
     Timer checktimer2;
     Timer checktimer3;
 
-    std::cout<<"main12"<<std::endl;
+   
 
     // Timer for controlling when pacman eats ghosts
     Timer special_food_timer;
@@ -392,7 +391,7 @@ extern const int SCREEN_BPP ;
   SDL_Rect checkpoint20={175,175,5,5};
   SDL_Rect checkpoint21={100,260,5,5};
   SDL_Rect checkpoint22={100,460,5,5};
-  std::cerr<<"efter initieringsskiten"<< std::endl;
+
 
 //SDL_Rect checkpoint7 = {
   //   SDL_Rect checkpoint8 = {
@@ -408,7 +407,7 @@ extern const int SCREEN_BPP ;
     // Clip the sprite sheet
   //   myPacman.set_clips();
  
-std::cout<<"Precis Innan Startup visas!!"<<std::endl;
+
     //While the user hasn't quit
     while( quit == false )
       {
@@ -420,13 +419,13 @@ std::cout<<"Precis Innan Startup visas!!"<<std::endl;
 	    //Set proceed-flag to false
 	    bool proceed = false;
 	    
-	    std::cout<<"Nu kommer bilden!!!"<<std::endl;
+	 
 	    //Start screen
 	    Startup.show(screen);
-	    std::cout<<"bild (We kill Pacman) visas"<<std::endl;
+	    
 	    Startup.show_infopanel(screen);
 	    theButton1.show(screen);
-	    std::cout<<"var är button?"<<std::endl;
+	    
 	    theButton2.show(screen);
 	    theButton3.show(screen);
 	    theButton4.show(screen);
@@ -753,7 +752,7 @@ std::cout<<"Precis Innan Startup visas!!"<<std::endl;
         //Show pacman on the screen
         myPacman.show(screen);
 	
-	std::cout<<"kalas"<<std::endl;
+
 	//Show food on the screen
 	myFood1.show_all_food(food_vector,screen);
 
