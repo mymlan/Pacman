@@ -144,11 +144,11 @@ extern const int SCREEN_BPP ;
  
  //Highscore
  Highscore myHighscore;
- /*
+
 
  //StringInput
  StringInput PlayerName;
- */
+
 
  
  //Initialize Food
@@ -312,6 +312,7 @@ extern const int SCREEN_BPP ;
 
 
        std::vector<Special_Food> special_food_vector = {mySpecial_Food1,mySpecial_Food2,mySpecial_Food3,mySpecial_Food4};
+
 
  
  //The frame rate regulator
@@ -582,7 +583,7 @@ extern const int SCREEN_BPP ;
 
 	    
 
-	/*
+
 
 
 	if(!checktimer2.is_started()) //If the timer is off, turn it on
@@ -606,7 +607,7 @@ extern const int SCREEN_BPP ;
 	    if(myGhost3.is_checkpoint(checkmaze))
 	      {checktimer3.start();} //restart the timer so that ghost only will look at a checkpoint once
 	  }
-*/
+
 
 
 	
@@ -624,7 +625,7 @@ extern const int SCREEN_BPP ;
 	  }
 		
 
-	/*	//Om alla Food objekt är uppätna avslutas spelet. Ska troligtvis ske något annat
+		//Om alla Food objekt är uppätna avslutas spelet. Ska troligtvis ske något annat
 	if(myPacman.no_food_left())
 	  {
 	    bool cont=false;
@@ -699,15 +700,15 @@ extern const int SCREEN_BPP ;
 	  
 
 	       
-	  }*/
+	  }
 	  
 
 
 	
 	//Is a Pacman eating food
-	//myPacman.eat_food(food_vector, myScore);
+	myPacman.eat_food(food_vector, myScore);
 
-	/*
+
 	//Is Pacman eating special_food
 	myPacman.eat_special_food(special_food_vector, myScore);
 
@@ -750,7 +751,7 @@ extern const int SCREEN_BPP ;
 	  
 	  } 
 
-	*/
+
 
 	SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0xFF, 0xFF, 0xFF ));
 
@@ -770,19 +771,17 @@ extern const int SCREEN_BPP ;
 	
 
 	//Show food on the screen
+
 	//myFood1.show_all_food(food_vector,screen);
-		
+
+
 	for (std::vector<Food>::iterator it = food_vector.begin() ; it != food_vector.end(); ++it)
-	  {
-	    (*it).show(screen);
-	  }
+	{
+		(*it).show(screen);
+	}
 
-
-
-
-	
 	//Show special_food on the screen
-	//	mySpecial_Food1.show_all_special_food(special_food_vector,screen);
+	mySpecial_Food1.show_all_special_food(special_food_vector,screen);
 	
 	//Show the checkpoints - just for testing
 	for (std::vector<SDL_Rect>::iterator it = checkmaze.begin() ; it != checkmaze.end(); ++it)

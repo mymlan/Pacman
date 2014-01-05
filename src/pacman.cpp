@@ -57,7 +57,7 @@ Pacman::Pacman() // string filename
     frame = 0;
     status = PACMAN_LEFT;
 
-    food_left = 1;//114;
+    food_left = 114;
     pacman_has_eaten_special_food = false;
 
 
