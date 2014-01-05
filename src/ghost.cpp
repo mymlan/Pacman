@@ -234,7 +234,7 @@ void Ghost1::do_if_checkpoint( std::vector<SDL_Rect> checkmaze, Pacman paccy )
 }
 
 //Sets the moving direction towards pacman
-void Ghost1::seek(Pacman paccy)
+void Ghost1::seek(Pacman& paccy)
 { 
   /*
   std::cout<<"scared_ : "<<scared_<<std::endl;
@@ -469,7 +469,7 @@ void Ghost3::do_if_checkpoint( std::vector<SDL_Rect> checkmaze, Pacman paccy )
 }
 
 //sets the moving direction towards pacman, works as ghost1 but switches the first and second ways to pacman,
-void Ghost3::seek(Pacman paccy) 
+void Ghost3::seek(Pacman& paccy) 
 {
 
   if (first_way_to_pacman_ == 0 && second_way_to_pacman_ == 0) //if we have tried both directions, get a new one

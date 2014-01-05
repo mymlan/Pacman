@@ -68,7 +68,7 @@ class Ghost1 : public Ghost
 {
 public:
  //Finds out how to move to Pacman. Seek sets the "first and second way to pacman" member units.
-  void seek(class Pacman);
+  void seek(Pacman& paccy);
 
   //Initializes the variables
   Ghost1();
@@ -107,7 +107,7 @@ public:
 class Ghost3 : public Ghost //this ghost mixes up the first and second most desirable directions towards pacman
 {
 public:
-  void seek(Pacman paccy);
+  void seek(Pacman& paccy);
 
   Ghost3();
 
