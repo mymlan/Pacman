@@ -59,9 +59,21 @@
 }
 */
 
-//============================================================================
-//  Memory release
-//============================================================================
+Sprite::Sprite()
+: ytpekare(0)
+, MAP_WIDTH(0)
+, SCREEN_HEIGHT(0)
+, SCREEN_WIDTH(0)
+{}
+
+Sprite::Sprite(const Sprite& f)
+: ytpekare(0)
+, MAP_WIDTH(0)
+, SCREEN_HEIGHT(0)
+, SCREEN_WIDTH(0)
+{
+	ytpekare = SDL_ConvertSurface(f.ytpekare, f.ytpekare->format, f.ytpekare->flags);
+}
 
 Sprite::~Sprite()
 {

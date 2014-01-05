@@ -32,6 +32,8 @@ class Sprite
 {
 public:
   // Sprite( std::string filename );
+  Sprite();
+  Sprite(const Sprite& f); //kopiering
   virtual ~Sprite();
   // virtual void apply_surface( SDL_Surface* destination, SDL_Rect* clip = NULL ); 
   // som den såg ut inatt
