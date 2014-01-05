@@ -138,10 +138,10 @@ extern const int SCREEN_BPP ;
 
  //The third ghost
  Ghost3 myGhost3;
- /*
+ 
  //Player score
  Score myScore;
- */
+ 
  //Highscore
  Highscore myHighscore;
  /*
@@ -611,7 +611,7 @@ extern const int SCREEN_BPP ;
 */
 
 
-	/*
+	
 	//Is a ghost eating Pacman or are Pacman eating a ghost
 	if (myPacman.eat_eaten(myGhost1, myScore) || myPacman.eat_eaten(myGhost2, myScore) || myPacman.eat_eaten(myGhost3, myScore))
 	  {
@@ -624,7 +624,7 @@ extern const int SCREEN_BPP ;
 		  }
 	      }
 	  }
-	*/	
+		
 
 	/*	//Om alla Food objekt är uppätna avslutas spelet. Ska troligtvis ske något annat
 	if(myPacman.no_food_left())
