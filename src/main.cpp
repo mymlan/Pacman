@@ -734,7 +734,11 @@ std::cout<<"Precis Innan Startup visas!!"<<std::endl;
 	  }
 	else
 	  {
+
+	    std::cout<<"yolo"<<std::endl;
 	    SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0x3, 0x5, 0x80 ) );
+	    std::cout<<"cheot"<<std::endl;
+
 	  } 
 
 
