@@ -735,10 +735,8 @@ std::cout<<"Precis Innan Startup visas!!"<<std::endl;
 	else
 	  {
 
-	    std::cout<<"yolo"<<std::endl;
 	    SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0x3, 0x5, 0x80 ) );
-	    std::cout<<"cheot"<<std::endl;
-
+	  
 	  } 
 
 
@@ -755,13 +753,14 @@ std::cout<<"Precis Innan Startup visas!!"<<std::endl;
         //Show pacman on the screen
         myPacman.show(screen);
 	
+	std::cout<<"kalas"<<std::endl;
 	//Show food on the screen
 	myFood1.show_all_food(food_vector,screen);
 
+	std::cout<<"lululol"<<std::endl;
 	//Show special_food on the screen
 	mySpecial_Food1.show_all_special_food(special_food_vector,screen);
-
-
+	
 	//Show the checkpoints - just for testing
 	for (std::vector<SDL_Rect>::iterator it = checkmaze.begin() ; it != checkmaze.end(); ++it)
 	  {

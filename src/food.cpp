@@ -81,7 +81,9 @@ void Food::show(SDL_Surface* screen)  // = delete? /ingrid
 {
   if (!eaten_)
     {
+      std::cout<<"like someboody"<<std::endl;
       apply_surface(box.x,box.y,ytpekare, screen);
+      std::cout<<"genom"<<std::endl;
     }
 }
 
@@ -130,7 +132,7 @@ Special_Food::Special_Food(int x_cord, int y_cord)
       
       //Create an optimized surface
       optimizedImage = SDL_DisplayFormat( loadedImage );
-      std::cout<<"jag är inne va?"<<std::endl;
+     
       //Free the old surface
       SDL_FreeSurface( loadedImage );
       

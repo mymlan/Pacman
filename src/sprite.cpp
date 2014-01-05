@@ -70,8 +70,7 @@ Sprite::~Sprite()
  
 
   
-  //Quit SDL
-  SDL_Quit();
+  
 
 }
 
