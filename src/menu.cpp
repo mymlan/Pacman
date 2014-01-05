@@ -95,20 +95,7 @@ Start::Start(int x, int y, std::string text)
 
 Start::~Start()
 {
-  //Free the surface
-  SDL_FreeSurface( ytpekare );
- 
-
-  //dessa rader under kanske inte ska vara här
-  //Close the font that was used
-
   TTF_CloseFont(Font );           
-    
-  //Quit SDL_ttf
-  TTF_Quit();
-
-  //Quit SDL
-  SDL_Quit();
 }
 
 void Start::show(SDL_Surface* screen)
@@ -182,21 +169,8 @@ void Start::change_start()
 
 Button::~Button()
 {
-  //Free the surface
   SDL_FreeSurface( ytpekare );
- 
-
-  //dessa rader under kanske inte ska vara här
-  //Close the font that was used
-
   TTF_CloseFont( Font );         
-    
-  //Quit SDL_ttf
-  TTF_Quit();
-
-  //Quit SDL
-  SDL_Quit();
-
 }
 
 Button::Button(int x, int y, std::string text)
@@ -264,21 +238,7 @@ void Button::show(int x, int y, const char* header,SDL_Surface* screen)
 
 Highscore_screen::~Highscore_screen()
 {
-  //Free the surface
-  SDL_FreeSurface( ytpekare );
- 
-
-  //dessa rader under kanske inte ska vara här
-  //Close the font that was used
-
   TTF_CloseFont( Font );          
-    
-  //Quit SDL_ttf
-  TTF_Quit();
-
-  //Quit SDL
-  SDL_Quit();
-
 }
 
 Highscore_screen::Highscore_screen(int x, int y, std::string text)
@@ -322,21 +282,7 @@ void Highscore_screen::change_pause()
 //====================== END_GAME ===================================================
 End_game::~End_game()
 {
-  //Free the surface
-  SDL_FreeSurface( ytpekare );
- 
-
-  //dessa rader under kanske inte ska vara här
-  //Close the font that was used
   TTF_CloseFont( Font );
-             
-    
-  //Quit SDL_ttf
-  TTF_Quit();
-
-  //Quit SDL
-  SDL_Quit();
-
 }
 
 End_game::End_game()

@@ -77,13 +77,7 @@ Sprite::Sprite(const Sprite& f)
 
 Sprite::~Sprite()
 {
-  //Free the surface
   SDL_FreeSurface( ytpekare );
- 
-
-  
-  
-
 }
 
 
