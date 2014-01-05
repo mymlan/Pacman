@@ -154,7 +154,7 @@ extern const int SCREEN_BPP ;
  //Initialize Food
  Food myFood1(10,50);
 
- /*
+
    Food myFood2(10,90);
    Food myFood3(10,130);
    Food myFood4(10,170);
@@ -312,9 +312,7 @@ extern const int SCREEN_BPP ;
 
 
        std::vector<Special_Food> special_food_vector = {mySpecial_Food1,mySpecial_Food2,mySpecial_Food3,mySpecial_Food4};
- */
- //create vectorwith all food in, called food_vector
- std::vector<Food> food_vector = {myFood1};
+
  
  //The frame rate regulator
  Timer fps;
@@ -773,12 +771,12 @@ extern const int SCREEN_BPP ;
 
 	//Show food on the screen
 	//myFood1.show_all_food(food_vector,screen);
-	/*	
+		
 	for (std::vector<Food>::iterator it = food_vector.begin() ; it != food_vector.end(); ++it)
 	  {
 	    (*it).show(screen);
 	  }
-*/
+
 
 
 
