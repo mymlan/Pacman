@@ -247,6 +247,27 @@ Highscore_screen::Highscore_screen(int x, int y, std::string text)
 
 void Highscore_screen::show(SDL_Surface* screen)
 { 
+	if( SDL_Init( SDL_INIT_EVERYTHING ) == -1 ) {
+	std::cerr << "Fel" << std::endl;
+	SDL_Quit();
+	exit(1);	
+
+	//	exit_program("Error in SDL init");
+	}
+
+	screen = SDL_SetVideoMode( 1000, 480, 32, SDL_SWSURFACE );
+	if( screen == NULL )  {
+	
+	std::cerr << "Fel" << std::endl;
+	SDL_Quit();
+	exit(1);
+
+	//	exit_program("Error in screen init");
+	}
+
+
+
+
   const char* header = message_.c_str();
   SDL_Surface* texttest;
   texttest = TTF_RenderText_Solid( Font, header , color );
