@@ -8,7 +8,7 @@ CCC = g++
 # Kompilatorflaggor, lägg till '-g' om kompilering för avlusning ska göras 
 CCFLAGS += -std=c++11 `sdl-config --cflags` `sdl-config --libs` -lSDL_image -lSDL_ttf
 
-OBJECTS = main.o sprite.o timer.o menu.o food.o score.o highscore.o pacman.o ghost.o string_input.o
+OBJECTS = main.o sprite.o timer.o menu.o food.o score.o highscore.o pacman.o ghost.o string_input.o map_data.o board.o
 
 # Huvudmål - skapas med kommandot 'make' eller 'make pacman'.
 main: $(OBJECTS)
@@ -56,6 +56,14 @@ ghost.o: src/ghost.cpp src/ghost.h
 
 string_input.o: src/string_input.cpp src/string_input.h
 	$(CCC) $(CCFLAGS) -c src/string_input.cpp
+# 'make clean' tar bort objektkodsfiler och 'core' (minnesdump).
+
+map_data.o: src/map_data.cpp src/map_data.h
+	$(CCC) $(CCFLAGS) -c src/map_data.cpp
+# 'make clean' tar bort objektkodsfiler och 'core' (minnesdump).
+
+board.o: src/board.cpp src/board.h
+	$(CCC) $(CCFLAGS) -c src/board.cpp
 # 'make clean' tar bort objektkodsfiler och 'core' (minnesdump).
 
 
