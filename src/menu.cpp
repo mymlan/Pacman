@@ -298,7 +298,7 @@ End_game::End_game()
 {
 
   //Initialize
-  button.x=400;
+  button.x=100;
   button.y=10;
   message_="Skriv namn. Enter.";
 
