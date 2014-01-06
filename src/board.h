@@ -37,7 +37,7 @@ private:
 	void move_stuff();
 	void do_creepy_ghost_stuff();
 	void handle_ghost_eats_pacman(bool &quit);
-	void handle_no_food_left();
+	void handle_no_food_left(bool &quit);
 	void handle_ghost_mood();
 	void draw_background();
 	void draw_everything();
