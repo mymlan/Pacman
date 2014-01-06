@@ -355,8 +355,7 @@ void Board::draw_everything()
 	theButton2.show(screen);
 	theButton3.show(screen);
 	theButton4.show(screen);
-
-	myPacman.showlife(3, screen);
+	myPacman.showlife(screen);
 	myScore.show(screen);
 
 	update_screen();

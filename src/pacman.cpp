@@ -401,7 +401,7 @@ void Pacman::set_clips()
 
 
  
-void Pacman::showlife(int lives, SDL_Surface* screen)
+void Pacman::showlife(SDL_Surface* screen)
 {
 if (lives==2)
     {

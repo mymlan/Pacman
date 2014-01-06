@@ -115,7 +115,7 @@ public:
 
   //void set_clips();
 
-  void showlife(int, SDL_Surface*);
+  void showlife(SDL_Surface*);
 };
 
 #endif
