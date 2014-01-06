@@ -314,14 +314,6 @@ void Board::draw_everything()
 		(*it).show(screen);
 	}
 
-	/*
-	//Show the checkpoints - just for testing
-       	for (std::vector<SDL_Rect>::iterator it = checkpoint_vector.begin() ; it != checkpoint_vector.end(); ++it)
-	{
-		SDL_FillRect( screen, &(*it), SDL_MapRGB( screen->format, 0x00, 0xEF, 0xEF) );
-		}
-	*/
-
 	//Show ghost on the screen
 	myGhost1.show(screen);
 	myGhost2.show(screen);
