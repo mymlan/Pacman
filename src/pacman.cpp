@@ -10,7 +10,7 @@
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
 #include <string>
-#include <iostream>  //for felsokning med std::cout
+#include <iostream>
 #include "SDL/SDL_ttf.h"
 #include <sstream>
 #include <fstream>
@@ -28,11 +28,8 @@
 //  Class: Pacman (KOD)
 //============================================================================
 
-
-
 Pacman::Pacman() // string filename
 {
-  
     //Initialize the offsets
     box.x = 320;
     box.y = 440;
@@ -60,20 +57,14 @@ Pacman::Pacman() // string filename
     food_left = 114;
     pacman_has_eaten_special_food = false;
 
-
-
 //The image that's loaded
   SDL_Surface* loadedImage = NULL;
-
-
 
   //The optimized surface that will be used
   SDL_Surface* optimizedImage = NULL;
 
   //Load the image
   loadedImage = IMG_Load("img/square.bmp");
-  
-
 
   //If the image loaded
   if( loadedImage != NULL )
@@ -91,11 +82,9 @@ Pacman::Pacman() // string filename
 	  //Color key surface
 	  SDL_SetColorKey( optimizedImage, SDL_SRCCOLORKEY, SDL_MapRGB( optimizedImage->format, 0, 0xFF, 0xFF ) );
         }
-    }
-  
+    } 
   
   ytpekare =  optimizedImage;
-  
   
 }
 
@@ -118,9 +107,6 @@ int Pacman::life()
   return life;
 }
 
-
-
-
 void Pacman::handle_input(SDL_Event event)
 {
     //If a key was pressed
@@ -139,8 +125,6 @@ void Pacman::handle_input(SDL_Event event)
 
 void Pacman::move(std::vector<SDL_Rect> maze, SDL_Rect wall25)
 {
-  
-
     //Move pacman left or right
     box.x += xVel;
     //If pacman went too far to the left or right or has collided with the walls
@@ -173,84 +157,10 @@ void Pacman::move(std::vector<SDL_Rect> maze, SDL_Rect wall25)
 
 }
 
-
-
 void Pacman::show(SDL_Surface* screen)
 {
-  //Sprite animation;
-
-  /*
-    //If Pacman is moving left
-    if( xVel < 0 )
-    {
-        //Set the animation to left
-        status = PACMAN_LEFT;
-
-        //Move to the next frame in the animation
-        frame++;
-    }
-    //If Pacman is moving right
-    else if( xVel > 0 )
-    {
-        //Set the animation to right
-        status = PACMAN_RIGHT;
-
-        //Move to the next frame in the animation
-        frame++;
-    }
-    //If pacman is moving up
-    else if ( yVel < 0)
-      {
-	status = PACMAN_UP;
-	frame++;
-      }
-    //if pacman is moving down
-    else if (yVel > 0)
-      {
-	status = PACMAN_DOWN;
-	frame ++;
-      }
-    //If pacman standing
-    else
-    {
-        //Restart the animation
-        frame = 0;
-    }
-
-    //Loop the animation
-    if( frame >= 2 )
-    {
-        frame = 0;
-    }
-    
-    //Show the pacman
-    if( status == PACMAN_RIGHT )
-      {
-        apply_surface(box.x,box.y, ytpekare , screen, &clipsRight[ frame]);
-      }
-    else if( status == PACMAN_LEFT )
-      {
-        apply_surface(box.x,box.y, ytpekare, screen, &clipsLeft[ frame ] );
-      }
-    else if( status == PACMAN_UP)
-      {
-	apply_surface (box.x,box.y, ytpekare, screen, &clipsUp[ frame ]);
-      }
-
-    else if( status == PACMAN_DOWN)
-      {
-	apply_surface (box.x,box.y, ytpekare, screen, &clipsDown[ frame ]);
-      }
-    
-
-
-*/
-    apply_surface(box.x,box.y,ytpekare,screen);
+  apply_surface(box.x,box.y,ytpekare,screen);
 }
-
-
-
-
 
 //Check if Pacman has no more lives
 bool Pacman::game_over()
@@ -258,12 +168,9 @@ bool Pacman::game_over()
   return (life()==-1);
 }
 
-
 //Collision between
 bool Pacman::eat_eaten(Ghost& ghost_object,Score& myScore)
 {
- 
-  
   if (check_collision(box, ghost_object.get_box()))
       {
 	if (ghost_object.is_scared())
@@ -280,8 +187,6 @@ bool Pacman::eat_eaten(Ghost& ghost_object,Score& myScore)
       }
   return false;
 }
-
-
 
 //Pacman eats food
 void Pacman::eat_food(std::vector<Food>& food_vector, Score& myScore) //Food& food_object
@@ -301,8 +206,6 @@ void Pacman::eat_food(std::vector<Food>& food_vector, Score& myScore) //Food& fo
     }
     
 }
-
-
 
 //Pacman eats special_food
 void Pacman::eat_special_food(std::vector<class Special_Food>& special_food_vector,Score& myScore)
@@ -352,54 +255,6 @@ bool Pacman::has_pacman_eaten_special_food()
 {
   return pacman_has_eaten_special_food;
 }
-
-/*
-void Pacman::set_clips()
-{
-    //Clip the sprites
-    clipsRight[ 0 ].x = 0;
-    clipsRight[ 0 ].y = 0;
-    clipsRight[ 0 ].w = PACMAN_WIDTH;
-    clipsRight[ 0 ].h = PACMAN_HEIGHT;
-
-    clipsRight[ 1 ].x = 0;
-    clipsRight[ 1 ].y = PACMAN_HEIGHT;
-    clipsRight[ 1 ].w = PACMAN_WIDTH;
-    clipsRight[ 1 ].h = PACMAN_HEIGHT;
-
-    clipsDown[ 0 ].x = PACMAN_WIDTH;
-    clipsDown[ 0 ].y = 0;
-    clipsDown[ 0 ].w = PACMAN_WIDTH;
-    clipsDown[ 0 ].h = PACMAN_HEIGHT;
-
-    clipsDown[ 1 ].x = PACMAN_WIDTH ;
-    clipsDown[ 1 ].y = PACMAN_HEIGHT;
-    clipsDown[ 1 ].w = PACMAN_WIDTH;
-    clipsDown[ 1 ].h = PACMAN_HEIGHT;
-    
-    clipsLeft[ 0 ].x = PACMAN_WIDTH * 2 ;
-    clipsLeft[ 0 ].y = 0 ;
-    clipsLeft[ 0 ].w = PACMAN_WIDTH;
-    clipsLeft[ 0 ].h = PACMAN_HEIGHT;
-
-    clipsLeft[ 1 ].x = PACMAN_WIDTH * 2;
-    clipsLeft[ 1 ].y = PACMAN_HEIGHT;
-    clipsLeft[ 1 ].w = PACMAN_WIDTH;
-    clipsLeft[ 1 ].h = PACMAN_HEIGHT;
-
-    clipsUp[ 0 ].x = PACMAN_WIDTH * 3;
-    clipsUp[ 0 ].y = 0;
-    clipsUp[ 0 ].w = PACMAN_WIDTH;
-    clipsUp[ 0 ].h = PACMAN_HEIGHT;
-
-    clipsUp[ 1 ].x = PACMAN_WIDTH * 3;
-    clipsUp[ 1 ].y = PACMAN_HEIGHT;
-    clipsUp[ 1 ].w = PACMAN_WIDTH;
-    clipsUp[ 1 ].h = PACMAN_HEIGHT;
-}
-*/
-
-
  
 void Pacman::showlife(SDL_Surface* screen)
 {
