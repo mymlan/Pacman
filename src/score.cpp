@@ -38,6 +38,13 @@ Score::Score()
   
 }
 
+Score::Score(const Score& other)
+{
+  this->points=other.points;
+  this->name=other.name;
+  this->scoreFont=other.scoreFont;
+ 
+}
 void Score::reset_score()
 {
   points=0;

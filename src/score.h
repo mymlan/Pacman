@@ -35,10 +35,13 @@ private:
   TTF_Font *scoreFont;
 public:
   Score();
+  Score(const Score&);
   //Score(const Score& other) : points(other.points), name(other.name) {}
   Score& operator=(const Score& other) {
-    this->points = other.points;
-    this->name = other.name;
+     
+ this->points = other.points;
+   
+    this->name = other.name; 
     return *this;
   }
   void reset_score();
