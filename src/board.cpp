@@ -336,7 +336,7 @@ void Board::draw_everything()
 void Board::handle_end_game(bool &quit)
 {
   End_game game_over;
-  SDL_WM_SetCaption("Enter name", NULL );
+  SDL_WM_SetCaption("Highscore", NULL );
   game_over.show(screen);
   update_screen();
   StringInput PlayerName;
@@ -384,8 +384,7 @@ void Board::handle_end_game(bool &quit)
 	    //Quit the program
 	    quit = true; terminate_window = true; std::cout<<"Game quit!"<<std::endl;
 
-	    //animation.clean_up();
-	    //return 0;
+	    
 	  }
 	//=========================================================
 				      
@@ -398,9 +397,7 @@ void Board::handle_end_game(bool &quit)
 	      {
 	      case SDLK_q:  quit = true; terminate_window = true; 
 		std::cout << "Game quit" << std::endl; break;
-			     
-		//animation.clean_up();
-		//return 0;
+     
  
 				
 	      }
