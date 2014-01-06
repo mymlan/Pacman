@@ -62,7 +62,7 @@ Food::Food(int x_cord, int y_cord)
 	  SDL_SetColorKey( optimizedImage, SDL_SRCCOLORKEY, SDL_MapRGB( optimizedImage->format, 0, 0xFF, 0xFF ) );
         }
     }  
-  ytpekare =  optimizedImage; // * ??
+  ytpekare =  optimizedImage;
 
   
 }
@@ -77,7 +77,7 @@ void Food::was_eaten()
   eaten_=true;
 }
 
-void Food::show(SDL_Surface* screen)  // = delete? /ingrid
+void Food::show(SDL_Surface* screen)
 {
   if (!eaten_)
     {
@@ -93,15 +93,6 @@ SDL_Rect Food::get_box()
   return box;
 }
 
-/*
-void Food::show_all_food(std::vector<Food> food_vector, SDL_Surface* screen)
-{
-  for (std::vector<Food>::iterator it = food_vector.begin() ; it != food_vector.end(); ++it)
-    {
-      (*it).show(screen);
-    }
-}*/
-
 //============================================================================
 //  Class: Special_Food
 //============================================================================
@@ -114,7 +105,7 @@ Special_Food::Special_Food(int x_cord, int y_cord)
   box.y = y_cord;
 
   //Set the foods dimensions
-  box.w = 29;    //we should change the global constants names PACMAN_WIDTH to CHARACTER_WIDTH
+  box.w = 29; 
   box.h = 30;
 
   
@@ -144,9 +135,7 @@ Special_Food::Special_Food(int x_cord, int y_cord)
 	  SDL_SetColorKey( optimizedImage, SDL_SRCCOLORKEY, SDL_MapRGB( optimizedImage->format, 0, 0xFF, 0xFF ) );
         }
     }  
-  ytpekare =  optimizedImage;
-  
-  
+  ytpekare =  optimizedImage; 
 }
 
 void Special_Food::was_eaten()
