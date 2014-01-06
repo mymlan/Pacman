@@ -48,7 +48,7 @@ void Board::run()
 
 		handle_ghost_eats_pacman(quit);
 
-		handle_no_food_left();
+		handle_no_food_left(quit);
 
 		myPacman.eat_food(food_vector, myScore);
 		myPacman.eat_special_food(special_food_vector, myScore);
@@ -142,19 +142,13 @@ void Board::run_pause_loop(bool &quit)
 					SDL_WM_SetCaption("Highscore", NULL );
 					Highscore_screen Highscore(400,10, "HIGHSCORE");
 					Highscore.show(screen);
-					if( SDL_Flip( screen ) == -1 )
-					  {
-					    exit_program("Error flipping highscore screen");
-					  }
-					break;
-
-					/*
+				
 					myHighscore.show(screen);
 					if( SDL_Flip( screen ) == -1 )
 					{
 						exit_program("Error flipping highscore screen");
 					}
-					break;*/
+					break;
 				}
 
 			}
@@ -246,7 +240,7 @@ void Board::handle_ghost_eats_pacman(bool &quit)
 	}
 }
 
-void Board::handle_no_food_left()
+void Board::handle_no_food_left(bool &quit)
 {
 	if(myPacman.no_food_left())
 	{
@@ -278,8 +272,12 @@ void Board::handle_no_food_left()
 		}
 
 		PlayerName.show_centered(screen);
+
+
 		update_screen();
+		quit=true;
 	}
+	
 }
 
 void Board::handle_ghost_mood()
