@@ -37,13 +37,12 @@ public:
   Score();
   Score(const Score&);
   //Score(const Score& other) : points(other.points), name(other.name) {}
-  Score& operator=(const Score& other) {
-     
- this->points = other.points;
-   
-    this->name = other.name; 
-    return *this;
-  }
+  Score& operator=(const Score& other) 
+    { 
+      this->points = other.points;
+      this->name = other.name; 
+      return *this;
+    }
   void reset_score();
   void add_points(int);
   std::string get_score(); // return score as string
