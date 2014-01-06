@@ -104,7 +104,7 @@ void StringInput::handle_input(SDL_Event event)
 	  {//Free the old surface
             SDL_FreeSurface( text );
 	    //Render a new text surface
-            text = TTF_RenderText_Solid( inputFont,str.c_str() ,{0xFF,0xFE,0xEE,0xDD});// textColor );
+            text = TTF_RenderText_Solid( inputFont,str.c_str() ,{0,0,0,0});// textColor );
 	  }
     }
   
