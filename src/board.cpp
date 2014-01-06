@@ -48,12 +48,14 @@ void Board::run()
 
 		handle_ghost_eats_pacman(quit);
 
-		handle_no_food_left(quit);
+		
 
 		myPacman.eat_food(food_vector, myScore);
 		myPacman.eat_special_food(special_food_vector, myScore);
 
 		handle_ghost_mood();
+
+		handle_no_food_left(quit);
 
 		draw_everything();
 
@@ -249,7 +251,7 @@ void Board::handle_no_food_left(bool &quit)
 		SDL_WM_SetCaption("Enter name", NULL );
 		game_over.show(screen);
 		update_screen();
-
+		
 		bool nameEntered = false;
 		while(!nameEntered)
 		{
@@ -274,6 +276,54 @@ void Board::handle_no_food_left(bool &quit)
 		PlayerName.show_centered(screen);
 
 
+		myScore.set_name(PlayerName.get_str());
+		myHighscore.save_new_highscore(myScore);
+
+		Highscore_screen Highscore(400,10, "HIGHSCORE");
+		Highscore.show(screen);
+		myHighscore.show(screen);
+		update_screen();
+		
+		bool terminate_window{false};
+		SDL_Event event;
+		while(!terminate_window){
+		  while(SDL_PollEvent ( &event))
+		    {
+		      //========================== Xed out ======================
+		      //If the user has Xed out the window
+		      if( event.type == SDL_QUIT )
+			{
+			  //Quit the program
+			  quit = true; terminate_window = true; std::cout<<"Game quit!"<<std::endl;
+
+			  //animation.clean_up();
+			  //return 0;
+			}
+		      //=========================================================
+				      
+		      SDL_Surface *new_screen = NULL; // Experiment
+				      
+		      //Unpause the game 
+		      if(event.type == SDL_KEYDOWN)
+			{
+			  switch(event.key.keysym.sym)
+			    {
+			    case SDLK_q:  quit = true; terminate_window = true; 
+			      std::cout << "Game quit" << std::endl; break;
+			     
+			      //animation.clean_up();
+			      //return 0;
+ 
+				
+			    }
+			}
+
+		    }
+		}
+		
+		
+
+		
 		update_screen();
 		quit=true;
 	}
