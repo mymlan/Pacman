@@ -10,8 +10,6 @@
 #ifndef GHOST_H
 #define GHOST_H
 
-
-
 //The headers
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
@@ -75,12 +73,8 @@ public:
 
   void get_home();  
 
-  //Shows the ghost on the screen
-  //  void show();
-
   //If the ghost finds a checkpoint, it reorients. uses is_checkpoint?
   void do_if_checkpoint(std::vector<SDL_Rect>, Pacman&);
-
 
 };
 
@@ -94,9 +88,6 @@ public:
   Ghost2();
 
   void get_home();
-
-  //Shows the ghost on the screen
-  // void show();
 
 //If the ghost finds a checkpoint, it reorients. uses is_checkpoint?
   void do_if_checkpoint(std::vector<SDL_Rect>);
@@ -113,12 +104,8 @@ public:
 
   void get_home();
 
-  //Shows the ghost on the screen
-  //  void show();
-
  //If the ghost finds a checkpoint, it reorients. uses is_checkpoint
   void do_if_checkpoint(std::vector<SDL_Rect>, Pacman&);
-
  
 };
 
