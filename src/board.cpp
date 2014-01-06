@@ -233,8 +233,10 @@ void Board::handle_ghost_eats_pacman(bool &quit)
 	{
 		if (myPacman.game_over())
 		{
+		  handle_end_game(quit);
 			if (myHighscore.is_new_highscore(myScore))
 			{
+			  
 				quit=true;
 				myHighscore.save_new_highscore(myScore);
 			}
@@ -243,92 +245,13 @@ void Board::handle_ghost_eats_pacman(bool &quit)
 }
 
 void Board::handle_no_food_left(bool &quit)
-{
-	if(myPacman.no_food_left())
-	{
-		End_game game_over;
-		StringInput PlayerName;
-		SDL_WM_SetCaption("Enter name", NULL );
-		game_over.show(screen);
-		update_screen();
-		
-		bool nameEntered = false;
-		while(!nameEntered)
-		{
-			SDL_Event event;
-			while(SDL_PollEvent( &event))
-			{
-				if( nameEntered == false )
-				{
-					PlayerName.handle_input(event);
-
-					if( ( event.type == SDL_KEYDOWN ) && ( event.key.keysym.sym == SDLK_RETURN ) )
-					{
-						nameEntered = true;
-					}
-					PlayerName.show_centered(screen);
-					update_screen();
-
-				}
-			}
-		}
-
-		PlayerName.show_centered(screen);
-
-
-		myScore.set_name(PlayerName.get_str());
-		myHighscore.save_new_highscore(myScore);
-
-		Highscore_screen Highscore(400,10, "Se terminalen");
-		Highscore.show(screen);
-		myHighscore.show(screen);
-		update_screen();
-		
-		bool terminate_window{false};
-		SDL_Event event;
-		while(!terminate_window){
-		  while(SDL_PollEvent ( &event))
-		    {
-		      //========================== Xed out ======================
-		      //If the user has Xed out the window
-		      if( event.type == SDL_QUIT )
-			{
-			  //Quit the program
-			  quit = true; terminate_window = true; std::cout<<"Game quit!"<<std::endl;
-
-			  //animation.clean_up();
-			  //return 0;
-			}
-		      //=========================================================
-				      
-		      SDL_Surface *new_screen = NULL; // Experiment
-				      
-		      //Unpause the game 
-		      if(event.type == SDL_KEYDOWN)
-			{
-			  switch(event.key.keysym.sym)
-			    {
-			    case SDLK_q:  quit = true; terminate_window = true; 
-			      std::cout << "Game quit" << std::endl; break;
-			     
-			      //animation.clean_up();
-			      //return 0;
- 
-				
-			    }
-			}
-
-		    }
-		}
-		
-		
-
-		
-		update_screen();
-		quit=true;
-	}
-	
+{ 
+  if(myPacman.no_food_left())
+    { 
+      handle_end_game(quit);
+    }
 }
+
 
 void Board::handle_ghost_mood()
 {
@@ -416,4 +339,88 @@ void Board::draw_everything()
 	myScore.show(screen);
 
 	update_screen();
+}
+
+void Board::handle_end_game(bool &quit)
+{
+  End_game game_over;
+  SDL_WM_SetCaption("Enter name", NULL );
+  game_over.show(screen);
+  update_screen();
+  StringInput PlayerName;
+  bool nameEntered = false;
+  while(!nameEntered)
+    {
+      SDL_Event event;
+      while(SDL_PollEvent( &event))
+	{
+	  if( nameEntered == false )
+	    {
+	      PlayerName.handle_input(event);
+
+	      if( ( event.type == SDL_KEYDOWN ) && ( event.key.keysym.sym == SDLK_RETURN ) )
+		{
+		  nameEntered = true;
+		}
+	      PlayerName.show_centered(screen);
+	      update_screen();
+
+	    }
+	}
+    }
+
+  PlayerName.show_centered(screen);
+
+
+  myScore.set_name(PlayerName.get_str());
+  myHighscore.save_new_highscore(myScore);
+
+  Highscore_screen Highscore(400,10, "Se terminalen");
+  Highscore.show(screen);
+  myHighscore.show(screen);
+  update_screen();
+		
+  bool terminate_window{false};
+  SDL_Event event;
+  while(!terminate_window){
+    while(SDL_PollEvent ( &event))
+      {
+	//========================== Xed out ======================
+	//If the user has Xed out the window
+	if( event.type == SDL_QUIT )
+	  {
+	    //Quit the program
+	    quit = true; terminate_window = true; std::cout<<"Game quit!"<<std::endl;
+
+	    //animation.clean_up();
+	    //return 0;
+	  }
+	//=========================================================
+				      
+	SDL_Surface *new_screen = NULL; // Experiment
+				      
+	//Unpause the game 
+	if(event.type == SDL_KEYDOWN)
+	  {
+	    switch(event.key.keysym.sym)
+	      {
+	      case SDLK_q:  quit = true; terminate_window = true; 
+		std::cout << "Game quit" << std::endl; break;
+			     
+		//animation.clean_up();
+		//return 0;
+ 
+				
+	      }
+	  }
+
+      }
+  }
+		
+		
+
+		
+  update_screen();
+  quit=true;
+	
 }
