@@ -26,6 +26,9 @@ StringInput::StringInput()
     //Initialize the surface
     text = NULL;
 
+    // inputFont = nånting?
+    inputFont = TTF_OpenFont("img/arial.ttf",28);
+  
     //Enable Unicode
     SDL_EnableUNICODE( SDL_ENABLE );
 }
@@ -69,8 +72,8 @@ void StringInput::handle_input(SDL_Event event)
             {
                 //Append the character
                 str += (char)event.key.keysym.unicode;
-		std::cout<< str<< std::endl;
-            }
+		std::cerr<< str<< std::endl; 
+	    }
             //If the key is a uppercase letter
             else if( ( event.key.keysym.unicode >= (Uint16)'A' ) && ( event.key.keysym.unicode <= (Uint16)'Z' ) )
             {
@@ -84,27 +87,30 @@ void StringInput::handle_input(SDL_Event event)
                 //Append the character
                 str += (char)event.key.keysym.unicode;
 		std::cout<< str<< std::endl;
+		std::cerr<<"kalooppsan!"<<std::endl;
             }
         }
 
         //If backspace was pressed and the string isn't blank
         if( ( event.key.keysym.sym == SDLK_BACKSPACE ) && ( str.length() != 0 ) )
-        {
+	  {std::cerr<<"kyl"<<std::endl;
             //Remove a character from the end
             str.erase( str.length() - 1 );
 	    std::cout<< str<< std::endl;
-        }
-
+	  }
+	
         //If the string was changed
         if( str != temp )
-        {
+	  {std::cerr<<"mystavla"<<std::endl;
             //Free the old surface
             SDL_FreeSurface( text );
-
+	    std::cerr<<"ful"<<std::endl;
             //Render a new text surface
-            text = TTF_RenderText_Solid( inputFont, str.c_str(), {0,0,0,0});// textColor );
-        }
-	}
+            text = TTF_RenderText_Solid( inputFont,str.c_str() ,{0,0,0,0});// textColor );
+	    std::cerr<<"rendertextsolid??"<<std::endl;
+	  }
+    }
+  std::cerr<<"hoppsan!"<<std::endl;
 }
 //}
 void StringInput::show_centered(SDL_Surface* screen)
