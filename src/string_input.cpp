@@ -46,7 +46,7 @@ void StringInput::handle_input(SDL_Event event)
 {
   SDL_EnableUNICODE( SDL_ENABLE );
   
-  //while(SDL_PollEvent( &event)){
+  
     //If a key was pressed
   if( event.type == SDL_KEYDOWN )
     {
@@ -106,7 +106,7 @@ void StringInput::handle_input(SDL_Event event)
     }
   
 }
-//}
+
 void StringInput::show_centered(SDL_Surface* screen)
 {
   Pacman draw;

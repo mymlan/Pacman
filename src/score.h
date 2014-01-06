@@ -9,13 +9,10 @@
 
 #ifndef SCORE_H
 #define SCORE_H
-
-
-//The headers
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
 #include <string>
-#include <iostream>  //for felsokning med std::cout
+#include <iostream>
 #include "SDL/SDL_ttf.h"
 #include <sstream>
 #include <fstream>
@@ -36,7 +33,6 @@ private:
 public:
   Score();
   Score(const Score&);
-  //Score(const Score& other) : points(other.points), name(other.name) {}
   Score& operator=(const Score& other) 
     { 
       this->points = other.points;
@@ -45,16 +41,15 @@ public:
     }
   void reset_score();
   void add_points(int);
-  std::string get_score(); // return score as string
+  std::string get_score();
   void set_score(int);
   void set_name(std::string);
   void show(SDL_Surface*);
-  int return_score(); // returns score as int
+  int return_score();
   std::string return_name();
-  // static bool sortingfunction( Score, Score) ;
-   bool operator< (const Score &other) const {
-     return other.points < points;
-   }
+  bool operator< (const Score &other) const {
+    return other.points < points;
+  }
 };
 
 #endif

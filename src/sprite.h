@@ -12,7 +12,7 @@
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
 #include <string>
-#include <iostream>  //for felsokning med std::cout
+#include <iostream>
 #include "SDL/SDL_ttf.h"
 #include <sstream>
 #include <fstream>
@@ -31,19 +31,16 @@ class Sprite
 
 {
 public:
-  // Sprite( std::string filename );
+ 
   Sprite();
   Sprite(const Sprite& f); //kopiering
   virtual ~Sprite();
-  // virtual void apply_surface( SDL_Surface* destination, SDL_Rect* clip = NULL ); 
-  // som den såg ut inatt
-
-  void apply_surface(int x, int y, SDL_Surface* ytpekare, SDL_Surface* destination, SDL_Rect* clip = NULL ); //virtual
+   void apply_surface(int x, int y, SDL_Surface* ytpekare, SDL_Surface* destination, SDL_Rect* clip = NULL ); //virtual
   
-  bool check_collision( SDL_Rect A, SDL_Rect B ); //virtual
+  bool check_collision( SDL_Rect A, SDL_Rect B ); 
   
 
-  virtual void show(SDL_Surface*) = 0; //pure virtual
+  virtual void show(SDL_Surface*) = 0;
 
 
  protected:
