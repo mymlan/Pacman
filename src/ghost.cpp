@@ -285,7 +285,6 @@ void Ghost1::seek(Pacman& paccy)
       if (10*first_way_to_pacman_ + second_way_to_pacman_ == crashed_) //same result for two seeks in a row means we are stuck
 	{
 	  //randomize a direcion
-	  std::cout<<"slumpar"<<std::endl;
 	  first_way_to_pacman_ = rand()% 4 + 1;
 	}  
       
