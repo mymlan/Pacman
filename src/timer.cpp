@@ -125,10 +125,3 @@ void Timer::delay_game()
       SDL_Delay( ( 1000 / FRAMES_PER_SECOND ) - this->get_ticks() );
     }
 }
-/*  fps.do if somtehig
-
-        if( fps.get_ticks() < 1000 / FRAMES_PER_SECOND )
-	  {
-            SDL_Delay( ( 1000 / FRAMES_PER_SECOND ) - fps.get_ticks() );
-	  }
-	  }*/
