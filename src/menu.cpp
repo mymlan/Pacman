@@ -300,7 +300,7 @@ End_game::End_game()
   //Initialize
   button.x=400;
   button.y=10;
-  message_="Skriv ditt namn och tryck enter!";
+  message_="Skriv namn. Enter.";
 
   //Set dimension
   button.w = BUTTON_WIDTH;
