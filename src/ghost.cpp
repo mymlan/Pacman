@@ -10,7 +10,7 @@
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
 #include <string>
-#include <iostream>  //for felsokning med std::cout
+#include <iostream>
 #include "SDL/SDL_ttf.h"
 #include <sstream>
 #include <fstream>
@@ -76,11 +76,9 @@ void Ghost::move(std::vector<SDL_Rect> maze) //checks collision with walls
     case 3: yVel = -10; xVel = 0; break;  //up      y increases downwards
     case 4: yVel = 10; xVel = 0; break; //down
     }
-
  
   //Move the ghost left or right
   box.x += xVel;
-
 
   //If the ghost went too far to the left or right or has collided with the walls
   for (std::vector<SDL_Rect>::iterator it = maze.begin() ; it != maze.end(); ++it) //try all the walls
@@ -193,21 +191,14 @@ Ghost1::Ghost1()
   //Load the image
   loadedImage = IMG_Load("img/ghost-picture.bmp");
 
-
-
-
   //If the image loaded
   if( loadedImage != NULL )
-    { 
-
-     
+    {   
       //Create an optimized surface
       optimizedImage = SDL_DisplayFormat(loadedImage);
-
     
       //Free the old surface
       SDL_FreeSurface( loadedImage );
-     
       
       //If the surface was optimized
       if( optimizedImage != NULL )
@@ -236,13 +227,6 @@ void Ghost1::do_if_checkpoint( std::vector<SDL_Rect> checkmaze, Pacman& paccy )
 //Sets the moving direction towards pacman
 void Ghost1::seek(Pacman& paccy)
 { 
-  /*
-  std::cout<<"scared_ : "<<scared_<<std::endl;
-  std::cout<<"before seek"<<std::endl;
-  std::cout<<"first: "<<first_way_to_pacman_<<std::endl;
-  std::cout<<"second: "<<second_way_to_pacman_<<std::endl;
-
-*/
   if (first_way_to_pacman_ == 0 && second_way_to_pacman_ == 0) //if we have tried both directions, get a new one
     {
       //pacman_x and pacman_y are the coordinates of pacman
@@ -276,12 +260,6 @@ void Ghost1::seek(Pacman& paccy)
 	    {second_way_to_pacman_ = 1;} //go left
 	}
 
-      /*
-      std::cout<<"precis efter sokning : "<<std::endl;
-      std::cout<<"first: "<<first_way_to_pacman_<<std::endl;
-      std::cout<<"second: "<<second_way_to_pacman_<<std::endl;
-      */
-
       if (10*first_way_to_pacman_ + second_way_to_pacman_ == crashed_) //same result for two seeks in a row means we are stuck
 	{
 	  //randomize a direcion
@@ -295,11 +273,6 @@ void Ghost1::seek(Pacman& paccy)
 	}
       crashed_ = 10*first_way_to_pacman_ + second_way_to_pacman_;
     }
-  /*
-  std::cout<<"efter seek: "<<std::endl;
-  std::cout<<"first: "<<first_way_to_pacman_<<std::endl;
-  std::cout<<"second: "<<second_way_to_pacman_<<"\n"<<std::endl;
-*/
 }
 
 
