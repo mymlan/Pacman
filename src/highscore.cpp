@@ -45,7 +45,7 @@ void Highscore::save_new_highscore(Score& new_highscore)
 
   //Save highscore list to file
   std::ofstream outputFile ("src/highscore.txt", std::ios::binary);
-  new_highscore.set_name("ingrid");
+  //new_highscore.set_name("ingrid");
   highscoretable.push_back(new_highscore);
   std::sort (highscoretable.begin(), highscoretable.end());
   if (highscoretable.size() == 6)
