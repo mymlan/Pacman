@@ -226,7 +226,7 @@ void Ghost1::do_if_checkpoint( std::vector<SDL_Rect> checkmaze, Pacman& paccy )
   if(is_checkpoint(checkmaze))
     {  
       //make a fresh seek if ghost reaches a checkpoint
-      first_way_to_pacman_ = 0;
+      first_way_to_pacman_ = second_way_to_pacman_;
       second_way_to_pacman_ = 0;
       crashed_ = 0;
       seek(paccy); 
@@ -370,7 +370,7 @@ void Ghost2::do_if_checkpoint( std::vector<SDL_Rect> checkmaze )
   if(is_checkpoint(checkmaze))
     {
       //make a fresh seek if ghost reaches a checkpoint
-      first_way_to_pacman_ = 0;
+      first_way_to_pacman_ = second_way_to_pacman_;
       second_way_to_pacman_ = 0;
       seek();
     }
