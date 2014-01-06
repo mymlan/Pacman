@@ -279,7 +279,7 @@ void Board::handle_no_food_left(bool &quit)
 		myScore.set_name(PlayerName.get_str());
 		myHighscore.save_new_highscore(myScore);
 
-		Highscore_screen Highscore(400,10, "HIGHSCORE");
+		Highscore_screen Highscore(400,10, "Se terminalen");
 		Highscore.show(screen);
 		myHighscore.show(screen);
 		update_screen();
