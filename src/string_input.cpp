@@ -44,7 +44,6 @@ StringInput::~StringInput()
 
 void StringInput::handle_input(SDL_Event event)
 {
-  std::cout<< "handleinput"<< std::endl;
   SDL_EnableUNICODE( SDL_ENABLE );
   
   //while(SDL_PollEvent( &event)){
@@ -64,29 +63,27 @@ void StringInput::handle_input(SDL_Event event)
             {
                 //Append the character
                 str += (char)event.key.keysym.unicode;
-		std::cout<< "space"<< std::endl;
-		std::cout<< str<< std::endl;
             }
             //If the key is a number
             else if( ( event.key.keysym.unicode >= (Uint16)'0' ) && ( event.key.keysym.unicode <= (Uint16)'9' ) )
             {
                 //Append the character
                 str += (char)event.key.keysym.unicode;
-		std::cerr<< str<< std::endl; 
+		 
 	    }
             //If the key is a uppercase letter
             else if( ( event.key.keysym.unicode >= (Uint16)'A' ) && ( event.key.keysym.unicode <= (Uint16)'Z' ) )
             {
                 //Append the character
                 str += (char)event.key.keysym.unicode;
-		std::cout<< str<< std::endl;
+		
             }
             //If the key is a lowercase letter
             else if( ( event.key.keysym.unicode >= (Uint16)'a' ) && ( event.key.keysym.unicode <= (Uint16)'z' ) )
             {
                 //Append the character
                 str += (char)event.key.keysym.unicode;
-		std::cout<< str<< std::endl;
+		
 		
             }
         }
@@ -96,7 +93,7 @@ void StringInput::handle_input(SDL_Event event)
 	  {
             //Remove a character from the end
             str.erase( str.length() - 1 );
-	    std::cout<< str<< std::endl;
+	   
 	  }
 	
         //If the string was changed
@@ -113,7 +110,6 @@ void StringInput::handle_input(SDL_Event event)
 void StringInput::show_centered(SDL_Surface* screen)
 {
   Pacman draw;
-  std::cout<<"show centered"<<std::endl;
     //If the surface isn't blank
     if( text != NULL )
     {

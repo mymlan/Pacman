@@ -66,6 +66,7 @@ private:
 	std::vector<SDL_Rect> maze;
 	SDL_Rect wall25;
 	std::vector<SDL_Rect> checkpoint_vector;
+	void handle_end_game(bool &quit);
 };
 
 
