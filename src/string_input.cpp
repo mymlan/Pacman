@@ -51,14 +51,14 @@ void StringInput::handle_input(SDL_Event event)
     //If a key was pressed
   if( event.type == SDL_KEYDOWN )
     {
-       std::cout<< "jag kom in"<< std::endl;
+       
         //Keep a copy of the current version of the string
         std::string temp = str;
 
         //If the string less than maximum size
         if( str.length() <= 16 )
         {
-	   std::cout<< "fyfan"<< std::endl;
+	   
             //If the key is a space
             if( event.key.keysym.unicode == (Uint16)' ' )
             {
@@ -87,13 +87,13 @@ void StringInput::handle_input(SDL_Event event)
                 //Append the character
                 str += (char)event.key.keysym.unicode;
 		std::cout<< str<< std::endl;
-		std::cerr<<"kalooppsan!"<<std::endl;
+		
             }
         }
 
         //If backspace was pressed and the string isn't blank
         if( ( event.key.keysym.sym == SDLK_BACKSPACE ) && ( str.length() != 0 ) )
-	  {std::cerr<<"kyl"<<std::endl;
+	  {
             //Remove a character from the end
             str.erase( str.length() - 1 );
 	    std::cout<< str<< std::endl;
@@ -101,16 +101,13 @@ void StringInput::handle_input(SDL_Event event)
 	
         //If the string was changed
         if( str != temp )
-	  {std::cerr<<"mystavla"<<std::endl;
-            //Free the old surface
+	  {//Free the old surface
             SDL_FreeSurface( text );
-	    std::cerr<<"ful"<<std::endl;
-            //Render a new text surface
-            text = TTF_RenderText_Solid( inputFont,str.c_str() ,{0,0,0,0});// textColor );
-	    std::cerr<<"rendertextsolid??"<<std::endl;
+	    //Render a new text surface
+            text = TTF_RenderText_Solid( inputFont,str.c_str() ,{0xFF,0xFE,0xEE,0xDD});// textColor );
 	  }
     }
-  std::cerr<<"hoppsan!"<<std::endl;
+  
 }
 //}
 void StringInput::show_centered(SDL_Surface* screen)
@@ -129,7 +126,6 @@ std::string StringInput::get_str()
 {
   return str;
 }
-
 
 
 
