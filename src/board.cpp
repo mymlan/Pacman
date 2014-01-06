@@ -142,12 +142,19 @@ void Board::run_pause_loop(bool &quit)
 					SDL_WM_SetCaption("Highscore", NULL );
 					Highscore_screen Highscore(400,10, "HIGHSCORE");
 					Highscore.show(screen);
+					if( SDL_Flip( screen ) == -1 )
+					  {
+					    exit_program("Error flipping highscore screen");
+					  }
+					break;
+
+					/*
 					myHighscore.show(screen);
 					if( SDL_Flip( screen ) == -1 )
 					{
 						exit_program("Error flipping highscore screen");
 					}
-					break;
+					break;*/
 				}
 
 			}
