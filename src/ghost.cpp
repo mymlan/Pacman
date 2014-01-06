@@ -156,8 +156,8 @@ SDL_Rect Ghost::get_box()
 Ghost1::Ghost1()
 {
   //Initialize the offsets
-  box.x = 0;
-  box.y = 0;
+  box.x = 290;
+  box.y = 165;
 
   MAP_WIDTH=640;
   SCREEN_HEIGHT=480;
@@ -279,16 +279,16 @@ void Ghost1::seek(Pacman& paccy)
 //Returns ghost to start position
 void Ghost1::get_home()
 {
-  box.x = 0;
-  box.y = 0;
+  box.x = 290;
+  box.y = 165;
 }
   
 //-------------------------- Ghost 2 -------------------------
 Ghost2::Ghost2()
 {
   //Initialize the offsets
-  box.x = 100;
-  box.y = 0;
+  box.x = 300;
+  box.y = 165;
 
   MAP_WIDTH=640;
   SCREEN_HEIGHT=480;
@@ -362,15 +362,15 @@ void Ghost2::seek()
 //Returns ghost2 to start position
 void Ghost2::get_home()
 {
-  box.x = 20;
-  box.y = 0;
+  box.x = 300;
+  box.y = 165;
 }
 //-------------------------- Ghost 3 -----------------
 Ghost3::Ghost3()
 {
   //Initialize the offsets
-  box.x = 0;
-  box.y = 100;
+  box.x = 310;
+  box.y = 165;
 
   MAP_WIDTH=640;
   SCREEN_HEIGHT=480;
@@ -498,8 +498,8 @@ void Ghost3::seek(Pacman& paccy)
 //Returns ghost3 to start position
 void Ghost3::get_home()
 {
-  box.x = 40;
-  box.y = 0;
+  box.x =310;
+  box.y =165;
 }
 
 
