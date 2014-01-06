@@ -25,7 +25,6 @@
 //============================================================================
 //  Class: Highscore
 //============================================================================
-//Highscore::Highscore(){}
 
 bool Highscore::is_new_highscore(Score& myScore) // ev. ta in namn också
 {
@@ -34,7 +33,7 @@ bool Highscore::is_new_highscore(Score& myScore) // ev. ta in namn också
   if ((size<10) || (myScore.return_score() > highscoretable[size-1].return_score()))
     {
       return true;
-      }
+    }
   return false;
 }
 
@@ -60,8 +59,6 @@ void Highscore::save_new_highscore(Score& new_highscore)
   outputFile.close();
 }
 
-
-
 void Highscore::load_list()
 {
   std::ifstream inputfile ("src/highscore.txt");
@@ -82,7 +79,7 @@ void Highscore::load_list()
 
 void Highscore::show(SDL_Surface* screen)
 {
-  apply_surface(0,0,ytpekare,screen); // ytpekare = score tidigare
+  apply_surface(0,0,ytpekare,screen);
 
   load_list();
   int size=highscoretable.size();
@@ -107,7 +104,6 @@ void Highscore::show(SDL_Surface* screen)
     std::cout<<entry<<std::endl;
 
     Highscore_screen myHighscorelist(400,100+50*i, entry);
-    //myHighscorelist.show(screen);
   }
 }
 
