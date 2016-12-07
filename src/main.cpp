@@ -9,7 +9,7 @@ void exit_program(std::string message)
 
 int main( int argc, char* args[] )
 {
-	SDL_Surface *screen = 0;
+	SDL_Surface *screen = NULL;
 	if( SDL_Init( SDL_INIT_EVERYTHING ) == -1 ) {
 		exit_program("Error in SDL init");
 	}

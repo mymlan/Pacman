@@ -136,13 +136,10 @@ void Board::run_pause_loop(bool &quit)
 		  break;
 		case SDLK_h:
 		  SDL_WM_SetCaption("Highscore", NULL );
-		  Highscore_screen Highscore(100,10, "Se highscore i terminalen");
+		  Highscore_screen Highscore(400,10, "HIGHSCORE");
 		  Highscore.show(screen);
 				
-		    std::cout<<"--------------"<<std::endl;
-		    std::cout<<"HIGHSCORE LIST"<<std::endl;
 		  myHighscore.show(screen);
-		    std::cout<<"--------------"<<std::endl;
 		  if( SDL_Flip( screen ) == -1 )
 		    {
 		      exit_program("Error flipping highscore screen");
@@ -187,6 +184,7 @@ void Board::move_stuff()
   myGhost1.move(maze);
   myGhost2.move(maze);
   myGhost3.move(maze);
+
 }
 
 void Board::do_creepy_ghost_stuff() {
@@ -363,12 +361,9 @@ void Board::handle_end_game(bool &quit)
   myScore.set_name(PlayerName.get_str());
   myHighscore.save_new_highscore(myScore);
 
-  Highscore_screen Highscore(300,10, "Se terminalen");
+  Highscore_screen Highscore(400,10, "Se terminalen");
   Highscore.show(screen);
-    std::cout<<"--------------"<<std::endl;
-    std::cout<<"HIGHSCORE LIST"<<std::endl; 
-    myHighscore.show(screen);
-  std::cout<<"--------------"<<std::endl;
+  myHighscore.show(screen);
   update_screen();
 		
   bool terminate_window{false};

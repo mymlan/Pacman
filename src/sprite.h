@@ -12,7 +12,7 @@
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
 #include <string>
-#include <iostream>
+#include <iostream>  //for felsokning med std::cout
 #include "SDL/SDL_ttf.h"
 #include <sstream>
 #include <fstream>
@@ -20,37 +20,29 @@
 #include <iterator>
 #include <algorithm>
 
-
-
-
 //============================================================================
 // Sprite 
 //============================================================================
 
-class Sprite
-
-{
+class Sprite {
 public:
- 
+  // Sprite( std::string filename );
   Sprite();
   Sprite(const Sprite& f); //kopiering
   virtual ~Sprite();
-   void apply_surface(int x, int y, SDL_Surface* ytpekare, SDL_Surface* destination, SDL_Rect* clip = NULL ); //virtual
-  
-  bool check_collision( SDL_Rect A, SDL_Rect B ); 
-  
+  // virtual void apply_surface( SDL_Surface* destination, SDL_Rect* clip = NULL ); 
 
-  virtual void show(SDL_Surface*) = 0;
+  void apply_surface(int x, int y, SDL_Surface* ytpekare, SDL_Surface* destination, SDL_Rect* clip = NULL ); //virtual
+  
+  bool check_collision( SDL_Rect A, SDL_Rect B ); //virtual  
 
+  virtual void show(SDL_Surface*) = 0; //pure virtual
 
  protected:
-
   SDL_Surface *ytpekare;
   int MAP_WIDTH;
   int SCREEN_HEIGHT;
   int SCREEN_WIDTH;
 };
-
-
 
 #endif

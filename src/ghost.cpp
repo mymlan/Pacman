@@ -10,7 +10,7 @@
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
 #include <string>
-#include <iostream>
+#include <iostream>  //for felsokning med std::cout
 #include "SDL/SDL_ttf.h"
 #include <sstream>
 #include <fstream>
@@ -49,6 +49,7 @@ void Ghost::reverse_direction()
       else
 	{first_way_to_pacman_ -= 1;}
     }
+  
   if (second_way_to_pacman_ != 0)
     {
       if (second_way_to_pacman_ == 1 ||second_way_to_pacman_ == 3)
@@ -56,7 +57,7 @@ void Ghost::reverse_direction()
       else
 	{second_way_to_pacman_ -= 1;}
     }
-
+  
   crashed_ = 0;
 }
 
@@ -73,10 +74,10 @@ void Ghost::move(std::vector<SDL_Rect> maze) //checks collision with walls
     {
     case 1: yVel = 0; xVel = -10; break; //left
     case 2: yVel = 0; xVel = 10; break;  //right
-    case 3: yVel = -10; xVel = 0; break;  //up      y increases downwards
-    case 4: yVel = 10; xVel = 0; break; //down
+    case 3: yVel = -10; xVel = 0; break; //up      y increases downwards
+    case 4: yVel = 10; xVel = 0; break;  //down
     }
- 
+
   //Move the ghost left or right
   box.x += xVel;
 
@@ -156,13 +157,12 @@ SDL_Rect Ghost::get_box()
 Ghost1::Ghost1()
 {
   //Initialize the offsets
-  box.x = 290;
-  box.y = 165;
+  box.x = 280;
+  box.y = 160;
 
   MAP_WIDTH=640;
   SCREEN_HEIGHT=480;
   SCREEN_WIDTH=1000;
-
   
   //Initialize the seek and destroy directions. first way to pacman is the most desirable way to go.
   first_way_to_pacman_ = 2;
@@ -186,19 +186,18 @@ Ghost1::Ghost1()
 
   //The optimized surface that will be used
   SDL_Surface* optimizedImage = NULL;
-
  
   //Load the image
   loadedImage = IMG_Load("img/ghost-picture.bmp");
 
   //If the image loaded
   if( loadedImage != NULL )
-    {   
+    {      
       //Create an optimized surface
       optimizedImage = SDL_DisplayFormat(loadedImage);
     
       //Free the old surface
-      SDL_FreeSurface( loadedImage );
+      SDL_FreeSurface( loadedImage );     
       
       //If the surface was optimized
       if( optimizedImage != NULL )
@@ -206,14 +205,14 @@ Ghost1::Ghost1()
 	  //Color key surface
 	  SDL_SetColorKey( optimizedImage, SDL_SRCCOLORKEY, SDL_MapRGB( optimizedImage->format, 0, 0xFF, 0xFF ) );
         }
-    }  
+    }
+  
   ytpekare =  optimizedImage;
 }
 
 //Moves freely, and looks for checkpoints
 void Ghost1::do_if_checkpoint( std::vector<SDL_Rect> checkmaze, Pacman& paccy ) 
-{
-  
+{  
   if(is_checkpoint(checkmaze))
     {  
       //make a fresh seek if ghost reaches a checkpoint
@@ -264,8 +263,7 @@ void Ghost1::seek(Pacman& paccy)
 	{
 	  //randomize a direcion
 	  first_way_to_pacman_ = rand()% 4 + 1;
-	}  
-      
+	}        
       
       if (scared_ == true) //if the ghost is scared, reverse the moving direction
 	{
@@ -275,20 +273,22 @@ void Ghost1::seek(Pacman& paccy)
     }
 }
 
-
 //Returns ghost to start position
 void Ghost1::get_home()
 {
-  box.x = 290;
-  box.y = 165;
+  box.x = 280;
+  box.y = 160;
+  /*
+  0:or  
+   */
 }
   
 //-------------------------- Ghost 2 -------------------------
 Ghost2::Ghost2()
 {
   //Initialize the offsets
-  box.x = 300;
-  box.y = 165;
+  box.x = 100;
+  box.y = 0;
 
   MAP_WIDTH=640;
   SCREEN_HEIGHT=480;
@@ -362,15 +362,15 @@ void Ghost2::seek()
 //Returns ghost2 to start position
 void Ghost2::get_home()
 {
-  box.x = 300;
-  box.y = 165;
+  box.x = 20;
+  box.y = 0;
 }
 //-------------------------- Ghost 3 -----------------
 Ghost3::Ghost3()
 {
   //Initialize the offsets
-  box.x = 310;
-  box.y = 165;
+  box.x = 0;
+  box.y = 100;
 
   MAP_WIDTH=640;
   SCREEN_HEIGHT=480;
@@ -498,8 +498,8 @@ void Ghost3::seek(Pacman& paccy)
 //Returns ghost3 to start position
 void Ghost3::get_home()
 {
-  box.x =310;
-  box.y =165;
+  box.x = 40;
+  box.y = 0;
 }
 
 

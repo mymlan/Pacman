@@ -15,7 +15,7 @@
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
 #include <string>
-#include <iostream>  
+#include <iostream>  //for felsokning med std::cout
 #include "SDL/SDL_ttf.h"
 #include <sstream>
 #include <fstream>
@@ -38,6 +38,7 @@ class Food : public Sprite
   void was_eaten();
   void show(SDL_Surface*);
   SDL_Rect get_box();
+  // void show_all_food(std::vector<Food>, SDL_Surface*);
 };
 //###############################################################################################
 

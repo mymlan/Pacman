@@ -38,6 +38,8 @@ public:
   void save_new_highscore(Score&);
   void show(SDL_Surface*);
   void load_list();
+ 
+
 };
 
 #endif

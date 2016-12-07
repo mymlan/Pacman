@@ -24,6 +24,7 @@ Menu::~Menu()
 {
 }
 
+
 //========================= START ==============================================
 
 Start::Start(int x, int y, std::string text)
@@ -41,7 +42,9 @@ Start::Start(int x, int y, std::string text)
 
   //Load  Font
   Font = TTF_OpenFont("img/xtrusion.ttf",55);
-  textpekare = NULL; 
+
+  textpekare = NULL;
+  
 
   //The image that's loaded
   SDL_Surface* loadedImage = NULL;
@@ -68,11 +71,14 @@ Start::Start(int x, int y, std::string text)
 	  SDL_SetColorKey( optimizedImage, SDL_SRCCOLORKEY, SDL_MapRGB( optimizedImage->format, 0, 0xFF, 0xFF ) );
         }
     }
+
   
   ytpekare =  optimizedImage; // * ???
   
   SDL_Rect clipsStartscr[1];
   SDL_Rect clipsInfopanel[1];
+
+
 }
 
 Start::~Start()
@@ -89,8 +95,19 @@ void Start::show_infopanel(SDL_Surface* screen)
 {
  for (int i=0; i<=8; i++)
     { 
-      apply_surface( (MAP_WIDTH+i*INFOPANEL_WIDTH), 0, ytpekare, screen ); 
+
+    apply_surface( (MAP_WIDTH+i*INFOPANEL_WIDTH), 0, ytpekare, screen );
+  
     }
+ /*
+ textpekare = TTF_RenderText_Solid( headerFont, message_.c_str(), headerColor );
+ apply_surface(660, 30,textpekare, screen); 
+ */
+  /*const char* header = message_.c_str();
+  SDL_Surface* texttest;
+  texttest = TTF_RenderText_Solid( Font, header , color ); //inputfont headercolor
+  apply_surface(button.x, button.y,texttest, screen); 
+  */
 }
 
 void Start::handle_input(bool &proceed, bool &quit, SDL_Event event)
@@ -119,6 +136,22 @@ void Start::change_start()
   else
     start =true;
 }
+
+/*void Start::set_clips()
+{
+  clipsStartscr[ 0 ].x = 0;
+  clipsStartscr[ 0 ].y = 0;
+  clipsStartscr[ 0 ].w = MAP_WIDTH;
+  clipsStartscr[ 0 ].h = SCREEN_HEIGHT;
+
+  clipsInfopanel[ 0 ].x = MAP_WIDTH;
+  clipsInfopanel[ 0 ].y = 0;
+  clipsInfopanel[ 0 ].w = INFOPANEL_WIDTH;
+  clipsInfopanel[ 0 ].h = INFOPANEL_HEIGHT;
+
+  }*/
+
+
 
 //====================== BUTTON ==========================================================
 
@@ -149,6 +182,27 @@ Button::Button(int x, int y, std::string text)
 
   //The optimized surface that will be used
   SDL_Surface* optimizedImage = NULL;
+  /*
+  //Load the image
+  loadedImage = IMG_Load( filename.c_str() );
+
+  //If the image loaded
+  if( loadedImage != NULL )
+    {
+      //Create an optimized surface
+      optimizedImage = SDL_DisplayFormat( loadedImage );
+
+      //Free the old surface
+      SDL_FreeSurface( loadedImage );
+
+      //If the surface was optimized
+      if( optimizedImage != NULL )
+        {
+	  //Color key surface
+	  SDL_SetColorKey( optimizedImage, SDL_SRCCOLORKEY, SDL_MapRGB( optimizedImage->format, 0, 0xFF, 0xFF ) );
+        }
+    }
+  */
 
   ytpekare =  optimizedImage; // * ?? /Ingrid
 
@@ -197,6 +251,8 @@ void Highscore_screen::show(SDL_Surface* screen)
 	std::cerr << "Fel" << std::endl;
 	SDL_Quit();
 	exit(1);	
+
+	//	exit_program("Error in SDL init");
 	}
 
 	screen = SDL_SetVideoMode( 1000, 480, 32, SDL_SWSURFACE );
@@ -205,7 +261,12 @@ void Highscore_screen::show(SDL_Surface* screen)
 	std::cerr << "Fel" << std::endl;
 	SDL_Quit();
 	exit(1);
+
+	//	exit_program("Error in screen init");
 	}
+
+
+
 
   const char* header = message_.c_str();
   SDL_Surface* texttest;
@@ -226,6 +287,7 @@ void Highscore_screen::change_pause()
     pause_ = true;
 }
 
+
 //====================== END_GAME ===================================================
 End_game::~End_game()
 {
@@ -236,7 +298,7 @@ End_game::End_game()
 {
 
   //Initialize
-  button.x=100;
+  button.x=400;
   button.y=10;
   message_="Skriv namn. Enter.";
 
@@ -251,20 +313,26 @@ End_game::End_game()
 void End_game::show(SDL_Surface* screen)
 {
 
-  if( SDL_Init( SDL_INIT_EVERYTHING ) == -1 ) 
-    {
-      std::cerr << "Fel" << std::endl;
-      SDL_Quit();
-      exit(1);	
-    }
-  screen = SDL_SetVideoMode( 1000, 480, 32, SDL_SWSURFACE );
-  if( screen == NULL )  
-    {
+	if( SDL_Init( SDL_INIT_EVERYTHING ) == -1 ) {
+	std::cerr << "Fel" << std::endl;
+	SDL_Quit();
+	exit(1);	
+
+	//	exit_program("Error in SDL init");
+	}
+
+	screen = SDL_SetVideoMode( 1000, 480, 32, SDL_SWSURFACE );
+	if( screen == NULL )  {
 	
-      std::cerr << "Fel" << std::endl;
-      SDL_Quit();
-      exit(1);
-    }
+	std::cerr << "Fel" << std::endl;
+	SDL_Quit();
+	exit(1);
+
+	//	exit_program("Error in screen init");
+	}
+
+
+
 
   const char* header = message_.c_str();
   SDL_Surface* texttest;

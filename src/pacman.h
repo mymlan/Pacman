@@ -9,8 +9,6 @@
 #ifndef PACMAN_H
 #define PACMAN_H
 
-
-
 //The headers
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
@@ -26,7 +24,6 @@
 //#include "ghost.h"
 //#include "score.h"
 
-
 //===================== PACMAN ==============================================
 class Pacman : public Sprite
 {
@@ -38,9 +35,16 @@ private:
   //The velocity of the square
   int xVel, yVel;
 
+  //The direction where the user points pacman
+  int goX, goY;
+  
+  //The previously used direction, used when the pacman
+  // is made to run into a wall
+  int legitXVel, legitYVel;
+  
   //The attributes of the Pacman
-  const int PACMAN_WIDTH  {20};
-  const int PACMAN_HEIGHT {20};
+  const int PACMAN_WIDTH  {40}; //img is 20x20
+  const int PACMAN_HEIGHT {40};
   //int  MAP_WIDTH;
   int SCREEN_HEIGHT;
   int SCREEN_WIDTH;
@@ -100,6 +104,10 @@ public:
   //Moves the Pacman
   void move(std::vector<SDL_Rect>, SDL_Rect);
 
+  //Moves if possible in direction chosen by user, otherwise last direction
+  bool tryMoveX(std::vector<SDL_Rect>, SDL_Rect);
+  bool tryMoveY(std::vector<SDL_Rect>, SDL_Rect);
+  
   //Shows the Pacman on the screen
   void show(SDL_Surface*);
   

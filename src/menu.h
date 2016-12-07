@@ -15,7 +15,7 @@
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
 #include <string>
-#include <iostream>
+#include <iostream>  //for felsokning med std::cout
 #include "SDL/SDL_ttf.h"
 #include <sstream>
 #include <fstream>
@@ -36,13 +36,16 @@ protected:
   TTF_Font *Font;
   SDL_Color color;
   SDL_Surface *screen {NULL};
-  SDL_Surface *header {NULL};
+SDL_Surface *header {NULL};
 
   //The attributes of the Buttons
   const int BUTTON_WIDTH {220};
   const int BUTTON_HEIGHT {40};
 
 public:
+  //  virtual void show(SDL_Surface*);
+  // Menu();
+  // Menu(std::string filename);//: new Sprite (std::string filename){}
   virtual ~Menu();
 };
 
@@ -55,14 +58,16 @@ class Start : public Menu
 private:
   bool start;
 
+
   SDL_Rect clipsStartscr;
   SDL_Rect clipsInfopanel;
   
   const int MAP_WIDTH{640};
+  //int INFOPANEL_WIDTH;
+ //The attributes of the Infopanel
   const int INFOPANEL_WIDTH {40};
   const int INFOPANEL_HEIGHT {480};
   const int SCREEN_HEIGHT{480};
-
  public:
   Start(int x, int y, std::string text);
   ~Start();
@@ -80,11 +85,13 @@ class Button : public Menu
 public:
   ~Button();
   Button(int x, int y, std::string text);
+
   void show(SDL_Surface*) ;
   void show(int x, int y, const char* header,SDL_Surface*);
-
  private:
   SDL_Surface *textpekare;
+
+
 };
 
 
@@ -115,6 +122,8 @@ class End_game : public Menu
   ~End_game();
   End_game();
   void show(SDL_Surface*);
+  // void show(int x, int y, const char* header) const;
+
 };
 
 

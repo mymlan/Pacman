@@ -12,58 +12,58 @@ OBJECTS = main.o sprite.o timer.o menu.o food.o score.o highscore.o pacman.o gho
 
 # Huvudmål - skapas med kommandot 'make' eller 'make pacman'.
 main: $(OBJECTS)
-	$(CCC) $(CCFLAGS) -o pacman $(OBJECTS)
+	$(CCC) -o pacman $(OBJECTS) $(CCFLAGS) 
 
 # Delmål (flaggan -c avbryter innan länkning, objektkodsfil erhålls)
 
 main.o: src/main.cpp  
-	$(CCC) $(CCFLAGS) -c src/main.cpp
+	$(CCC) -c src/main.cpp $(CCFLAGS)
 # 'make clean' tar bort objektkodsfiler och 'core' (minnesdump).
 
 
 sprite.o: src/sprite.cpp src/sprite.h
-	$(CCC) $(CCFLAGS) -c src/sprite.cpp
+	$(CCC) -c src/sprite.cpp $(CCFLAGS) 
 # 'make clean' tar bort objektkodsfiler och 'core' (minnesdump).
 
 
 timer.o: src/timer.cpp src/timer.h 
-	$(CCC) $(CCFLAGS) -c src/timer.cpp
+	$(CCC) -c src/timer.cpp $(CCFLAGS)
 # 'make clean' tar bort objektkodsfiler och 'core' (minnesdump).
 
 menu.o: src/menu.cpp src/menu.h
-	$(CCC) $(CCFLAGS) -c src/menu.cpp
+	$(CCC) -c src/menu.cpp $(CCFLAGS)
 # 'make clean' tar bort objektkodsfiler och 'core' (minnesdump).
 
 food.o: src/food.cpp src/food.h
-	$(CCC) $(CCFLAGS) -c src/food.cpp
+	$(CCC) -c src/food.cpp $(CCFLAGS)
 # 'make clean' tar bort objektkodsfiler och 'core' (minnesdump).
 
 score.o: src/score.cpp src/score.h
-	$(CCC) $(CCFLAGS) -c src/score.cpp
+	$(CCC) -c src/score.cpp $(CCFLAGS)
 # 'make clean' tar bort objektkodsfiler och 'core' (minnesdump).
 
 highscore.o: src/highscore.cpp src/highscore.h
-	$(CCC) $(CCFLAGS) -c src/highscore.cpp
+	$(CCC) -c src/highscore.cpp $(CCFLAGS)
 # 'make clean' tar bort objektkodsfiler och 'core' (minnesdump).
 
 pacman.o: src/pacman.cpp src/pacman.h
-	$(CCC) $(CCFLAGS) -c src/pacman.cpp
+	$(CCC) -c src/pacman.cpp $(CCFLAGS)
 # 'make clean' tar bort objektkodsfiler och 'core' (minnesdump).
 
 ghost.o: src/ghost.cpp src/ghost.h
-	$(CCC) $(CCFLAGS) -c src/ghost.cpp
+	$(CCC) -c src/ghost.cpp $(CCFLAGS)
 # 'make clean' tar bort objektkodsfiler och 'core' (minnesdump).
 
 string_input.o: src/string_input.cpp src/string_input.h
-	$(CCC) $(CCFLAGS) -c src/string_input.cpp
+	$(CCC) -c src/string_input.cpp $(CCFLAGS)
 # 'make clean' tar bort objektkodsfiler och 'core' (minnesdump).
 
 map_data.o: src/map_data.cpp src/map_data.h
-	$(CCC) $(CCFLAGS) -c src/map_data.cpp
+	$(CCC) -c src/map_data.cpp $(CCFLAGS)
 # 'make clean' tar bort objektkodsfiler och 'core' (minnesdump).
 
 board.o: src/board.cpp src/board.h
-	$(CCC) $(CCFLAGS) -c src/board.cpp
+	$(CCC) -c src/board.cpp $(CCFLAGS) 
 # 'make clean' tar bort objektkodsfiler och 'core' (minnesdump).
 
 
